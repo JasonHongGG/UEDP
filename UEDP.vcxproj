@@ -139,7 +139,44 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Background\Entry.cpp" />
+    <ClCompile Include="System\FileAttribute.cpp" />
+    <ClCompile Include="System\Memory.cpp" />
+    <ClCompile Include="System\Memory\MemoryReader.cpp" />
+    <ClCompile Include="System\Memory\MemoryRegionEnumerator.cpp" />
+    <ClCompile Include="System\Memory\MemorySearch.cpp" />
+    <ClCompile Include="System\Memory\MemoryWriter.cpp" />
+    <ClCompile Include="System\Process.cpp" />
+    <ClCompile Include="System\Process\ProcessInfo.cpp" />
+    <ClCompile Include="System\Process\ProcessModule.cpp" />
+    <ClCompile Include="System\Process\ProcessWindow.cpp" />
     <ClCompile Include="UEDP.cpp" />
+    <ClCompile Include="Utils\Utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Background\Entry.h" />
+    <ClInclude Include="System\FileAttribute.h" />
+    <ClInclude Include="System\Memory.h" />
+    <ClInclude Include="System\Memory\MemoryReader.h" />
+    <ClInclude Include="System\Memory\MemoryRegionEnumerator.h" />
+    <ClInclude Include="System\Memory\MemorySearch.h" />
+    <ClInclude Include="System\Memory\MemoryWriter.h" />
+    <ClInclude Include="System\Memory\SearchStrategy\NormalSearchStrategy.h" />
+    <ClInclude Include="System\Memory\SearchStrategy\PatternSearchStrategy.h" />
+    <ClInclude Include="System\Memory\SearchStrategy\SearchStrategyFactory.h" />
+    <ClInclude Include="System\Memory\SearchStrategy\SearchStrategyInterface.h" />
+    <ClInclude Include="System\Memory\SearchStrategy\SundaySearchStrategy.h" />
+    <ClInclude Include="System\Process.h" />
+    <ClInclude Include="System\Process\ProcessInfo.h" />
+    <ClInclude Include="System\Process\ProcessModule.h" />
+    <ClInclude Include="System\Process\ProcessWindow.h" />
+    <ClInclude Include="Utils\Include\BeaEngine.h" />
+    <ClInclude Include="Utils\Include\BS_thread_pool.hpp" />
+    <ClInclude Include="Utils\Env.h" />
+    <ClInclude Include="Utils\Include\nanosvg.h" />
+    <ClInclude Include="Utils\Include\nanosvgrast.h" />
+    <ClInclude Include="Utils\Include\StbImage.h" />
+    <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

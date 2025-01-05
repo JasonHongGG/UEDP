@@ -3,21 +3,21 @@
 #include <iostream>
 #include <thread>
 
-#include "gui/overlay.h"
-#include "features/entry.h"
+//#include "gui/overlay.h"
+#include "background/entry.h"
 
 
-// Camel case : 變數、function、檔名
-// Upper Camal Case : 物件
+// Camel case : 變數、檔名
+// Upper Camal Case : 物件、function
 // Snake case、全大寫 : 全域變數
-// 全大寫 : 專有名詞
+// 全大寫 : 專有名詞、檔案名稱
 
 int main() {
 
 	// ==========  Overlay  ==========
-	std::thread GUI([&]() { OverlayMgr.setup(); });
+	//std::thread GUI([&]() { OverlayMgr.setup(); });
 	std::thread background([&]() { Background.SetUp(); });	
-	GUI.join();
+	//GUI.join();
 	background.join();
 
 	std::cout << "\n[ All Execution Completed : Safe Exit ]\n";

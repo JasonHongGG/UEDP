@@ -18,5 +18,112 @@
     <ClCompile Include="UEDP.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Background\Entry.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\FileAttribute.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Process.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Utils.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Process\ProcessWindow.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Process\ProcessModule.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Process\ProcessInfo.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory\MemoryReader.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory\MemoryWriter.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory\MemorySearch.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Memory\MemoryRegionEnumerator.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Background\Entry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\FileAttribute.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Process.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Include\BeaEngine.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Include\BS_thread_pool.hpp">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Include\nanosvg.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Include\nanosvgrast.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Include\StbImage.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Env.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Process\ProcessWindow.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Process\ProcessModule.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Process\ProcessInfo.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\MemoryReader.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\MemoryWriter.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\MemorySearch.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\MemoryRegionEnumerator.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\SearchStrategy\SearchStrategyInterface.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\SearchStrategy\NormalSearchStrategy.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\SearchStrategy\SundaySearchStrategy.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\SearchStrategy\PatternSearchStrategy.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Memory\SearchStrategy\SearchStrategyFactory.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
