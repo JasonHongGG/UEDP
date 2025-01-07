@@ -23,8 +23,8 @@ public:
     static HWND MainWindow;
     static std::string WindowName;
     static std::vector<EnumWindowsData> WindowList;
-
-    
+    int UserWindowWidth = GetSystemMetrics(SM_CXSCREEN);
+    int UserWindowHeight = GetSystemMetrics(SM_CYSCREEN);
 
     BOOL isMainWindow(HWND handle);
 

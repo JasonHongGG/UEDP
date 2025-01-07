@@ -1,8 +1,6 @@
 #pragma once
 #pragma once
 #include "../System/Process.h"
-//#include "../gui/MenuConfig.h"
-//#include "../gui/Overlay.h"
 
 class BackgroundEntry {
 public:
@@ -10,15 +8,15 @@ public:
 
 	void CloseProcess();
 
-	void MainEntry();
+	void Entry();
 
 	void SetUp()
 	{
-		// Busy Box (use sleep to realse cpu)
-		//while (OverlayMgr.MenuState) {
-		//	MainEntry();
-		//	Sleep(10);
-		//}
+		 //Busy Box (use sleep to realse cpu)
+		while (Process::ProcState == Process::ProcessState::Running) {
+			Entry();
+			Sleep(10);
+		}
 	}
 private:
 };

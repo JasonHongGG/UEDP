@@ -6,6 +6,9 @@
 #include "d3d11.h"
 #include "../imgui/imgui.h"
 
+#include "../State/GUIState.h"
+#include "../State/EventHandler.h"
+
 //#include "BaseAddress.h"
 //#include "DumperUtils.h"
 //#include "UEOffset.h"				//AutoConfig
@@ -20,17 +23,20 @@
 void BackgroundEntry::InitialProcess()
 {
 	// initial
-	StorageMgr.SetUEVersion(0);
-	StorageMgr.SetGWorld(0);
-	StorageMgr.SetGUObjectArray(0);
-	StorageMgr.SetFNamePool(0);
+	//StorageMgr.SetUEVersion(0);
+	//StorageMgr.SetGWorld(0);
+	//StorageMgr.SetGUObjectArray(0);
+	//StorageMgr.SetFNamePool(0);
 
 	// ==========  Initial String Parameter  ==========
 	std::wstring WindowName;
-	if (Menu_MainConf.WindowTitle_SelectIndex != 0) {
-		ProcMgr.infoMgr.GetProcessNameByPID(ProcessWindow::WindowList[Menu_MainConf.WindowTitle_SelectIndex].ProcessID);
-		std::wstring WideStr(ProcessWindow::WindowList[Menu_MainConf.WindowTitle_SelectIndex].WindowTitle.begin(), ProcessWindow::WindowList[Menu_MainConf.WindowTitle_SelectIndex].WindowTitle.end());
-		ProcessWindow::WindowName = Utils.UnicodeToUTF8(WideStr.c_str());
+	if (
+		//MainMenuConf.WindowTitle_SelectIndex != 0
+		false
+		) {
+		//ProcMgr.infoMgr.GetProcessNameByPID(ProcessWindow::WindowList[MainMenuConf.WindowTitle_SelectIndex].ProcessID);
+		//std::wstring WideStr(ProcessWindow::WindowList[MainMenuConf.WindowTitle_SelectIndex].WindowTitle.begin(), ProcessWindow::WindowList[MainMenuConf.WindowTitle_SelectIndex].WindowTitle.end());
+		//ProcessWindow::WindowName = Utils.UnicodeToUTF8(WideStr.c_str());
 	}
 	else {
 		ProcessInfo::ProcessName = Utils.UnicodeToUTF8(Const::ProcessName.c_str());
@@ -41,7 +47,7 @@ void BackgroundEntry::InitialProcess()
 
 	// ==========  Get Process ID¡BHandler  ==========
 	if (!ProcMgr.infoMgr.GetPID(Utils.UTF8ToUnicode(ProcessInfo::ProcessName.c_str()).c_str())) {
-		MsgHandler.NotifyEvent(NotificationManager::NotiyType::Error, "Process Not Running !!!", "..."); 
+		EventHandler.NotifyEvent(NotificationConfig::NotiyType::Error, "Process Not Running !!!", "..."); 
 		return; 
 	}
 
@@ -80,5 +86,24 @@ void BackgroundEntry::InitialProcess()
 void BackgroundEntry::CloseProcess()
 {
 	CloseHandle(ProcessInfo::hProcess);
-	OverlayMgr.MenuState = false;
+	Process::ProcState = Process::ProcessState::Stop;
+}
+
+
+void BackgroundEntry::Entry()
+{
+	// ==========  Initial Process  ==========
+	if (MainMenuState.OpenProcess == ProcessState::Start) {
+		MainMenuState.OpenProcess = ProcessState::Processing;
+		EventHandler.NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] OpenProcess");
+		InitialProcess();
+		MainMenuState.OpenProcess = ProcessState::Completed;
+	}
+
+	if (MainMenuState.CloseProcess == ProcessState::Start) {
+		MainMenuState.CloseProcess = ProcessState::Processing;
+		EventHandler.NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] CloseProcess");
+		CloseProcess();
+		MainMenuState.CloseProcess = ProcessState::Completed;
+	}
 }

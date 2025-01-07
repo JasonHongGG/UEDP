@@ -8,7 +8,9 @@
 #include <sstream>
 #include <regex>
 #include <map>
+#include <cstdarg>
 #include <chrono>
+#include <Windows.h>
 
 class UtilsSet
 {

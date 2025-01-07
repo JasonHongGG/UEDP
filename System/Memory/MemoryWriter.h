@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include "../Process.h"
 
 class MemoryWriter {
 public:

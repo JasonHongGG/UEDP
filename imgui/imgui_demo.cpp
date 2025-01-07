@@ -1342,13 +1342,13 @@ static void ShowDemoWindowWidgets(ImGuiDemoWindowData* demo_data)
         float my_tex_w = (float)io.Fonts->TexWidth;
         float my_tex_h = (float)io.Fonts->TexHeight;
         {
-            static bool use_text_color_for_tint = false;
-            ImGui::Checkbox("Use Text Color for Tint", &use_text_color_for_tint);
+            static bool use_color_for_tint = false;
+            ImGui::Checkbox("Use Text Color for Tint", &use_color_for_tint);
             ImGui::Text("%.0fx%.0f", my_tex_w, my_tex_h);
             ImVec2 pos = ImGui::GetCursorScreenPos();
             ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
             ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-            ImVec4 tint_col = use_text_color_for_tint ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // No tint
+            ImVec4 tint_col = use_color_for_tint ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // No tint
             ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
             ImGui::Image(my_tex_id, ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
             if (ImGui::BeginItemTooltip())
@@ -4582,7 +4582,7 @@ static void ShowDemoWindowLayout()
             static bool show_h_scrollbar = true;
             static bool show_button = true;
             static bool show_tree_nodes = true;
-            static bool show_text_wrapped = false;
+            static bool show_wrapped = false;
             static bool show_columns = true;
             static bool show_tab_bar = true;
             static bool show_child = false;
@@ -4600,7 +4600,7 @@ static void ShowDemoWindowLayout()
             ImGui::Checkbox("H-scrollbar", &show_h_scrollbar);
             ImGui::Checkbox("Button", &show_button);            // Will grow contents size (unless explicitly overwritten)
             ImGui::Checkbox("Tree nodes", &show_tree_nodes);    // Will grow contents size and display highlight over full width
-            ImGui::Checkbox("Text wrapped", &show_text_wrapped);// Will grow and use contents size
+            ImGui::Checkbox("Text wrapped", &show_wrapped);// Will grow and use contents size
             ImGui::Checkbox("Columns", &show_columns);          // Will use contents size
             ImGui::Checkbox("Tab bar", &show_tab_bar);          // Will use contents size
             ImGui::Checkbox("Child", &show_child);              // Will grow and use contents size
@@ -4636,7 +4636,7 @@ static void ShowDemoWindowLayout()
                 }
                 ImGui::CollapsingHeader("CollapsingHeader", &open);
             }
-            if (show_text_wrapped)
+            if (show_wrapped)
             {
                 ImGui::TextWrapped("This text should automatically wrap on the edge of the work rectangle.");
             }
@@ -4717,27 +4717,27 @@ static void ShowDemoWindowLayout()
 
             const ImVec2 p0 = ImGui::GetItemRectMin();
             const ImVec2 p1 = ImGui::GetItemRectMax();
-            const char* text_str = "Line 1 hello\nLine 2 clip me!";
-            const ImVec2 text_pos = ImVec2(p0.x + offset.x, p0.y + offset.y);
+            const char* str = "Line 1 hello\nLine 2 clip me!";
+            const ImVec2 pos = ImVec2(p0.x + offset.x, p0.y + offset.y);
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
             switch (n)
             {
             case 0:
                 ImGui::PushClipRect(p0, p1, true);
                 draw_list->AddRectFilled(p0, p1, IM_COL32(90, 90, 120, 255));
-                draw_list->AddText(text_pos, IM_COL32_WHITE, text_str);
+                draw_list->AddText(pos, IM_COL32_WHITE, str);
                 ImGui::PopClipRect();
                 break;
             case 1:
                 draw_list->PushClipRect(p0, p1, true);
                 draw_list->AddRectFilled(p0, p1, IM_COL32(90, 90, 120, 255));
-                draw_list->AddText(text_pos, IM_COL32_WHITE, text_str);
+                draw_list->AddText(pos, IM_COL32_WHITE, str);
                 draw_list->PopClipRect();
                 break;
             case 2:
                 ImVec4 clip_rect(p0.x, p0.y, p1.x, p1.y); // AddText() takes a ImVec4* here so let's convert.
                 draw_list->AddRectFilled(p0, p1, IM_COL32(90, 90, 120, 255));
-                draw_list->AddText(ImGui::GetFont(), ImGui::GetFontSize(), text_pos, IM_COL32_WHITE, text_str, NULL, 0.0f, &clip_rect);
+                draw_list->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, IM_COL32_WHITE, str, NULL, 0.0f, &clip_rect);
                 break;
             }
         }
@@ -5253,8 +5253,8 @@ static void ShowDemoWindowTables()
         return;
 
     // Using those as a base value to create width/height that are factor of the size of our font
-    const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
-    const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
+    const float BASE_WIDTH = ImGui::CalcTextSize("A").x;
+    const float BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
 
     ImGui::PushID("Tables");
 
@@ -5682,7 +5682,7 @@ static void ShowDemoWindowTables()
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, cell_padding);
         if (ImGui::BeginTable("table_padding_2", 3, flags2))
         {
-            static char text_bufs[3 * 5][16]; // Mini text storage for 3x5 cells
+            static char bufs[3 * 5][16]; // Mini text storage for 3x5 cells
             static bool init = true;
             if (!show_widget_frame_bg)
                 ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
@@ -5690,10 +5690,10 @@ static void ShowDemoWindowTables()
             {
                 ImGui::TableNextColumn();
                 if (init)
-                    strcpy(text_bufs[cell], "edit me");
+                    strcpy(bufs[cell], "edit me");
                 ImGui::SetNextItemWidth(-FLT_MIN);
                 ImGui::PushID(cell);
-                ImGui::InputText("##cell", text_bufs[cell], IM_ARRAYSIZE(text_bufs[cell]));
+                ImGui::InputText("##cell", bufs[cell], IM_ARRAYSIZE(bufs[cell]));
                 ImGui::PopID();
             }
             if (!show_widget_frame_bg)
@@ -5721,7 +5721,7 @@ static void ShowDemoWindowTables()
         for (int table_n = 0; table_n < 4; table_n++)
         {
             ImGui::PushID(table_n);
-            ImGui::SetNextItemWidth(TEXT_BASE_WIDTH * 30);
+            ImGui::SetNextItemWidth(BASE_WIDTH * 30);
             EditTableSizingFlags(&sizing_policy_flags[table_n]);
 
             // To make it easier to understand the different sizing policy,
@@ -5766,7 +5766,7 @@ static void ShowDemoWindowTables()
 
         PushStyleCompact();
         ImGui::PushID("Advanced");
-        ImGui::PushItemWidth(TEXT_BASE_WIDTH * 30);
+        ImGui::PushItemWidth(BASE_WIDTH * 30);
         EditTableSizingFlags(&flags);
         ImGui::Combo("Contents", &contents_type, "Show width\0Short Text\0Long Text\0Button\0Fill Button\0InputText\0");
         if (contents_type == CT_FillButton)
@@ -5787,7 +5787,7 @@ static void ShowDemoWindowTables()
         ImGui::PopID();
         PopStyleCompact();
 
-        if (ImGui::BeginTable("table2", column_count, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 7)))
+        if (ImGui::BeginTable("table2", column_count, flags, ImVec2(0.0f, BASE_HEIGHT * 7)))
         {
             for (int cell = 0; cell < 10 * column_count; cell++)
             {
@@ -5797,7 +5797,7 @@ static void ShowDemoWindowTables()
 
                 ImGui::PushID(cell);
                 char label[32];
-                static char text_buf[32] = "";
+                static char buf[32] = "";
                 sprintf(label, "Hello %d,%d", column, row);
                 switch (contents_type)
                 {
@@ -5806,7 +5806,7 @@ static void ShowDemoWindowTables()
                 case CT_ShowWidth:  ImGui::Text("W: %.1f", ImGui::GetContentRegionAvail().x); break;
                 case CT_Button:     ImGui::Button(label); break;
                 case CT_FillButton: ImGui::Button(label, ImVec2(-FLT_MIN, 0.0f)); break;
-                case CT_InputText:  ImGui::SetNextItemWidth(-FLT_MIN); ImGui::InputText("##", text_buf, IM_ARRAYSIZE(text_buf)); break;
+                case CT_InputText:  ImGui::SetNextItemWidth(-FLT_MIN); ImGui::InputText("##", buf, IM_ARRAYSIZE(buf)); break;
                 }
                 ImGui::PopID();
             }
@@ -5831,7 +5831,7 @@ static void ShowDemoWindowTables()
 
         // When using ScrollX or ScrollY we need to specify a size for our table container!
         // Otherwise by default the table will fit all available space, like a BeginChild() call.
-        ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8);
+        ImVec2 outer_size = ImVec2(0.0f, BASE_HEIGHT * 8);
         if (ImGui::BeginTable("table_scrolly", 3, flags, outer_size))
         {
             ImGui::TableSetupScrollFreeze(0, 1); // Make top row always visible
@@ -5887,7 +5887,7 @@ static void ShowDemoWindowTables()
 
         // When using ScrollX or ScrollY we need to specify a size for our table container!
         // Otherwise by default the table will fit all available space, like a BeginChild() call.
-        ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8);
+        ImVec2 outer_size = ImVec2(0.0f, BASE_HEIGHT * 8);
         if (ImGui::BeginTable("table_scrollx", 7, flags, outer_size))
         {
             ImGui::TableSetupScrollFreeze(freeze_cols, freeze_rows);
@@ -5933,7 +5933,7 @@ static void ShowDemoWindowTables()
         static float inner_width = 1000.0f;
         PushStyleCompact();
         ImGui::PushID("flags3");
-        ImGui::PushItemWidth(TEXT_BASE_WIDTH * 30);
+        ImGui::PushItemWidth(BASE_WIDTH * 30);
         ImGui::CheckboxFlags("ImGuiTableFlags_ScrollX", &flags2, ImGuiTableFlags_ScrollX);
         ImGui::DragFloat("inner_width", &inner_width, 1.0f, 0.0f, FLT_MAX, "%.1f");
         ImGui::PopItemWidth();
@@ -5993,7 +5993,7 @@ static void ShowDemoWindowTables()
             = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
             | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV
             | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable;
-        ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 9);
+        ImVec2 outer_size = ImVec2(0.0f, BASE_HEIGHT * 9);
         if (ImGui::BeginTable("table_columns_flags", column_count, flags, outer_size))
         {
             bool has_angled_header = false;
@@ -6007,7 +6007,7 @@ static void ShowDemoWindowTables()
             ImGui::TableHeadersRow();
             for (int column = 0; column < column_count; column++)
                 column_flags_out[column] = ImGui::TableGetColumnFlags(column);
-            float indent_step = (float)((int)TEXT_BASE_WIDTH / 2);
+            float indent_step = (float)((int)BASE_WIDTH / 2);
             for (int row = 0; row < 8; row++)
             {
                 // Add some indentation to demonstrate usage of per-column IndentEnable/IndentDisable flags.
@@ -6075,9 +6075,9 @@ static void ShowDemoWindowTables()
             // We could also set ImGuiTableFlags_SizingFixedFit on the table and then all columns
             // will default to ImGuiTableColumnFlags_WidthFixed.
             ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, 100.0f);
-            ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 15.0f);
-            ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 30.0f);
-            ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 15.0f);
+            ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, BASE_WIDTH * 15.0f);
+            ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, BASE_WIDTH * 30.0f);
+            ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, BASE_WIDTH * 15.0f);
             for (int row = 0; row < 5; row++)
             {
                 ImGui::TableNextRow();
@@ -6111,7 +6111,7 @@ static void ShowDemoWindowTables()
             ImGui::TableNextColumn();
             ImGui::Text("A0 Row 0");
             {
-                float rows_height = TEXT_BASE_HEIGHT * 2;
+                float rows_height = BASE_HEIGHT * 2;
                 if (ImGui::BeginTable("table_nested2", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable))
                 {
                     ImGui::TableSetupColumn("B0");
@@ -6153,7 +6153,7 @@ static void ShowDemoWindowTables()
         {
             for (int row = 0; row < 8; row++)
             {
-                float min_row_height = (float)(int)(TEXT_BASE_HEIGHT * 0.30f * row);
+                float min_row_height = (float)(int)(BASE_HEIGHT * 0.30f * row);
                 ImGui::TableNextRow(ImGuiTableRowFlags_None, min_row_height);
                 ImGui::TableNextColumn();
                 ImGui::Text("min_row_height = %.2f", min_row_height);
@@ -6221,7 +6221,7 @@ static void ShowDemoWindowTables()
         ImGui::SameLine(); HelpMarker("Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit).\n\nOnly available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.");
         PopStyleCompact();
 
-        ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 5.5f);
+        ImVec2 outer_size = ImVec2(0.0f, BASE_HEIGHT * 5.5f);
         if (ImGui::BeginTable("table1", 3, flags, outer_size))
         {
             for (int row = 0; row < 10; row++)
@@ -6241,7 +6241,7 @@ static void ShowDemoWindowTables()
         ImGui::Spacing();
 
         ImGui::Text("Using explicit size:");
-        if (ImGui::BeginTable("table2", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg, ImVec2(TEXT_BASE_WIDTH * 30, 0.0f)))
+        if (ImGui::BeginTable("table2", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg, ImVec2(BASE_WIDTH * 30, 0.0f)))
         {
             for (int row = 0; row < 5; row++)
             {
@@ -6255,11 +6255,11 @@ static void ShowDemoWindowTables()
             ImGui::EndTable();
         }
         ImGui::SameLine();
-        if (ImGui::BeginTable("table3", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg, ImVec2(TEXT_BASE_WIDTH * 30, 0.0f)))
+        if (ImGui::BeginTable("table3", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg, ImVec2(BASE_WIDTH * 30, 0.0f)))
         {
             for (int row = 0; row < 3; row++)
             {
-                ImGui::TableNextRow(0, TEXT_BASE_HEIGHT * 1.5f);
+                ImGui::TableNextRow(0, BASE_HEIGHT * 1.5f);
                 for (int column = 0; column < 3; column++)
                 {
                     ImGui::TableNextColumn();
@@ -6347,8 +6347,8 @@ static void ShowDemoWindowTables()
         {
             // The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
             ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoHide);
-            ImGui::TableSetupColumn("Size", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
-            ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 18.0f);
+            ImGui::TableSetupColumn("Size", ImGuiTableColumnFlags_WidthFixed, BASE_WIDTH * 12.0f);
+            ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, BASE_WIDTH * 18.0f);
             ImGui::TableHeadersRow();
 
             // Simple storage to output a dummy file-system.
@@ -6431,7 +6431,7 @@ static void ShowDemoWindowTables()
                 {
                     // Setup ItemWidth once (instead of setting up every time, which is also possible but less efficient)
                     ImGui::TableSetColumnIndex(0);
-                    ImGui::PushItemWidth(TEXT_BASE_WIDTH * 3.0f); // Small
+                    ImGui::PushItemWidth(BASE_WIDTH * 3.0f); // Small
                     ImGui::TableSetColumnIndex(1);
                     ImGui::PushItemWidth(-ImGui::GetContentRegionAvail().x * 0.5f);
                     ImGui::TableSetColumnIndex(2);
@@ -6539,7 +6539,7 @@ static void ShowDemoWindowTables()
             ImGui::TreePop();
         }
 
-        if (ImGui::BeginTable("table_angled_headers", columns_count, table_flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 12)))
+        if (ImGui::BeginTable("table_angled_headers", columns_count, table_flags, ImVec2(0.0f, BASE_HEIGHT * 12)))
         {
             ImGui::TableSetupColumn(column_names[0], ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoReorder);
             for (int n = 1; n < columns_count; n++)
@@ -6589,7 +6589,7 @@ static void ShowDemoWindowTables()
         // [1.1] Right-click on the TableHeadersRow() line to open the default table context menu.
         // [1.2] Right-click in columns also open the default table context menu (if ImGuiTableFlags_ContextMenuInBody is set)
         const int COLUMNS_COUNT = 3;
-        if (ImGui::BeginTable("table_context_menu", COLUMNS_COUNT, flags1))
+        if (ImGui::BeginTable("table_conmenu", COLUMNS_COUNT, flags1))
         {
             ImGui::TableSetupColumn("One");
             ImGui::TableSetupColumn("Two");
@@ -6619,7 +6619,7 @@ static void ShowDemoWindowTables()
             "Demonstrate mixing table context menu (over header), item context button (over button) "
             "and custom per-colunm context menu (over column body).");
         ImGuiTableFlags flags2 = ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Borders;
-        if (ImGui::BeginTable("table_context_menu_2", COLUMNS_COUNT, flags2))
+        if (ImGui::BeginTable("table_conmenu_2", COLUMNS_COUNT, flags2))
         {
             ImGui::TableSetupColumn("One");
             ImGui::TableSetupColumn("Two");
@@ -6757,7 +6757,7 @@ static void ShowDemoWindowTables()
         ImGui::SameLine(); HelpMarker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).");
         PopStyleCompact();
 
-        if (ImGui::BeginTable("table_sorting", 4, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 15), 0.0f))
+        if (ImGui::BeginTable("table_sorting", 4, flags, ImVec2(0.0f, BASE_HEIGHT * 15), 0.0f))
         {
             // Declare columns
             // We use the "user_id" parameter of TableSetupColumn() to specify a user id that will be stored in the sort specifications.
@@ -6829,7 +6829,7 @@ static void ShowDemoWindowTables()
         static int freeze_cols = 1;
         static int freeze_rows = 1;
         static int items_count = IM_ARRAYSIZE(template_items_names) * 2;
-        static ImVec2 outer_size_value = ImVec2(0.0f, TEXT_BASE_HEIGHT * 12);
+        static ImVec2 outer_size_value = ImVec2(0.0f, BASE_HEIGHT * 12);
         static float row_min_height = 0.0f; // Auto
         static float inner_width_with_scroll = 0.0f; // Auto-extend
         static bool outer_size_enabled = true;
@@ -6841,7 +6841,7 @@ static void ShowDemoWindowTables()
         {
             // Make the UI compact because there are so many fields
             PushStyleCompact();
-            ImGui::PushItemWidth(TEXT_BASE_WIDTH * 28.0f);
+            ImGui::PushItemWidth(BASE_WIDTH * 28.0f);
 
             if (ImGui::TreeNodeEx("Features:", ImGuiTreeNodeFlags_DefaultOpen))
             {
@@ -8510,8 +8510,8 @@ struct ExampleAppConsole
 
         // Command-line
         bool reclaim_focus = false;
-        ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
-        if (ImGui::InputText("Input", InputBuf, IM_ARRAYSIZE(InputBuf), input_text_flags, &TextEditCallbackStub, (void*)this))
+        ImGuiInputTextFlags input_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
+        if (ImGui::InputText("Input", InputBuf, IM_ARRAYSIZE(InputBuf), input_flags, &TextEditCallbackStub, (void*)this))
         {
             char* s = InputBuf;
             Strtrim(s);
@@ -9538,11 +9538,11 @@ static void ShowExampleAppCustomRendering(bool* p_open)
             static ImVector<ImVec2> points;
             static ImVec2 scrolling(0.0f, 0.0f);
             static bool opt_enable_grid = true;
-            static bool opt_enable_context_menu = true;
+            static bool opt_enable_conmenu = true;
             static bool adding_line = false;
 
             ImGui::Checkbox("Enable grid", &opt_enable_grid);
-            ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
+            ImGui::Checkbox("Enable context menu", &opt_enable_conmenu);
             ImGui::Text("Mouse Left: drag to add lines,\nMouse Right: drag to scroll, click for context menu.");
 
             // Typically you would use a BeginChild()/EndChild() pair to benefit from a clipping region + own scrolling.
@@ -9592,7 +9592,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
 
             // Pan (we use a zero mouse threshold when there's no context menu)
             // You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
-            const float mouse_threshold_for_pan = opt_enable_context_menu ? -1.0f : 0.0f;
+            const float mouse_threshold_for_pan = opt_enable_conmenu ? -1.0f : 0.0f;
             if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan))
             {
                 scrolling.x += io.MouseDelta.x;
@@ -9601,7 +9601,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
 
             // Context menu (under default mouse threshold)
             ImVec2 drag_delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
-            if (opt_enable_context_menu && drag_delta.x == 0.0f && drag_delta.y == 0.0f)
+            if (opt_enable_conmenu && drag_delta.x == 0.0f && drag_delta.y == 0.0f)
                 ImGui::OpenPopupOnItemClick("context", ImGuiPopupFlags_MouseButtonRight);
             if (ImGui::BeginPopup("context"))
             {

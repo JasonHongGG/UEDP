@@ -881,10 +881,10 @@ typedef enum { MDT_EFFECTIVE_DPI = 0, MDT_ANGULAR_DPI = 1, MDT_RAW_DPI = 2, MDT_
 #endif
 #ifndef _DPI_AWARENESS_CONTEXTS_
 DECLARE_HANDLE(DPI_AWARENESS_CONTEXT);
-#define DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE    (DPI_AWARENESS_CONTEXT)-3
+#define DPI_AWARENESS_CONPER_MONITOR_AWARE    (DPI_AWARENESS_CONTEXT)-3
 #endif
-#ifndef DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
-#define DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 (DPI_AWARENESS_CONTEXT)-4
+#ifndef DPI_AWARENESS_CONPER_MONITOR_AWARE_V2
+#define DPI_AWARENESS_CONPER_MONITOR_AWARE_V2 (DPI_AWARENESS_CONTEXT)-4
 #endif
 typedef HRESULT(WINAPI* PFN_SetProcessDpiAwareness)(PROCESS_DPI_AWARENESS);                     // Shcore.lib + dll, Windows 8.1+
 typedef HRESULT(WINAPI* PFN_GetDpiForMonitor)(HMONITOR, MONITOR_DPI_TYPE, UINT*, UINT*);        // Shcore.lib + dll, Windows 8.1+
@@ -902,7 +902,7 @@ void ImGui_ImplWin32_EnableDpiAwareness()
         static HINSTANCE user32_dll = ::LoadLibraryA("user32.dll"); // Reference counted per-process
         if (PFN_SetThreadDpiAwarenessContext SetThreadDpiAwarenessContextFn = (PFN_SetThreadDpiAwarenessContext)::GetProcAddress(user32_dll, "SetThreadDpiAwarenessContext"))
         {
-            SetThreadDpiAwarenessContextFn(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+            SetThreadDpiAwarenessContextFn(DPI_AWARENESS_CONPER_MONITOR_AWARE_V2);
             return;
         }
     }

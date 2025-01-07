@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -140,6 +140,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Background\Entry.cpp" />
+    <ClCompile Include="GUI\Include\Gradient\ImGradientHDR.cpp" />
+    <ClCompile Include="GUI\Include\Notify\imgui_notify.cpp" />
+    <ClCompile Include="GUI\Include\Toggle\imgui_toggle.cpp" />
+    <ClCompile Include="GUI\Include\Toggle\imgui_toggle_palette.cpp" />
+    <ClCompile Include="GUI\Include\Toggle\imgui_toggle_presets.cpp" />
+    <ClCompile Include="GUI\Include\Toggle\imgui_toggle_renderer.cpp" />
+    <ClCompile Include="GUI\Menu.cpp" />
+    <ClCompile Include="GUI\Overlay.cpp" />
+    <ClCompile Include="GUI\Overlay\D3DRender.cpp" />
+    <ClCompile Include="GUI\Overlay\ImguiSetting.cpp" />
+    <ClCompile Include="GUI\Overlay\OverlayWindow.cpp" />
+    <ClCompile Include="GUI\TextureLoader.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="System\FileAttribute.cpp" />
     <ClCompile Include="System\Memory.cpp" />
     <ClCompile Include="System\Memory\MemoryReader.cpp" />
@@ -155,6 +174,51 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background\Entry.h" />
+    <ClInclude Include="Font\IconsFontAwesome6.h" />
+    <ClInclude Include="GUI\Config\ColorConfig.h" />
+    <ClInclude Include="GUI\Config\FontConfig.h" />
+    <ClInclude Include="GUI\Config\FPSConfig.h" />
+    <ClInclude Include="GUI\Config\LogConfig.h" />
+    <ClInclude Include="GUI\Config\MainMenuConfig.h" />
+    <ClInclude Include="GUI\Config\StyleConfig.h" />
+    <ClInclude Include="GUI\Config\TimerConfig.h" />
+    <ClInclude Include="GUI\DockingManager.h" />
+    <ClInclude Include="GUI\Include\Gradient\ImGradientHDR.h" />
+    <ClInclude Include="GUI\Include\Notify\imgui_notify.h" />
+    <ClInclude Include="GUI\Include\Toggle\imgui_offset_rect.h" />
+    <ClInclude Include="GUI\Include\Toggle\imgui_toggle.h" />
+    <ClInclude Include="GUI\Include\Toggle\imgui_toggle_math.h" />
+    <ClInclude Include="GUI\Include\Toggle\imgui_toggle_palette.h" />
+    <ClInclude Include="GUI\Include\Toggle\imgui_toggle_presets.h" />
+    <ClInclude Include="GUI\Include\Toggle\imgui_toggle_renderer.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\DumperConsole.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\MainPage.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\SideBar.h" />
+    <ClInclude Include="GUI\MyGuiComponent.h" />
+    <ClInclude Include="GUI\MyGuiComponent\ComboList.h" />
+    <ClInclude Include="GUI\MyGuiComponent\InputBarBtn.h" />
+    <ClInclude Include="GUI\MyGuiComponent\ListBox.h" />
+    <ClInclude Include="GUI\MyGuiComponent\Operator.h" />
+    <ClInclude Include="GUI\Config\NotificationConfig.h" />
+    <ClInclude Include="State\EventHandler.h" />
+    <ClInclude Include="GUI\Menu.h" />
+    <ClInclude Include="GUI\Menu\MainMenu.h" />
+    <ClInclude Include="GUI\Overlay.h" />
+    <ClInclude Include="GUI\Overlay\D3DRender.h" />
+    <ClInclude Include="GUI\Overlay\ImguiSetting.h" />
+    <ClInclude Include="GUI\Overlay\OverlayWindow.h" />
+    <ClInclude Include="GUI\TextureLoader.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="State\GlobalState.h" />
+    <ClInclude Include="State\GUIState.h" />
+    <ClInclude Include="State\WindowState.h" />
     <ClInclude Include="System\FileAttribute.h" />
     <ClInclude Include="System\Memory.h" />
     <ClInclude Include="System\Memory\MemoryReader.h" />

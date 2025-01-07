@@ -913,7 +913,7 @@ CODE
  - 2014/11/26 (1.17) - reworked syntax of IMGUI_ONCE_UPON_A_FRAME helper macro to increase compiler compatibility
  - 2014/11/07 (1.15) - renamed IsHovered() to IsItemHovered()
  - 2014/10/02 (1.14) - renamed IMGUI_INCLUDE_IMGUI_USER_CPP to IMGUI_INCLUDE_IMGUI_USER_INL and imgui_user.cpp to imgui_user.inl (more IDE friendly)
- - 2014/09/25 (1.13) - removed 'text_end' parameter from IO.SetClipboardTextFn (the string is now always zero-terminated for simplicity)
+ - 2014/09/25 (1.13) - removed 'end' parameter from IO.SetClipboardTextFn (the string is now always zero-terminated for simplicity)
  - 2014/09/24 (1.12) - renamed SetFontScale() to SetWindowFontScale()
  - 2014/09/24 (1.12) - moved IM_MALLOC/IM_REALLOC/IM_FREE preprocessor defines to IO.MemAllocFn/IO.MemReallocFn/IO.MemFreeFn
  - 2014/08/30 (1.09) - removed IO.FontHeight (now computed automatically)
@@ -2329,7 +2329,7 @@ IM_MSVC_RUNTIME_CHECKS_OFF
 // Convert UTF-8 to 32-bit character, process single character input.
 // A nearly-branchless UTF-8 decoder, based on work of Christopher Wellons (https://github.com/skeeto/branchless-utf8).
 // We handle UTF-8 decoding error by skipping forward.
-int ImTextCharFromUtf8(unsigned int* out_char, const char* in_text, const char* in_text_end)
+int ImTextCharFromUtf8(unsigned int* out_char, const char* in_text, const char* in_end)
 {
     static const char lengths[32] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 3, 3, 4, 0 };
     static const int masks[]  = { 0x00, 0x7f, 0x1f, 0x0f, 0x07 };
@@ -2339,16 +2339,16 @@ int ImTextCharFromUtf8(unsigned int* out_char, const char* in_text, const char* 
     int len = lengths[*(const unsigned char*)in_text >> 3];
     int wanted = len + (len ? 0 : 1);
 
-    if (in_text_end == NULL)
-        in_text_end = in_text + wanted; // Max length, nulls will be taken into account.
+    if (in_end == NULL)
+        in_end = in_text + wanted; // Max length, nulls will be taken into account.
 
-    // Copy at most 'len' bytes, stop copying at 0 or past in_text_end. Branch predictor does a good job here,
+    // Copy at most 'len' bytes, stop copying at 0 or past in_end. Branch predictor does a good job here,
     // so it is fast even with excessive branching.
     unsigned char s[4];
-    s[0] = in_text + 0 < in_text_end ? in_text[0] : 0;
-    s[1] = in_text + 1 < in_text_end ? in_text[1] : 0;
-    s[2] = in_text + 2 < in_text_end ? in_text[2] : 0;
-    s[3] = in_text + 3 < in_text_end ? in_text[3] : 0;
+    s[0] = in_text + 0 < in_end ? in_text[0] : 0;
+    s[1] = in_text + 1 < in_end ? in_text[1] : 0;
+    s[2] = in_text + 2 < in_end ? in_text[2] : 0;
+    s[3] = in_text + 3 < in_end ? in_text[3] : 0;
 
     // Assume a four-byte character and load four bytes. Unused bits are shifted out.
     *out_char  = (uint32_t)(s[0] & masks[len]) << 18;
@@ -2370,7 +2370,7 @@ int ImTextCharFromUtf8(unsigned int* out_char, const char* in_text, const char* 
 
     if (e)
     {
-        // No bytes are consumed when *in_text == 0 || in_text == in_text_end.
+        // No bytes are consumed when *in_text == 0 || in_text == in_end.
         // One byte is consumed in case of invalid first byte of in_text.
         // All available bytes (at most `len` bytes) are consumed on incomplete/invalid second to last bytes.
         // Invalid or incomplete input may consume less bytes than wanted, therefore every byte has to be inspected in s.
@@ -2381,29 +2381,29 @@ int ImTextCharFromUtf8(unsigned int* out_char, const char* in_text, const char* 
     return wanted;
 }
 
-int ImTextStrFromUtf8(ImWchar* buf, int buf_size, const char* in_text, const char* in_text_end, const char** in_text_remaining)
+int ImTextStrFromUtf8(ImWchar* buf, int buf_size, const char* in_text, const char* in_end, const char** in_remaining)
 {
     ImWchar* buf_out = buf;
     ImWchar* buf_end = buf + buf_size;
-    while (buf_out < buf_end - 1 && (!in_text_end || in_text < in_text_end) && *in_text)
+    while (buf_out < buf_end - 1 && (!in_end || in_text < in_end) && *in_text)
     {
         unsigned int c;
-        in_text += ImTextCharFromUtf8(&c, in_text, in_text_end);
+        in_text += ImTextCharFromUtf8(&c, in_text, in_end);
         *buf_out++ = (ImWchar)c;
     }
     *buf_out = 0;
-    if (in_text_remaining)
-        *in_text_remaining = in_text;
+    if (in_remaining)
+        *in_remaining = in_text;
     return (int)(buf_out - buf);
 }
 
-int ImTextCountCharsFromUtf8(const char* in_text, const char* in_text_end)
+int ImTextCountCharsFromUtf8(const char* in_text, const char* in_end)
 {
     int char_count = 0;
-    while ((!in_text_end || in_text < in_text_end) && *in_text)
+    while ((!in_end || in_text < in_end) && *in_text)
     {
         unsigned int c;
-        in_text += ImTextCharFromUtf8(&c, in_text, in_text_end);
+        in_text += ImTextCharFromUtf8(&c, in_text, in_end);
         char_count++;
     }
     return char_count;
@@ -2453,10 +2453,10 @@ const char* ImTextCharToUtf8(char out_buf[5], unsigned int c)
 }
 
 // Not optimal but we very rarely use this function.
-int ImTextCountUtf8BytesFromChar(const char* in_text, const char* in_text_end)
+int ImTextCountUtf8BytesFromChar(const char* in_text, const char* in_end)
 {
     unsigned int unused = 0;
-    return ImTextCharFromUtf8(&unused, in_text, in_text_end);
+    return ImTextCharFromUtf8(&unused, in_text, in_end);
 }
 
 static inline int ImTextCountUtf8BytesFromChar(unsigned int c)
@@ -2468,11 +2468,11 @@ static inline int ImTextCountUtf8BytesFromChar(unsigned int c)
     return 3;
 }
 
-int ImTextStrToUtf8(char* out_buf, int out_buf_size, const ImWchar* in_text, const ImWchar* in_text_end)
+int ImTextStrToUtf8(char* out_buf, int out_buf_size, const ImWchar* in_text, const ImWchar* in_end)
 {
     char* buf_p = out_buf;
     const char* buf_end = out_buf + out_buf_size;
-    while (buf_p < buf_end - 1 && (!in_text_end || in_text < in_text_end) && *in_text)
+    while (buf_p < buf_end - 1 && (!in_end || in_text < in_end) && *in_text)
     {
         unsigned int c = (unsigned int)(*in_text++);
         if (c < 0x80)
@@ -2484,10 +2484,10 @@ int ImTextStrToUtf8(char* out_buf, int out_buf_size, const ImWchar* in_text, con
     return (int)(buf_p - out_buf);
 }
 
-int ImTextCountUtf8BytesFromStr(const ImWchar* in_text, const ImWchar* in_text_end)
+int ImTextCountUtf8BytesFromStr(const ImWchar* in_text, const ImWchar* in_end)
 {
     int bytes_count = 0;
-    while ((!in_text_end || in_text < in_text_end) && *in_text)
+    while ((!in_end || in_text < in_end) && *in_text)
     {
         unsigned int c = (unsigned int)(*in_text++);
         if (c < 0x80)
@@ -2498,26 +2498,26 @@ int ImTextCountUtf8BytesFromStr(const ImWchar* in_text, const ImWchar* in_text_e
     return bytes_count;
 }
 
-const char* ImTextFindPreviousUtf8Codepoint(const char* in_text_start, const char* in_text_curr)
+const char* ImTextFindPreviousUtf8Codepoint(const char* in_start, const char* in_curr)
 {
-    while (in_text_curr > in_text_start)
+    while (in_curr > in_start)
     {
-        in_text_curr--;
-        if ((*in_text_curr & 0xC0) != 0x80)
-            return in_text_curr;
+        in_curr--;
+        if ((*in_curr & 0xC0) != 0x80)
+            return in_curr;
     }
-    return in_text_start;
+    return in_start;
 }
 
-int ImTextCountLines(const char* in_text, const char* in_text_end)
+int ImTextCountLines(const char* in_text, const char* in_end)
 {
-    if (in_text_end == NULL)
-        in_text_end = in_text + strlen(in_text); // FIXME-OPT: Not optimal approach, discourage use for now.
+    if (in_end == NULL)
+        in_end = in_text + strlen(in_text); // FIXME-OPT: Not optimal approach, discourage use for now.
     int count = 0;
-    while (in_text < in_text_end)
+    while (in_text < in_end)
     {
-        const char* line_end = (const char*)memchr(in_text, '\n', in_text_end - in_text);
-        in_text = line_end ? line_end + 1 : in_text_end;
+        const char* line_end = (const char*)memchr(in_text, '\n', in_end - in_text);
+        in_text = line_end ? line_end + 1 : in_end;
         count++;
     }
     return count;
@@ -2814,13 +2814,13 @@ void ImGuiTextFilter::Build()
     }
 }
 
-bool ImGuiTextFilter::PassFilter(const char* text, const char* text_end) const
+bool ImGuiTextFilter::PassFilter(const char* text, const char* end) const
 {
     if (Filters.Size == 0)
         return true;
 
     if (text == NULL)
-        text = text_end = "";
+        text = end = "";
 
     for (const ImGuiTextRange& f : Filters)
     {
@@ -2829,13 +2829,13 @@ bool ImGuiTextFilter::PassFilter(const char* text, const char* text_end) const
         if (f.b[0] == '-')
         {
             // Subtract
-            if (ImStristr(text, text_end, f.b + 1, f.e) != NULL)
+            if (ImStristr(text, end, f.b + 1, f.e) != NULL)
                 return false;
         }
         else
         {
             // Grep
-            if (ImStristr(text, text_end, f.b, f.e) != NULL)
+            if (ImStristr(text, end, f.b, f.e) != NULL)
                 return true;
         }
     }
@@ -3502,124 +3502,124 @@ const char* ImGui::GetStyleColorName(ImGuiCol idx)
 // Also see imgui_draw.cpp for some more which have been reworked to not rely on ImGui:: context.
 //-----------------------------------------------------------------------------
 
-const char* ImGui::FindRenderedTextEnd(const char* text, const char* text_end)
+const char* ImGui::FindRenderedTextEnd(const char* text, const char* end)
 {
-    const char* text_display_end = text;
-    if (!text_end)
-        text_end = (const char*)-1;
+    const char* display_end = text;
+    if (!end)
+        end = (const char*)-1;
 
-    while (text_display_end < text_end && *text_display_end != '\0' && (text_display_end[0] != '#' || text_display_end[1] != '#'))
-        text_display_end++;
-    return text_display_end;
+    while (display_end < end && *display_end != '\0' && (display_end[0] != '#' || display_end[1] != '#'))
+        display_end++;
+    return display_end;
 }
 
 // Internal ImGui functions to render text
 // RenderText***() functions calls ImDrawList::AddText() calls ImBitmapFont::RenderText()
-void ImGui::RenderText(ImVec2 pos, const char* text, const char* text_end, bool hide_text_after_hash)
+void ImGui::RenderText(ImVec2 pos, const char* text, const char* end, bool hide_after_hash)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
 
     // Hide anything after a '##' string
-    const char* text_display_end;
-    if (hide_text_after_hash)
+    const char* display_end;
+    if (hide_after_hash)
     {
-        text_display_end = FindRenderedTextEnd(text, text_end);
+        display_end = FindRenderedTextEnd(text, end);
     }
     else
     {
-        if (!text_end)
-            text_end = text + strlen(text); // FIXME-OPT
-        text_display_end = text_end;
+        if (!end)
+            end = text + strlen(text); // FIXME-OPT
+        display_end = end;
     }
 
-    if (text != text_display_end)
+    if (text != display_end)
     {
-        window->DrawList->AddText(g.Font, g.FontSize, pos, GetColorU32(ImGuiCol_Text), text, text_display_end);
+        window->DrawList->AddText(g.Font, g.FontSize, pos, GetColorU32(ImGuiCol_Text), text, display_end);
         if (g.LogEnabled)
-            LogRenderedText(&pos, text, text_display_end);
+            LogRenderedText(&pos, text, display_end);
     }
 }
 
-void ImGui::RenderTextWrapped(ImVec2 pos, const char* text, const char* text_end, float wrap_width)
+void ImGui::RenderTextWrapped(ImVec2 pos, const char* text, const char* end, float wrap_width)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
 
-    if (!text_end)
-        text_end = text + strlen(text); // FIXME-OPT
+    if (!end)
+        end = text + strlen(text); // FIXME-OPT
 
-    if (text != text_end)
+    if (text != end)
     {
-        window->DrawList->AddText(g.Font, g.FontSize, pos, GetColorU32(ImGuiCol_Text), text, text_end, wrap_width);
+        window->DrawList->AddText(g.Font, g.FontSize, pos, GetColorU32(ImGuiCol_Text), text, end, wrap_width);
         if (g.LogEnabled)
-            LogRenderedText(&pos, text, text_end);
+            LogRenderedText(&pos, text, end);
     }
 }
 
 // Default clip_rect uses (pos_min,pos_max)
 // Handle clipping on CPU immediately (vs typically let the GPU clip the triangles that are overlapping the clipping rectangle edges)
-// FIXME-OPT: Since we have or calculate text_size we could coarse clip whole block immediately, especally for text above draw_list->DrawList.
+// FIXME-OPT: Since we have or calculate size we could coarse clip whole block immediately, especally for text above draw_list->DrawList.
 // Effectively as this is called from widget doing their own coarse clipping it's not very valuable presently. Next time function will take
 // better advantage of the render function taking size into account for coarse clipping.
-void ImGui::RenderTextClippedEx(ImDrawList* draw_list, const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* text_display_end, const ImVec2* text_size_if_known, const ImVec2& align, const ImRect* clip_rect)
+void ImGui::RenderTextClippedEx(ImDrawList* draw_list, const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* display_end, const ImVec2* size_if_known, const ImVec2& align, const ImRect* clip_rect)
 {
     // Perform CPU side clipping for single clipped element to avoid using scissor state
     ImVec2 pos = pos_min;
-    const ImVec2 text_size = text_size_if_known ? *text_size_if_known : CalcTextSize(text, text_display_end, false, 0.0f);
+    const ImVec2 size = size_if_known ? *size_if_known : CalcTextSize(text, display_end, false, 0.0f);
 
     const ImVec2* clip_min = clip_rect ? &clip_rect->Min : &pos_min;
     const ImVec2* clip_max = clip_rect ? &clip_rect->Max : &pos_max;
-    bool need_clipping = (pos.x + text_size.x >= clip_max->x) || (pos.y + text_size.y >= clip_max->y);
+    bool need_clipping = (pos.x + size.x >= clip_max->x) || (pos.y + size.y >= clip_max->y);
     if (clip_rect) // If we had no explicit clipping rectangle then pos==clip_min
         need_clipping |= (pos.x < clip_min->x) || (pos.y < clip_min->y);
 
     // Align whole block. We should defer that to the better rendering function when we'll have support for individual line alignment.
-    if (align.x > 0.0f) pos.x = ImMax(pos.x, pos.x + (pos_max.x - pos.x - text_size.x) * align.x);
-    if (align.y > 0.0f) pos.y = ImMax(pos.y, pos.y + (pos_max.y - pos.y - text_size.y) * align.y);
+    if (align.x > 0.0f) pos.x = ImMax(pos.x, pos.x + (pos_max.x - pos.x - size.x) * align.x);
+    if (align.y > 0.0f) pos.y = ImMax(pos.y, pos.y + (pos_max.y - pos.y - size.y) * align.y);
 
     // Render
     if (need_clipping)
     {
         ImVec4 fine_clip_rect(clip_min->x, clip_min->y, clip_max->x, clip_max->y);
-        draw_list->AddText(NULL, 0.0f, pos, GetColorU32(ImGuiCol_Text), text, text_display_end, 0.0f, &fine_clip_rect);
+        draw_list->AddText(NULL, 0.0f, pos, GetColorU32(ImGuiCol_Text), text, display_end, 0.0f, &fine_clip_rect);
     }
     else
     {
-        draw_list->AddText(NULL, 0.0f, pos, GetColorU32(ImGuiCol_Text), text, text_display_end, 0.0f, NULL);
+        draw_list->AddText(NULL, 0.0f, pos, GetColorU32(ImGuiCol_Text), text, display_end, 0.0f, NULL);
     }
 }
 
-void ImGui::RenderTextClipped(const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* text_end, const ImVec2* text_size_if_known, const ImVec2& align, const ImRect* clip_rect)
+void ImGui::RenderTextClipped(const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* end, const ImVec2* size_if_known, const ImVec2& align, const ImRect* clip_rect)
 {
     // Hide anything after a '##' string
-    const char* text_display_end = FindRenderedTextEnd(text, text_end);
-    const int text_len = (int)(text_display_end - text);
-    if (text_len == 0)
+    const char* display_end = FindRenderedTextEnd(text, end);
+    const int len = (int)(display_end - text);
+    if (len == 0)
         return;
 
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
-    RenderTextClippedEx(window->DrawList, pos_min, pos_max, text, text_display_end, text_size_if_known, align, clip_rect);
+    RenderTextClippedEx(window->DrawList, pos_min, pos_max, text, display_end, size_if_known, align, clip_rect);
     if (g.LogEnabled)
-        LogRenderedText(&pos_min, text, text_display_end);
+        LogRenderedText(&pos_min, text, display_end);
 }
 
 // Another overly complex function until we reorganize everything into a nice all-in-one helper.
 // This is made more complex because we have dissociated the layout rectangle (pos_min..pos_max) which define _where_ the ellipsis is, from actual clipping of text and limit of the ellipsis display.
 // This is because in the context of tabs we selectively hide part of the text when the Close Button appears, but we don't want the ellipsis to move.
-void ImGui::RenderTextEllipsis(ImDrawList* draw_list, const ImVec2& pos_min, const ImVec2& pos_max, float clip_max_x, float ellipsis_max_x, const char* text, const char* text_end_full, const ImVec2* text_size_if_known)
+void ImGui::RenderTextEllipsis(ImDrawList* draw_list, const ImVec2& pos_min, const ImVec2& pos_max, float clip_max_x, float ellipsis_max_x, const char* text, const char* end_full, const ImVec2* size_if_known)
 {
     ImGuiContext& g = *GImGui;
-    if (text_end_full == NULL)
-        text_end_full = FindRenderedTextEnd(text);
-    const ImVec2 text_size = text_size_if_known ? *text_size_if_known : CalcTextSize(text, text_end_full, false, 0.0f);
+    if (end_full == NULL)
+        end_full = FindRenderedTextEnd(text);
+    const ImVec2 size = size_if_known ? *size_if_known : CalcTextSize(text, end_full, false, 0.0f);
 
     //draw_list->AddLine(ImVec2(pos_max.x, pos_min.y - 4), ImVec2(pos_max.x, pos_max.y + 4), IM_COL32(0, 0, 255, 255));
     //draw_list->AddLine(ImVec2(ellipsis_max_x, pos_min.y-2), ImVec2(ellipsis_max_x, pos_max.y+2), IM_COL32(0, 255, 0, 255));
     //draw_list->AddLine(ImVec2(clip_max_x, pos_min.y), ImVec2(clip_max_x, pos_max.y), IM_COL32(255, 0, 0, 255));
-    // FIXME: We could technically remove (last_glyph->AdvanceX - last_glyph->X1) from text_size.x here and save a few pixels.
-    if (text_size.x > pos_max.x - pos_min.x)
+    // FIXME: We could technically remove (last_glyph->AdvanceX - last_glyph->X1) from size.x here and save a few pixels.
+    if (size.x > pos_max.x - pos_min.x)
     {
         // Hello wo...
         // |       |   |
@@ -3629,39 +3629,39 @@ void ImGui::RenderTextEllipsis(ImDrawList* draw_list, const ImVec2& pos_min, con
         const ImFont* font = draw_list->_Data->Font;
         const float font_size = draw_list->_Data->FontSize;
         const float font_scale = draw_list->_Data->FontScale;
-        const char* text_end_ellipsis = NULL;
+        const char* end_ellipsis = NULL;
         const float ellipsis_width = font->EllipsisWidth * font_scale;
 
         // We can now claim the space between pos_max.x and ellipsis_max.x
-        const float text_avail_width = ImMax((ImMax(pos_max.x, ellipsis_max_x) - ellipsis_width) - pos_min.x, 1.0f);
-        float text_size_clipped_x = font->CalcTextSizeA(font_size, text_avail_width, 0.0f, text, text_end_full, &text_end_ellipsis).x;
-        if (text == text_end_ellipsis && text_end_ellipsis < text_end_full)
+        const float avail_width = ImMax((ImMax(pos_max.x, ellipsis_max_x) - ellipsis_width) - pos_min.x, 1.0f);
+        float size_clipped_x = font->CalcTextSizeA(font_size, avail_width, 0.0f, text, end_full, &end_ellipsis).x;
+        if (text == end_ellipsis && end_ellipsis < end_full)
         {
             // Always display at least 1 character if there's no room for character + ellipsis
-            text_end_ellipsis = text + ImTextCountUtf8BytesFromChar(text, text_end_full);
-            text_size_clipped_x = font->CalcTextSizeA(font_size, FLT_MAX, 0.0f, text, text_end_ellipsis).x;
+            end_ellipsis = text + ImTextCountUtf8BytesFromChar(text, end_full);
+            size_clipped_x = font->CalcTextSizeA(font_size, FLT_MAX, 0.0f, text, end_ellipsis).x;
         }
-        while (text_end_ellipsis > text && ImCharIsBlankA(text_end_ellipsis[-1]))
+        while (end_ellipsis > text && ImCharIsBlankA(end_ellipsis[-1]))
         {
             // Trim trailing space before ellipsis (FIXME: Supporting non-ascii blanks would be nice, for this we need a function to backtrack in UTF-8 text)
-            text_end_ellipsis--;
-            text_size_clipped_x -= font->CalcTextSizeA(font_size, FLT_MAX, 0.0f, text_end_ellipsis, text_end_ellipsis + 1).x; // Ascii blanks are always 1 byte
+            end_ellipsis--;
+            size_clipped_x -= font->CalcTextSizeA(font_size, FLT_MAX, 0.0f, end_ellipsis, end_ellipsis + 1).x; // Ascii blanks are always 1 byte
         }
 
         // Render text, render ellipsis
-        RenderTextClippedEx(draw_list, pos_min, ImVec2(clip_max_x, pos_max.y), text, text_end_ellipsis, &text_size, ImVec2(0.0f, 0.0f));
-        ImVec2 ellipsis_pos = ImTrunc(ImVec2(pos_min.x + text_size_clipped_x, pos_min.y));
+        RenderTextClippedEx(draw_list, pos_min, ImVec2(clip_max_x, pos_max.y), text, end_ellipsis, &size, ImVec2(0.0f, 0.0f));
+        ImVec2 ellipsis_pos = ImTrunc(ImVec2(pos_min.x + size_clipped_x, pos_min.y));
         if (ellipsis_pos.x + ellipsis_width <= ellipsis_max_x)
             for (int i = 0; i < font->EllipsisCharCount; i++, ellipsis_pos.x += font->EllipsisCharStep * font_scale)
                 font->RenderChar(draw_list, font_size, ellipsis_pos, GetColorU32(ImGuiCol_Text), font->EllipsisChar);
     }
     else
     {
-        RenderTextClippedEx(draw_list, pos_min, ImVec2(clip_max_x, pos_max.y), text, text_end_full, &text_size, ImVec2(0.0f, 0.0f));
+        RenderTextClippedEx(draw_list, pos_min, ImVec2(clip_max_x, pos_max.y), text, end_full, &size, ImVec2(0.0f, 0.0f));
     }
 
     if (g.LogEnabled)
-        LogRenderedText(&pos_min, text, text_end_full);
+        LogRenderedText(&pos_min, text, end_full);
 }
 
 // Render a rectangle shaped with optional rounding and borders
@@ -3761,8 +3761,8 @@ ImGuiContext* ImGui::GetCurrentContext()
 
 void ImGui::SetCurrentContext(ImGuiContext* ctx)
 {
-#ifdef IMGUI_SET_CURRENT_CONTEXT_FUNC
-    IMGUI_SET_CURRENT_CONTEXT_FUNC(ctx); // For custom thread-based hackery you may want to have control over this.
+#ifdef IMGUI_SET_CURRENT_CONFUNC
+    IMGUI_SET_CURRENT_CONFUNC(ctx); // For custom thread-based hackery you may want to have control over this.
 #else
     GImGui = ctx;
 #endif
@@ -5577,30 +5577,30 @@ void ImGui::Render()
 
 // Calculate text size. Text can be multi-line. Optionally ignore text after a ## marker.
 // CalcTextSize("") should return ImVec2(0.0f, g.FontSize)
-ImVec2 ImGui::CalcTextSize(const char* text, const char* text_end, bool hide_text_after_double_hash, float wrap_width)
+ImVec2 ImGui::CalcTextSize(const char* text, const char* end, bool hide_after_double_hash, float wrap_width)
 {
     ImGuiContext& g = *GImGui;
 
-    const char* text_display_end;
-    if (hide_text_after_double_hash)
-        text_display_end = FindRenderedTextEnd(text, text_end);      // Hide anything after a '##' string
+    const char* display_end;
+    if (hide_after_double_hash)
+        display_end = FindRenderedTextEnd(text, end);      // Hide anything after a '##' string
     else
-        text_display_end = text_end;
+        display_end = end;
 
     ImFont* font = g.Font;
     const float font_size = g.FontSize;
-    if (text == text_display_end)
+    if (text == display_end)
         return ImVec2(0.0f, font_size);
-    ImVec2 text_size = font->CalcTextSizeA(font_size, FLT_MAX, wrap_width, text, text_display_end, NULL);
+    ImVec2 size = font->CalcTextSizeA(font_size, FLT_MAX, wrap_width, text, display_end, NULL);
 
     // Round
     // FIXME: This has been here since Dec 2015 (7b0bf230) but down the line we want this out.
     // FIXME: Investigate using ceilf or e.g.
     // - https://git.musl-libc.org/cgit/musl/tree/src/math/ceilf.c
     // - https://embarkstudios.github.io/rust-gpu/api/src/libm/math/ceilf.rs.html
-    text_size.x = IM_TRUNC(text_size.x + 0.99999f);
+    size.x = IM_TRUNC(size.x + 0.99999f);
 
-    return text_size;
+    return size;
 }
 
 // Find window given position, search front-to-back
@@ -6846,7 +6846,7 @@ void ImGui::RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& titl
     // Title bar text (with: horizontal alignment, avoiding collapse/close button, optional "unsaved document" marker)
     // FIXME: Refactor text alignment facilities along with RenderText helpers, this is WAY too much messy code..
     const float marker_size_x = (flags & ImGuiWindowFlags_UnsavedDocument) ? button_sz * 0.80f : 0.0f;
-    const ImVec2 text_size = CalcTextSize(name, NULL, true) + ImVec2(marker_size_x, 0.0f);
+    const ImVec2 size = CalcTextSize(name, NULL, true) + ImVec2(marker_size_x, 0.0f);
 
     // As a nice touch we try to ensure that centered title text doesn't get affected by visibility of Close/Collapse button,
     // while uncentered title text will still reach edges correctly.
@@ -6857,7 +6857,7 @@ void ImGui::RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& titl
     if (style.WindowTitleAlign.x > 0.0f && style.WindowTitleAlign.x < 1.0f)
     {
         float centerness = ImSaturate(1.0f - ImFabs(style.WindowTitleAlign.x - 0.5f) * 2.0f); // 0.0f on either edges, 1.0f on center
-        float pad_extend = ImMin(ImMax(pad_l, pad_r), title_bar_rect.GetWidth() - pad_l - pad_r - text_size.x);
+        float pad_extend = ImMin(ImMax(pad_l, pad_r), title_bar_rect.GetWidth() - pad_l - pad_r - size.x);
         pad_l = ImMax(pad_l, pad_extend * centerness);
         pad_r = ImMax(pad_r, pad_extend * centerness);
     }
@@ -6867,7 +6867,7 @@ void ImGui::RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& titl
     if (flags & ImGuiWindowFlags_UnsavedDocument)
     {
         ImVec2 marker_pos;
-        marker_pos.x = ImClamp(layout_r.Min.x + (layout_r.GetWidth() - text_size.x) * style.WindowTitleAlign.x + text_size.x, layout_r.Min.x, layout_r.Max.x);
+        marker_pos.x = ImClamp(layout_r.Min.x + (layout_r.GetWidth() - size.x) * style.WindowTitleAlign.x + size.x, layout_r.Min.x, layout_r.Max.x);
         marker_pos.y = (layout_r.Min.y + layout_r.Max.y) * 0.5f;
         if (marker_pos.x > layout_r.Min.x)
         {
@@ -6877,7 +6877,7 @@ void ImGui::RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& titl
     }
     //if (g.IO.KeyShift) window->DrawList->AddRect(layout_r.Min, layout_r.Max, IM_COL32(255, 128, 0, 255)); // [DEBUG]
     //if (g.IO.KeyCtrl) window->DrawList->AddRect(clip_r.Min, clip_r.Max, IM_COL32(255, 128, 0, 255)); // [DEBUG]
-    RenderTextClipped(layout_r.Min, layout_r.Max, name, NULL, &text_size, style.WindowTitleAlign, &clip_r);
+    RenderTextClipped(layout_r.Min, layout_r.Max, name, NULL, &size, style.WindowTitleAlign, &clip_r);
 }
 
 void ImGui::UpdateWindowParentAndRootLinks(ImGuiWindow* window, ImGuiWindowFlags flags, ImGuiWindow* parent_window)
@@ -10256,7 +10256,7 @@ void ImGui::UpdateInputEvents(bool trickle_fast_inputs)
     // FIXME: Could specialize chars<>keys trickling rules for control keys (those not typically associated to characters)
     const bool trickle_interleaved_keys_and_text = (trickle_fast_inputs && g.WantTextInputNextFrame == 1);
 
-    bool mouse_moved = false, mouse_wheeled = false, key_changed = false, text_inputted = false;
+    bool mouse_moved = false, mouse_wheeled = false, key_changed = false, inputted = false;
     int  mouse_button_changed = 0x00;
     ImBitArray<ImGuiKey_KeysData_SIZE> key_changed_mask;
 
@@ -10270,7 +10270,7 @@ void ImGui::UpdateInputEvents(bool trickle_fast_inputs)
                 continue;
             // Trickling Rule: Stop processing queued events if we already handled a mouse button change
             ImVec2 event_pos(e->MousePos.PosX, e->MousePos.PosY);
-            if (trickle_fast_inputs && (mouse_button_changed != 0 || mouse_wheeled || key_changed || text_inputted))
+            if (trickle_fast_inputs && (mouse_button_changed != 0 || mouse_wheeled || key_changed || inputted))
                 break;
             io.MousePos = event_pos;
             io.MouseSource = e->MousePos.MouseSource;
@@ -10312,7 +10312,7 @@ void ImGui::UpdateInputEvents(bool trickle_fast_inputs)
             IM_ASSERT(key != ImGuiKey_None);
             ImGuiKeyData* key_data = GetKeyData(key);
             const int key_data_index = (int)(key_data - g.IO.KeysData);
-            if (trickle_fast_inputs && key_data->Down != e->Key.Down && (key_changed_mask.TestBit(key_data_index) || text_inputted || mouse_button_changed != 0))
+            if (trickle_fast_inputs && key_data->Down != e->Key.Down && (key_changed_mask.TestBit(key_data_index) || inputted || mouse_button_changed != 0))
                 break;
             key_data->Down = e->Key.Down;
             key_data->AnalogValue = e->Key.AnalogValue;
@@ -10336,7 +10336,7 @@ void ImGui::UpdateInputEvents(bool trickle_fast_inputs)
             unsigned int c = e->Text.Char;
             io.InputQueueCharacters.push_back(c <= IM_UNICODE_CODEPOINT_MAX ? (ImWchar)c : IM_UNICODE_CODEPOINT_INVALID);
             if (trickle_interleaved_keys_and_text)
-                text_inputted = true;
+                inputted = true;
         }
         else if (e->Type == ImGuiInputEventType_Focus)
         {
@@ -11050,7 +11050,7 @@ IM_MSVC_RUNTIME_CHECKS_RESTORE
 // See comments in ItemAdd() about how/why the size provided to ItemSize() vs ItemAdd() may often different.
 // THIS IS IN THE PERFORMANCE CRITICAL PATH.
 IM_MSVC_RUNTIME_CHECKS_OFF
-void ImGui::ItemSize(const ImVec2& size, float text_baseline_y)
+void ImGui::ItemSize(const ImVec2& size, float baseline_y)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -11060,7 +11060,7 @@ void ImGui::ItemSize(const ImVec2& size, float text_baseline_y)
     // We increase the height in this function to accommodate for baseline offset.
     // In theory we should be offsetting the starting position (window->DC.CursorPos), that will be the topic of a larger refactor,
     // but since ItemSize() is not yet an API that moves the cursor (to handle e.g. wrapping) enlarging the height has the same effect.
-    const float offset_to_match_baseline_y = (text_baseline_y >= 0) ? ImMax(0.0f, window->DC.CurrLineTextBaseOffset - text_baseline_y) : 0.0f;
+    const float offset_to_match_baseline_y = (baseline_y >= 0) ? ImMax(0.0f, window->DC.CurrLineTextBaseOffset - baseline_y) : 0.0f;
 
     const float line_y1 = window->DC.IsSameLine ? window->DC.CursorPosPrevLine.y : window->DC.CursorPos.y;
     const float line_height = ImMax(window->DC.CurrLineSize.y, /*ImMax(*/window->DC.CursorPos.y - line_y1/*, 0.0f)*/ + size.y + offset_to_match_baseline_y);
@@ -11077,7 +11077,7 @@ void ImGui::ItemSize(const ImVec2& size, float text_baseline_y)
 
     window->DC.PrevLineSize.y = line_height;
     window->DC.CurrLineSize.y = 0.0f;
-    window->DC.PrevLineTextBaseOffset = ImMax(window->DC.CurrLineTextBaseOffset, text_baseline_y);
+    window->DC.PrevLineTextBaseOffset = ImMax(window->DC.CurrLineTextBaseOffset, baseline_y);
     window->DC.CurrLineTextBaseOffset = 0.0f;
     window->DC.IsSameLine = window->DC.IsSetPos = false;
 
@@ -14358,7 +14358,7 @@ void ImGui::LogTextV(const char* fmt, va_list args)
 // Internal version that takes a position to decide on newline placement and pad items according to their depth.
 // We split text into individual lines to add current tree level padding
 // FIXME: This code is a little complicated perhaps, considering simplifying the whole system.
-void ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char* text_end)
+void ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char* end)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -14367,8 +14367,8 @@ void ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char*
     const char* suffix = g.LogNextSuffix;
     g.LogNextPrefix = g.LogNextSuffix = NULL;
 
-    if (!text_end)
-        text_end = FindRenderedTextEnd(text, text_end);
+    if (!end)
+        end = FindRenderedTextEnd(text, end);
 
     const bool log_new_line = ref_pos && (ref_pos->y > g.LogLinePosY + g.Style.FramePadding.y + 1);
     if (ref_pos)
@@ -14387,14 +14387,14 @@ void ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char*
         g.LogDepthRef = window->DC.TreeDepth;
     const int tree_depth = (window->DC.TreeDepth - g.LogDepthRef);
 
-    const char* text_remaining = text;
+    const char* remaining = text;
     for (;;)
     {
         // Split the string. Each new line (after a '\n') is followed by indentation corresponding to the current depth of our log entry.
         // We don't add a trailing \n yet to allow a subsequent item on the same line to be captured.
-        const char* line_start = text_remaining;
-        const char* line_end = ImStreolRange(line_start, text_end);
-        const bool is_last_line = (line_end == text_end);
+        const char* line_start = remaining;
+        const char* line_end = ImStreolRange(line_start, end);
+        const bool is_last_line = (line_end == end);
         if (line_start != line_end || !is_last_line)
         {
             const int line_length = (int)(line_end - line_start);
@@ -14409,7 +14409,7 @@ void ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char*
         }
         if (is_last_line)
             break;
-        text_remaining = line_end + 1;
+        remaining = line_end + 1;
     }
 
     if (suffix)
@@ -20042,10 +20042,10 @@ static void SetClipboardTextFn_DefaultImpl(void* user_data_ctx, const char* text
 {
     ImGuiContext& g = *(ImGuiContext*)user_data_ctx;
     g.ClipboardHandlerData.clear();
-    const char* text_end = text + strlen(text);
-    g.ClipboardHandlerData.resize((int)(text_end - text) + 1);
-    memcpy(&g.ClipboardHandlerData[0], text, (size_t)(text_end - text));
-    g.ClipboardHandlerData[(int)(text_end - text)] = 0;
+    const char* end = text + strlen(text);
+    g.ClipboardHandlerData.resize((int)(end - text) + 1);
+    memcpy(&g.ClipboardHandlerData[0], text, (size_t)(end - text));
+    g.ClipboardHandlerData[(int)(end - text)] = 0;
 }
 
 #endif // Default clipboard handlers
@@ -21810,7 +21810,7 @@ void ImGui::DebugTextUnformattedWithLocateItem(const char* line_begin, const cha
     if (!IsItemHovered())
         return;
     ImGuiContext& g = *GImGui;
-    ImRect text_rect = g.LastItemData.Rect;
+    ImRect rect = g.LastItemData.Rect;
     for (const char* p = line_begin; p <= line_end - 10; p++)
     {
         ImGuiID id = 0;
@@ -21818,7 +21818,7 @@ void ImGui::DebugTextUnformattedWithLocateItem(const char* line_begin, const cha
             continue;
         ImVec2 p0 = CalcTextSize(line_begin, p);
         ImVec2 p1 = CalcTextSize(p, p + 10);
-        g.LastItemData.Rect = ImRect(text_rect.Min + ImVec2(p0.x, 0.0f), text_rect.Min + ImVec2(p0.x + p1.x, p1.y));
+        g.LastItemData.Rect = ImRect(rect.Min + ImVec2(p0.x, 0.0f), rect.Min + ImVec2(p0.x + p1.x, p1.y));
         if (IsMouseHoveringRect(g.LastItemData.Rect.Min, g.LastItemData.Rect.Max, true))
             DebugLocateItemOnHover(id);
         p += 10;

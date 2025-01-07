@@ -5,7 +5,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <winver.h>
-#include "ProcessInfo.h"
+#include "Process.h"
 
 
 class FileAttributeManager

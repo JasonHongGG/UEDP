@@ -2587,10 +2587,10 @@ void ImGui::TableMergeDrawChannels(ImGuiTable* table)
                 continue;
             char buf[32];
             ImFormatString(buf, 32, "MG%d:%d", merge_group_n, merge_group->ChannelsCount);
-            ImVec2 text_pos = merge_group->ClipRect.Min + ImVec2(4, 4);
-            ImVec2 text_size = CalcTextSize(buf, NULL);
-            GetForegroundDrawList()->AddRectFilled(text_pos, text_pos + text_size, IM_COL32(0, 0, 0, 255));
-            GetForegroundDrawList()->AddText(text_pos, IM_COL32(255, 255, 0, 255), buf, NULL);
+            ImVec2 pos = merge_group->ClipRect.Min + ImVec2(4, 4);
+            ImVec2 size = CalcTextSize(buf, NULL);
+            GetForegroundDrawList()->AddRectFilled(pos, pos + size, IM_COL32(0, 0, 0, 255));
+            GetForegroundDrawList()->AddText(pos, IM_COL32(255, 255, 0, 255), buf, NULL);
             GetForegroundDrawList()->AddRect(merge_group->ClipRect.Min, merge_group->ClipRect.Max, IM_COL32(255, 255, 0, 255));
         }
 #endif
@@ -3181,8 +3181,8 @@ void ImGui::TableHeader(const char* label)
     //window->DrawList->AddCircleFilled(ImVec2(ellipsis_max, label_pos.y), 40, IM_COL32_WHITE);
     RenderTextEllipsis(window->DrawList, label_pos, ImVec2(ellipsis_max, label_pos.y + label_height + g.Style.FramePadding.y), ellipsis_max, ellipsis_max, label, label_end, &label_size);
 
-    const bool text_clipped = label_size.x > (ellipsis_max - label_pos.x);
-    if (text_clipped && hovered && g.ActiveId == 0)
+    const bool clipped = label_size.x > (ellipsis_max - label_pos.x);
+    if (clipped && hovered && g.ActiveId == 0)
         SetItemTooltip("%.*s", (int)(label_end - label), label);
 
     // We don't use BeginPopupContextItem() because we want the popup to stay up even after the column is hidden
@@ -3383,8 +3383,8 @@ void ImGui::TableOpenContextMenu(int column_n)
         table->IsContextPopupOpen = true;
         table->ContextPopupColumn = (ImGuiTableColumnIdx)column_n;
         table->InstanceInteracted = table->InstanceCurrent;
-        const ImGuiID context_menu_id = ImHashStr("##ContextMenu", 0, table->ID);
-        OpenPopupEx(context_menu_id, ImGuiPopupFlags_None);
+        const ImGuiID conmenu_id = ImHashStr("##ContextMenu", 0, table->ID);
+        OpenPopupEx(conmenu_id, ImGuiPopupFlags_None);
     }
 }
 
@@ -3392,8 +3392,8 @@ bool ImGui::TableBeginContextMenuPopup(ImGuiTable* table)
 {
     if (!table->IsContextPopupOpen || table->InstanceCurrent != table->InstanceInteracted)
         return false;
-    const ImGuiID context_menu_id = ImHashStr("##ContextMenu", 0, table->ID);
-    if (BeginPopupEx(context_menu_id, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings))
+    const ImGuiID conmenu_id = ImHashStr("##ContextMenu", 0, table->ID);
+    if (BeginPopupEx(conmenu_id, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings))
         return true;
     table->IsContextPopupOpen = false;
     return false;

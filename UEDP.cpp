@@ -3,7 +3,7 @@
 #include <iostream>
 #include <thread>
 
-//#include "gui/overlay.h"
+#include "GUI/Overlay.h"
 #include "background/entry.h"
 
 
@@ -15,9 +15,9 @@
 int main() {
 
 	// ==========  Overlay  ==========
-	//std::thread GUI([&]() { OverlayMgr.setup(); });
+	std::thread GUI([&]() { OverlayMgr.Setup(); });
 	std::thread background([&]() { Background.SetUp(); });	
-	//GUI.join();
+	GUI.join();
 	background.join();
 
 	std::cout << "\n[ All Execution Completed : Safe Exit ]\n";
