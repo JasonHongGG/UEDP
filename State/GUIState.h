@@ -9,6 +9,7 @@ struct MainMenuStateManager
 	bool FocusOnMainMenu = false;
 	bool FocusOnMenuSideBar = false;
 	bool ShowSideBarWhenFocusMainMenu = false;
+	bool ShowMainMenuWhenFocusSideBar = false;
 
 	ProcessState OpenProcess = ProcessState::Idle;
 	ProcessState CloseProcess = ProcessState::Idle;

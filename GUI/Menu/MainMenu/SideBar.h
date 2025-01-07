@@ -12,6 +12,7 @@
 namespace SideBar
 {
 	inline MainMenuCurPage* PageID = nullptr;
+	inline static bool LastSideBarFocusIsFalse = false;
 
 	void ButtonShadow(bool IsFilled, ImVec4 Color, ImVec2 CursorPos, ImVec2 ButtonSize, float FramePadding = 0);
 
@@ -92,11 +93,24 @@ void SideBar::MenuSideBarComponent(std::string Name, MainMenuCurPage Type, ImVec
 
 void SideBar::StateUpdate()
 {
+	LastSideBarFocusIsFalse = (!MainMenuState.FocusOnMenuSideBar) ? true : false;
 	MainMenuState.FocusOnMenuSideBar = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+
+	if (MainMenuState.FocusOnMenuSideBar and LastSideBarFocusIsFalse) {
+		if (!MainMenuState.FocusOnMainMenu)
+			MainMenuState.ShowMainMenuWhenFocusSideBar = true;
+	}
 }
 
 void SideBar::FocusUpdate()
 {
+	if (MainMenuState.ShowMainMenuWhenFocusSideBar) {
+		ImGui::SetWindowFocus("Jason Hong");
+		ImGui::SetWindowFocus("MenuSideBar");
+		MainMenuState.ShowMainMenuWhenFocusSideBar = false;
+	}
+
+
 	if (MainMenuState.ShowSideBarWhenFocusMainMenu) {
 		ImGui::SetWindowFocus("MenuSideBar");
 	}
