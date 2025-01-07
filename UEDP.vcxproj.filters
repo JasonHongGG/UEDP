@@ -311,10 +311,16 @@
     <ClInclude Include="GUI\Menu\MainMenu\SideBar.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\Config\LogConfig.h">
+    <ClInclude Include="GUI\Config\LogoConfig.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Config\StyleConfig.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\SelectProcessWindow.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Config\SelectProcessWindowConfig.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

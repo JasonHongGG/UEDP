@@ -2,7 +2,7 @@
 #include "../../Config/MainMenuConfig.h"
 #include "../../Config/FontConfig.h"
 #include "../../Config/ColorConfig.h"
-#include "../../Config/LogConfig.h"
+#include "../../Config/LogoConfig.h"
 #include "../../Config/StyleConfig.h"
 
 #include "../../../State/GUIState.h"
@@ -66,14 +66,14 @@ void SideBar::MenuSideBarComponent(std::string Name, MainMenuCurPage Type, ImVec
 {
 	static ImGuiStyle* StyleMgr = &ImGui::GetStyle();
 	static bool ColorState = false;
-	ColorState = (*PageID == Type or (Type == MainMenuCurPage::DumperConsole and UEDumperConsole.ShowUEDumperConsole));
+	ColorState = (*PageID == Type or (Type == MainMenuCurPage::DumperConsole and UEDumperConsole.OpenUEDumperConsole));
 	ImVec2 CursorPos = ImGui::GetCursorPos();
 
 	ImGui::DummySpace();
 	if (ColorState) Style::ActivateBtnStyleSwitch(true);
 	if (ImGui::CenterButton(Name.c_str(), ButtonSize)) {
 		if (Type == MainMenuCurPage::DumperConsole)
-			UEDumperConsole.ShowUEDumperConsole = !UEDumperConsole.ShowUEDumperConsole;
+			UEDumperConsole.OpenUEDumperConsole = !UEDumperConsole.OpenUEDumperConsole;
 		else if (Type == MainMenuCurPage::Quit)
 			MainMenuState.CloseProcess = ProcessState::Start;
 		else

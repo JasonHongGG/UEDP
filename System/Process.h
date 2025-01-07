@@ -16,14 +16,14 @@ public:
 
 
     // Parameter
-    ProcessInfo infoMgr;
-    ProcessModule moduleMgr;
-    ProcessWindow windowMgr;
+    ProcessInfo InfoMgr;
+    ProcessModule ModuleMgr;
+    ProcessWindow WindowMgr;
 
     Process() {
-        infoMgr = ProcessInfo();
-        moduleMgr = ProcessModule();
-        windowMgr = ProcessWindow();
+        InfoMgr = ProcessInfo();
+        ModuleMgr = ProcessModule();
+        WindowMgr = ProcessWindow();
     }
     ~Process() {}
 private:

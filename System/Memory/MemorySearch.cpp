@@ -123,7 +123,7 @@ BOOL MemorySearch::PatternSearch(BYTE* bSearchData, int nSearchSize, DWORD_PTR d
 int MemorySearch::AOBSCAN(BYTE bTargetBytes[], size_t bytesSize, std::vector<DWORD_PTR>& result, bool scanAllRegion, bool alignSearch)
 {
     // ScanAllRegion : 搜尋所有記憶體範圍，否則 Default 是 Main Module 的 Memory Region
-    size_t moduleSize = scanAllRegion ? 0x00007fffffffffff : ProcMgr.moduleMgr.GetModuleSize(ProcessInfo::hProcess, ProcessModule::hMainMoudle);
+    size_t moduleSize = scanAllRegion ? 0x00007fffffffffff : ProcMgr.ModuleMgr.GetModuleSize(ProcessInfo::hProcess, ProcessModule::hMainMoudle);
     DWORD_PTR startAddress = scanAllRegion ? 0x0000000000000000 : (DWORD_PTR)ProcessModule::hMainMoudle;
     DWORD_PTR endAddress = startAddress + moduleSize;
     PatternSearch(bTargetBytes, bytesSize, startAddress, endAddress, false, 2, alignSearch, result);     //只有 0、2 可以支援 "??" 未知 bytes 表示式     ，且 2 比較快

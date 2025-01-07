@@ -16,11 +16,6 @@ enum class MainMenuCurPage
 
 struct MainMenuConfig
 {
-	// Window
-	int WindowTitleSelectIndex = 0;
-	std::vector<std::string> WindowTitleList = { "None" };
-
-
 	//Dumper Console
 	ProcessState DumperGlobalExecution = ProcessState::Idle;		// 目前只有 Global 的執行會計時
 	int DumperGlobalExecutionMode_SelectedIndex = 1;	// 預設是 Activate

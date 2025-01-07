@@ -1,7 +1,5 @@
 #pragma once
 #include "../../imgui/imgui.h"
-#include "../../imgui/imgui_impl_dx11.h"
-#include "../../imgui/imgui_impl_win32.h"
 
 #include "../Config/FontConfig.h"
 #include "../Config/MainMenuConfig.h"
@@ -38,7 +36,7 @@ void MainMenu::MainMenuRender()
 	FocusUpdate();
 	ImGui::PushFont(Font::NormalText);
 	ImGui::SetNextWindowSize({ Width,Height }, ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowPos({ (ProcMgr.windowMgr.UserWindowWidth - Width) / 2, (ProcMgr.windowMgr.UserWindowHeight - Height) / 2 }, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos({ (ProcMgr.WindowMgr.UserWindowWidth - Width) / 2, (ProcMgr.WindowMgr.UserWindowHeight - Height) / 2 }, ImGuiCond_FirstUseEver);
 	ImGui::Begin("Jason Hong", NULL, ImGuiWindowFlags_NoTitleBar);	// | ImGuiWindowFlags_NoBackground  ImGuiWindowFlags_NoTitleBar  ImGuiWindowFlags_MenuBar
 	{
 		MainPage::Render(PageID);

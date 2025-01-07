@@ -27,9 +27,15 @@ struct MainMenuStateManager
 };
 inline MainMenuStateManager MainMenuState;
 
+struct SelectProcessWindowStateManager
+{
+	bool OpenSelectProcessWindow = false;
+};
+inline SelectProcessWindowStateManager SelectProcessWindowState;
+
 struct UEDumperConsoleStateManager
 {
-	bool ShowUEDumperConsole = false;
+	bool OpenUEDumperConsole = false;
 };
 inline UEDumperConsoleStateManager UEDumperConsole;
 
