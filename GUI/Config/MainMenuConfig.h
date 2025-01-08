@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <vector>
 #include "../../State/GlobalState.h"
 
 enum class MainMenuCurPage
@@ -12,6 +13,13 @@ enum class MainMenuCurPage
 	MainConfig = 5,
 	DumperConsole = 6,
 	Quit = 7,
+};
+
+enum class MainConfigTabType
+{
+	ColorStylePanel,
+	ParamterPanel,
+	ComponentPanel,
 };
 
 struct MainMenuConfig
@@ -41,7 +49,17 @@ struct MainMenuConfig
 	size_t TotalObject_Counter_ProgressBar_Value = 0;
 	size_t TotalObject_Counter_ProgressBar_TotalValue = 1000;
 	
-
+	// Config Page
+	struct TabStruct {
+		bool isOpen = false;
+		std::string Name = "";
+		MainConfigTabType Type = MainConfigTabType::ColorStylePanel;
+	};
+	std::vector<TabStruct> ConfigPageTabList = {
+		{true, "ColorStyle", MainConfigTabType::ColorStylePanel},
+		{true, "ParamterPanel", MainConfigTabType::ParamterPanel},
+		{true, "ComponentPanel", MainConfigTabType::ComponentPanel},
+	};
 };
 
 inline MainMenuConfig MainMenuConf;

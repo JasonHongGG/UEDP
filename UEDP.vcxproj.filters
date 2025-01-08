@@ -350,5 +350,35 @@
     <ClInclude Include="GUI\Menu\MainMenu\FXShader\IconFollowerEffect.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ColorStylePanelTab.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ParamterPanelTab.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Config\TestComponentConfig.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanelTab.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\ShadowEditor.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Config\ShadowConfig.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\ToggleEditor.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Config\ToggleConfig.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\ComponentPanelManager.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

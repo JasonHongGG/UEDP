@@ -13,6 +13,8 @@
 #include "MainMenu/ToolPage.h"
 #include "MainMenu/ImagePage.h"
 #include "MainMenu/FXShaderPage.h"
+#include "MainMenu/ConfigPage.h"
+#include "MainMenu/ConfigPage/ComponentPanel/ComponentPanelManager.h"
 
 namespace MainMenu
 {
@@ -31,6 +33,7 @@ namespace MainMenu
 	{
 		SideBarRender();
 		MainMenuRender();
+		ComponentPanelMgr.Render();
 	}
 }
 
@@ -46,6 +49,7 @@ void MainMenu::MainMenuRender()
 		ToolPage::Render(PageID);
 		ImagePage::Render(PageID);
 		FXShaderPage::Render(PageID);
+		ConfigPage::Render(PageID);
 
 		StateUpdate();
 	}

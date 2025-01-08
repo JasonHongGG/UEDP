@@ -47,3 +47,11 @@ struct NotificationStateManager
 	ProcessState NotifyEvent = ProcessState::Idle;
 };
 inline NotificationStateManager NotificationState;
+
+struct ConfigPageComponentStateManager
+{
+	bool OpenShadowEditor = false;
+	bool OpenToggleEditor = false;
+	bool OpenGradientEditor = false;
+};
+inline ConfigPageComponentStateManager ConfigPageComponentStateMgr;

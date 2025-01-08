@@ -181,8 +181,11 @@
     <ClInclude Include="GUI\Config\LogoConfig.h" />
     <ClInclude Include="GUI\Config\MainMenuConfig.h" />
     <ClInclude Include="GUI\Config\SelectProcessWindowConfig.h" />
+    <ClInclude Include="GUI\Config\ShadowConfig.h" />
     <ClInclude Include="GUI\Config\StyleConfig.h" />
+    <ClInclude Include="GUI\Config\TestComponentConfig.h" />
     <ClInclude Include="GUI\Config\TimerConfig.h" />
+    <ClInclude Include="GUI\Config\ToggleConfig.h" />
     <ClInclude Include="GUI\DockingManager.h" />
     <ClInclude Include="GUI\Include\Gradient\ImGradientHDR.h" />
     <ClInclude Include="GUI\Include\Notify\imgui_notify.h" />
@@ -192,6 +195,13 @@
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_palette.h" />
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_presets.h" />
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_renderer.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ColorStylePanelTab.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanelTab.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\ComponentPanelManager.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\ShadowEditor.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\ToggleEditor.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ParamterPanelTab.h" />
     <ClInclude Include="GUI\Menu\MainMenu\DumperConsole.h" />
     <ClInclude Include="GUI\Menu\MainMenu\FXShaderPage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\FXShader\BubbleEffect.h" />
