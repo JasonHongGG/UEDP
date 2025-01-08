@@ -12,6 +12,7 @@
 #include "MainMenu/SideBar.h"
 #include "MainMenu/ToolPage.h"
 #include "MainMenu/ImagePage.h"
+#include "MainMenu/FXShaderPage.h"
 
 namespace MainMenu
 {
@@ -44,6 +45,7 @@ void MainMenu::MainMenuRender()
 		MainPage::Render(PageID);
 		ToolPage::Render(PageID);
 		ImagePage::Render(PageID);
+		FXShaderPage::Render(PageID);
 
 		StateUpdate();
 	}

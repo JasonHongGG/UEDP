@@ -329,5 +329,26 @@
     <ClInclude Include="GUI\Menu\MainMenu\ToolPage.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\FXShaderPage.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\FXShaderManager.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\ShaderEffectInterface.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\ConnectionLineEffect.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\RainEffect.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\BubbleEffect.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\IconFollowerEffect.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

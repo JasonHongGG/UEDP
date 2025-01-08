@@ -193,6 +193,13 @@
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_presets.h" />
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_renderer.h" />
     <ClInclude Include="GUI\Menu\MainMenu\DumperConsole.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\FXShaderPage.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\BubbleEffect.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\ConnectionLineEffect.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\FXShaderManager.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\IconFollowerEffect.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\RainEffect.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\FXShader\ShaderEffectInterface.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ImagePage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\MainPage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ToolPage.h" />
