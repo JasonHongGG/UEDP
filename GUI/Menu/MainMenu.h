@@ -10,6 +10,8 @@
 
 #include "MainMenu/MainPage.h"
 #include "MainMenu/SideBar.h"
+#include "MainMenu/ToolPage.h"
+#include "MainMenu/ImagePage.h"
 
 namespace MainMenu
 {
@@ -40,6 +42,8 @@ void MainMenu::MainMenuRender()
 	ImGui::Begin("Jason Hong", NULL, ImGuiWindowFlags_NoTitleBar);	// | ImGuiWindowFlags_NoBackground  ImGuiWindowFlags_NoTitleBar  ImGuiWindowFlags_MenuBar
 	{
 		MainPage::Render(PageID);
+		ToolPage::Render(PageID);
+		ImagePage::Render(PageID);
 
 		StateUpdate();
 	}
@@ -75,13 +79,27 @@ void MainMenu::FocusUpdate()
 
 void MainMenu::StateUpdate()
 {
+	ImGuiIO& io = ImGui::GetIO();
+
 	LastMainMenuFocusIsFalse = (!MainMenuState.FocusOnMainMenu) ? true : false;
 	MainMenuState.FocusOnMainMenu = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 	if (MainMenuState.FocusOnMainMenu and LastMainMenuFocusIsFalse) {
-		if (!MainMenuState.FocusOnMenuSideBar)
+		if (!MainMenuState.FocusOnSideBar)
 			MainMenuState.ShowSideBarWhenFocusMainMenu = true;
 	}
 
 	// Update Window Position
 	MainMenuState.CurrentMenuPosision = ImGui::GetWindowPos();
+
+	// Update Window State
+	WindowState::IsHookAnyWindow = io.WantCaptureMouse;
+	WindowState::IsMousePosValid = ImGui::IsMousePosValid();
+
+	// Update KeyBoard Click Key
+	ImGuiKey start_key = (ImGuiKey)0;
+	for (ImGuiKey key = start_key; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)) {
+		if ((key >= 0 && key < 512 && ImGui::GetIO().KeyMap[key] != -1) || !ImGui::IsKeyDown(key)) continue;
+
+		MainMenuState.MouseClickKey = key;
+	}
 }

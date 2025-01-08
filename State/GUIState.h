@@ -7,9 +7,11 @@ struct MainMenuStateManager
 	ImVec2 CurrentMenuPosision = { 0, 0 };
 	ImVec2 LastMenuPosision = { 0, 0 };
 	bool FocusOnMainMenu = false;
-	bool FocusOnMenuSideBar = false;
+	bool FocusOnSideBar = false;
 	bool ShowSideBarWhenFocusMainMenu = false;
 	bool ShowMainMenuWhenFocusSideBar = false;
+
+	int MouseClickKey = 0;
 
 	ProcessState OpenProcess = ProcessState::Idle;
 	ProcessState CloseProcess = ProcessState::Idle;

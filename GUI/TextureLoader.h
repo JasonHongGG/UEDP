@@ -11,7 +11,13 @@ class TextureLoader
 {
 public:
 	int* ImageDelays = NULL;
-
+	int ImageWidth = 0;
+	int ImageHeight = 0;
+	int FrameCnt = 0; // mayby will sport gif
+	int FrameDisplayCnt = 0;
+	int FrameTimer = 3;	// ¨C 3s ¸õ¤U¤@­s Frame
+	float ImageProportion = 0;
+	std::vector<ID3D11ShaderResourceView*> ImageTextureVec;
 
 	stbi_uc* LoadSVG(const char* filename, int* width, int* height, int* channels);
 

@@ -193,7 +193,9 @@
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_presets.h" />
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_renderer.h" />
     <ClInclude Include="GUI\Menu\MainMenu\DumperConsole.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ImagePage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\MainPage.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\ToolPage.h" />
     <ClInclude Include="GUI\Menu\SelectProcessWindow.h" />
     <ClInclude Include="GUI\Menu\MainMenu\SideBar.h" />
     <ClInclude Include="GUI\MyGuiComponent.h" />

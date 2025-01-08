@@ -1,16 +1,12 @@
 #pragma once
 #include "../../../imgui/imgui.h"
-
 #include "../../../System/Process.h"
 
 #include "../../Config/SelectProcessWindowConfig.h"
 #include "../../Config/FontConfig.h"
 #include "../../Config/TimerConfig.h"
-
 #include "../../../State/GUIState.h"
-
 #include "../../MyGuiComponent.h"
-
 #include "DumperConsole.h"
 
 namespace MainPage

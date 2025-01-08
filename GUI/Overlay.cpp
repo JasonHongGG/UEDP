@@ -113,9 +113,9 @@ void Overlay::LimitFPS() {
 
 	// ==================  Frame Rate Process ==================
 	// Initial When User Change Frame Rate
-	if (!FPSConf.Initial) {
+	if (FPSConf.Initial) {
 		QueryPerformanceFrequency(&FPSConf.Frequency);
-		FPSConf.Initial = true;
+		FPSConf.Initial = false;
 	}
 
 	// Calculate TargetFrameRate 

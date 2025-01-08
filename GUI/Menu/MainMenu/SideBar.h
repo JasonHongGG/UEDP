@@ -93,10 +93,10 @@ void SideBar::MenuSideBarComponent(std::string Name, MainMenuCurPage Type, ImVec
 
 void SideBar::StateUpdate()
 {
-	LastSideBarFocusIsFalse = (!MainMenuState.FocusOnMenuSideBar) ? true : false;
-	MainMenuState.FocusOnMenuSideBar = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+	LastSideBarFocusIsFalse = (!MainMenuState.FocusOnSideBar) ? true : false;
+	MainMenuState.FocusOnSideBar = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 
-	if (MainMenuState.FocusOnMenuSideBar and LastSideBarFocusIsFalse) {
+	if (MainMenuState.FocusOnSideBar and LastSideBarFocusIsFalse) {
 		if (!MainMenuState.FocusOnMainMenu)
 			MainMenuState.ShowMainMenuWhenFocusSideBar = true;
 	}
