@@ -15,6 +15,7 @@
 #include "MainMenu/FXShaderPage.h"
 #include "MainMenu/ConfigPage.h"
 #include "MainMenu/ConfigPage/ComponentPanel/ComponentPanelManager.h"
+#include "MainMenu/LoadAndSaveSettingPage.h"
 
 namespace MainMenu
 {
@@ -49,6 +50,7 @@ void MainMenu::MainMenuRender()
 		ToolPage::Render(PageID);
 		ImagePage::Render(PageID);
 		FXShaderPage::Render(PageID);
+		LoadAndSaveSettingPage::Render(PageID);
 		ConfigPage::Render(PageID);
 
 		StateUpdate();

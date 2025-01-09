@@ -48,7 +48,7 @@ void BackgroundEntry::InitialProcess()
 
 	// ==========  Get Process ID¡BHandler  ==========
 	if (!ProcMgr.InfoMgr.GetPID(Utils.UTF8ToUnicode(ProcessInfo::ProcessName.c_str()).c_str())) {
-		EventHandler.NotifyEvent(NotificationConfig::NotiyType::Error, "Process Not Running !!!", "..."); 
+		EventHandler::NotifyEvent(NotificationConfig::NotiyType::Error, "Process Not Running !!!", "..."); 
 		return; 
 	}
 
@@ -96,21 +96,21 @@ void BackgroundEntry::Entry()
 	// ==========  Initial Process  ==========
 	if (MainMenuState.OpenProcess == ProcessState::Start) {
 		MainMenuState.OpenProcess = ProcessState::Processing;
-		EventHandler.NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] OpenProcess");
+		EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] OpenProcess");
 		InitialProcess();
 		MainMenuState.OpenProcess = ProcessState::Completed;
 	}
 
 	if (MainMenuState.CloseProcess == ProcessState::Start) {
 		MainMenuState.CloseProcess = ProcessState::Processing;
-		EventHandler.NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] CloseProcess");
+		EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] CloseProcess");
 		CloseProcess();
 		MainMenuState.CloseProcess = ProcessState::Completed;
 	}
 
 	if (MainMenuState.SelectProcess == ProcessState::Start) {
 		MainMenuState.SelectProcess = ProcessState::Processing;
-		EventHandler.NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] SelectProcess");
+		EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] SelectProcess");
 		
 		ProcMgr.WindowMgr.GetWindowList();
 		SelectProcessWindowConf.WindowTitleList.clear();

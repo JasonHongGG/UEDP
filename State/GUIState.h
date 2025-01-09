@@ -55,3 +55,13 @@ struct ConfigPageComponentStateManager
 	bool OpenGradientEditor = false;
 };
 inline ConfigPageComponentStateManager ConfigPageComponentStateMgr;
+
+struct LoadAndSaveSettingStateManager
+{
+	std::string CurTime = "";
+	ProcessState SaveEvent = ProcessState::Idle;
+	ProcessState ReadEvent = ProcessState::Idle; 
+	ProcessState DeleteEvent = ProcessState::Idle;
+	ProcessState LoadEvent = ProcessState::Idle;
+};
+inline LoadAndSaveSettingStateManager LoadAndSaveSettingStateMgr;

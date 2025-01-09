@@ -386,5 +386,17 @@
     <ClInclude Include="GUI\Config\GradientHDRConfig.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Menu\MainMenu\LoadAndSaveSettingPage.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Config\LoadAndSaveSettingConfig.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="State\EventHandler\LoadAndSaveSettingEvent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="State\EventHandler\Utils.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

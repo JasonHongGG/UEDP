@@ -132,7 +132,7 @@ namespace DumperConsole
 				printf("[Pressed Button] %s\n", OptionName.c_str());
 			}
 			else {
-				EventHandler.NotifyEvent(NotificationConfig::NotiyType::Warning, "No target program attached", "Please select a target program before running");
+				EventHandler::NotifyEvent(NotificationConfig::NotiyType::Warning, "No target program attached", "Please select a target program before running");
 			}
 		}
 		ImGui::TableNextColumn();
@@ -146,7 +146,7 @@ namespace DumperConsole
 		// Global Run
 		{
 			if (ImGui::Button("Run")) {
-				if (!ProcessInfo::hProcess) EventHandler.NotifyEvent(NotificationConfig::NotiyType::Warning, "No target program attached", "Please select a target program before running");
+				if (!ProcessInfo::hProcess) EventHandler::NotifyEvent(NotificationConfig::NotiyType::Warning, "No target program attached", "Please select a target program before running");
 
 				MainMenuConf.DumperGlobalExecution = ProcessState::Start;
 				Utils.TimerSwitch(true, &TimerConf.TimeObjMap["DumperTimer"].TimerActivate, TimerConf.TimeObjMap["DumperTimer"].StartTime, TimerConf.TimeObjMap["DumperTimer"].EndTime);

@@ -179,6 +179,7 @@
     <ClInclude Include="GUI\Config\FontConfig.h" />
     <ClInclude Include="GUI\Config\FPSConfig.h" />
     <ClInclude Include="GUI\Config\GradientHDRConfig.h" />
+    <ClInclude Include="GUI\Config\LoadAndSaveSettingConfig.h" />
     <ClInclude Include="GUI\Config\LogoConfig.h" />
     <ClInclude Include="GUI\Config\MainMenuConfig.h" />
     <ClInclude Include="GUI\Config\SelectProcessWindowConfig.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\GradientEditor.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\ShadowEditor.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanel\ToggleEditor.h" />
+    <ClInclude Include="GUI\Menu\MainMenu\LoadAndSaveSettingPage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ParamterPanelTab.h" />
     <ClInclude Include="GUI\Menu\MainMenu\DumperConsole.h" />
     <ClInclude Include="GUI\Menu\MainMenu\FXShaderPage.h" />
@@ -239,6 +241,8 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="State\EventHandler\LoadAndSaveSettingEvent.h" />
+    <ClInclude Include="State\EventHandler\Utils.h" />
     <ClInclude Include="State\GlobalState.h" />
     <ClInclude Include="State\GUIState.h" />
     <ClInclude Include="State\WindowState.h" />

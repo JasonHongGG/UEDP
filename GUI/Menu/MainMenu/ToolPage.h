@@ -153,23 +153,23 @@ void ToolPage::NotificationBlock()
 	{
 		ImGui::PushFont(Font::IconText);
 		if (ImGui::Button(ICON_FA_ARROW_UP_FROM_BRACKET "None")) {       //"Add Object"
-			EventHandler.NotifyEvent(NotificationConfig::NotiyType::None, "", "None Test Message", NotificationConf.DismissTimeBar);
+			EventHandler::NotifyEvent(NotificationConfig::NotiyType::None, "", "None Test Message", NotificationConf.DismissTimeBar);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button(ICON_FA_ARROW_UP_FROM_BRACKET "Success")) {       //"Add Object"
-			EventHandler.NotifyEvent(NotificationConfig::NotiyType::Success, "", "Success Test Message", NotificationConf.DismissTimeBar);
+			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Success, "", "Success Test Message", NotificationConf.DismissTimeBar);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button(ICON_FA_ARROW_UP_FROM_BRACKET "Warning")) {       //"Add Object"
-			EventHandler.NotifyEvent(NotificationConfig::NotiyType::Warning, "", "Warning Test Message", NotificationConf.DismissTimeBar);
+			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Warning, "", "Warning Test Message", NotificationConf.DismissTimeBar);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button(ICON_FA_ARROW_UP_FROM_BRACKET "Error")) {       //"Add Object"
-			EventHandler.NotifyEvent(NotificationConfig::NotiyType::Error, "", "Error Test Message", NotificationConf.DismissTimeBar);
+			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Error, "", "Error Test Message", NotificationConf.DismissTimeBar);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button(ICON_FA_ARROW_UP_FROM_BRACKET "Info")) {       //"Add Object"
-			EventHandler.NotifyEvent(NotificationConfig::NotiyType::Info, "", "Info Test Message", NotificationConf.DismissTimeBar);
+			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "", "Info Test Message", NotificationConf.DismissTimeBar);
 		}
 
 		ImGui::DragFloat("Dismiss#TestBar", &NotificationConf.DismissTimeBar, (float)0.1);

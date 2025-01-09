@@ -3,26 +3,16 @@
 
 #include "../GUI/Config/NotificationConfig.h"
 
+#include "EventHandler/Utils.h"
+#include "EventHandler/LoadAndSaveSettingEvent.h"
+
 #include "GlobalState.h"
 #include "GUIState.h"
 
 
-class EventHandlerClass
+namespace EventHandler
 {
-public:
-
-public:
-    bool IsEventAcceptable(const ProcessState& State)
-    {
-        if (State != ProcessState::Start and
-            State != ProcessState::Processing and
-            State != ProcessState::Retry)
-            return true;
-        else
-            return false;
-    }
-
-    void NotifyEvent(NotificationConfig::NotiyType Type, std::string Title, std::string Content = "...", float DismissTime = NotificationConf.DismissTimeBar)
+    inline void NotifyEvent(NotificationConfig::NotiyType Type, std::string Title, std::string Content = "...", float DismissTime = NotificationConf.DismissTimeBar)
     {
         const ProcessState State = NotificationState.NotifyEvent;
 
@@ -189,34 +179,6 @@ public:
     //    }
     //}
 
-    //// ============================================================================================================
-    //// Menu Config
-    //void ReadMenuConfig_Event() {
-    //    const ProcessState State = ConfigSaveConf.OptionPanel.ReadConfigEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        ConfigSaveConf.OptionPanel.ReadConfigEvent.State = ProcessState::Start;
-    //    }
-    //}
 
-    //void LoadMenuConfig_Event(const std::string& CurTime) {
-    //    const ProcessState State = ConfigSaveConf.OptionPanel.LoadConfigEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        ConfigSaveConf.OptionPanel.LoadConfigEvent.CurTime = CurTime;
-    //        ConfigSaveConf.OptionPanel.LoadConfigEvent.State = ProcessState::Start;
-    //    }
-    //}
-
-    //bool DeleteMenuConfig_Event(const std::string& CurTime) {
-    //    const ProcessState State = ConfigSaveConf.OptionPanel.DeleteConfigEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        ConfigSaveConf.OptionPanel.DeleteConfigEvent.CurTime = CurTime;
-    //        ConfigSaveConf.OptionPanel.DeleteConfigEvent.State = ProcessState::Start;
-    //        return true;
-    //    }
-    //    return false;
-    //}
-
-private:
+    
 };
-
-inline EventHandlerClass EventHandler = EventHandlerClass();
