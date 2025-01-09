@@ -10,6 +10,8 @@
 #include "../State/GUIState.h"
 #include "../State/EventHandler.h"
 
+#include "Entry/ParseEntry.h"
+
 //#include "BaseAddress.h"
 //#include "DumperUtils.h"
 //#include "UEOffset.h"				//AutoConfig
@@ -31,13 +33,10 @@ void BackgroundEntry::InitialProcess()
 
 	// ==========  Initial String Parameter  ==========
 	std::wstring WindowName;
-	if (
-		//MainMenuConf.WindowTitle_SelectIndex != 0
-		false
-		) {
-		//ProcMgr.infoMgr.GetProcessNameByPID(ProcessWindow::WindowList[MainMenuConf.WindowTitle_SelectIndex].ProcessID);
-		//std::wstring WideStr(ProcessWindow::WindowList[MainMenuConf.WindowTitle_SelectIndex].WindowTitle.begin(), ProcessWindow::WindowList[MainMenuConf.WindowTitle_SelectIndex].WindowTitle.end());
-		//ProcessWindow::WindowName = Utils.UnicodeToUTF8(WideStr.c_str());
+	if ( SelectProcessWindowConf.WindowTitleSelectIndex != 0 ) {
+		ProcMgr.InfoMgr.GetProcessNameByPID(ProcessWindow::WindowList[SelectProcessWindowConf.WindowTitleSelectIndex].ProcessID);
+		std::wstring WideStr(ProcessWindow::WindowList[SelectProcessWindowConf.WindowTitleSelectIndex].WindowTitle.begin(), ProcessWindow::WindowList[SelectProcessWindowConf.WindowTitleSelectIndex].WindowTitle.end());
+		ProcessWindow::WindowName = Utils.UnicodeToUTF8(WideStr.c_str());
 	}
 	else {
 		ProcessInfo::ProcessName = Utils.UnicodeToUTF8(Const::ProcessName.c_str());
@@ -120,5 +119,11 @@ void BackgroundEntry::Entry()
 
 		SelectProcessWindowState.OpenSelectProcessWindow = true;
 		MainMenuState.SelectProcess = ProcessState::Completed;
+	}
+
+	// Already Attach Process
+	if (ProcessWindow::MainWindow) 
+	{
+		ParseEntry:::Entry();
 	}
 }

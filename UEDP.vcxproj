@@ -139,7 +139,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Background\Core\BaseAddressDumper.cpp" />
+    <ClCompile Include="Background\Core\Utils.cpp" />
     <ClCompile Include="Background\Entry.cpp" />
+    <ClCompile Include="Background\Entry\ParseEntry.h" />
     <ClCompile Include="GUI\Include\Gradient\ImGradientHDR.cpp" />
     <ClCompile Include="GUI\Include\Notify\imgui_notify.cpp" />
     <ClCompile Include="GUI\Include\Toggle\imgui_toggle.cpp" />
@@ -173,7 +176,11 @@
     <ClCompile Include="Utils\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background\Core\BaseAddressDumper.h" />
+    <ClInclude Include="Background\Core\Utils.h" />
     <ClInclude Include="Background\Entry.h" />
+    <ClInclude Include="Background\Storage\Interface.h" />
+    <ClInclude Include="Background\Storage\StorageManager.h" />
     <ClInclude Include="Font\IconsFontAwesome6.h" />
     <ClInclude Include="GUI\Config\ColorConfig.h" />
     <ClInclude Include="GUI\Config\FontConfig.h" />

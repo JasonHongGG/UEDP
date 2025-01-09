@@ -111,6 +111,15 @@
     <ClCompile Include="GUI\Include\Toggle\imgui_toggle_renderer.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Background\Entry\ParseEntry.h">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Background\Core\BaseAddressDumper.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Background\Core\Utils.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background\Entry.h">
@@ -396,6 +405,18 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="State\EventHandler\Utils.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Core\BaseAddressDumper.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Core\Utils.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Storage\StorageManager.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Storage\Interface.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

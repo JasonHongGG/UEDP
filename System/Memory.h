@@ -46,27 +46,3 @@ public:
 
 inline Memory MemMgr = Memory();
 
-class MemmoryStorageManager
-{
-public:
-    // ==============================================================================================
-    // Memory Search
-    // Temp Save AOBSCAN Result (Prevent Race Condition)
-    std::vector<DWORD_PTR> AOBSCAN_Ret;
-    std::mutex AOBSCAN_Mtx;
-    void AOBSCAN_Ret_PushBack(DWORD_PTR Address) {
-        std::lock_guard<std::mutex> lock(AOBSCAN_Mtx);
-        AOBSCAN_Ret.push_back(Address);
-    }
-    void AOBSCAN_Ret_Clear() {
-        AOBSCAN_Ret.clear();
-    }
-    std::vector<DWORD_PTR> GetAOBSCAN_Ret() {
-        return AOBSCAN_Ret;
-    }
-
-private:
-};
-inline MemmoryStorageManager MemStoreMgr = MemmoryStorageManager();
-
-
