@@ -1,12 +1,14 @@
+#pragma once
 #include "../../State/GUIState.h"
 #include "../../State/EventHandler.h"
 #include "../../GUI/Config/NotificationConfig.h"
 #include "../Core/BaseAddressDumper.h"
-#include  "../Core/Utils.h"
+#include  "../Core/DumperUtils.h"
+#include "../Core/Parser.h"
 
 namespace ParseEntry
 {
-	void Entry()
+	inline void Entry()
 	{
 		if (MainMenuState.GetUEVersion == ProcessState::Start) {
 			MainMenuState.GetUEVersion = ProcessState::Processing;
@@ -39,21 +41,21 @@ namespace ParseEntry
 		if (MainMenuState.ParseFNamePool == ProcessState::Start) {
 			MainMenuState.ParseFNamePool = ProcessState::Processing;
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] Parse FName Pool");
-			ParseMgr.ParseFNamePool();
+			FNameParser.ParseFNamePool();
 			MainMenuState.ParseFNamePool = ProcessState::Completed;
 		}
 
 		if (MainMenuState.AutoConfig == ProcessState::Start) {
 			MainMenuState.AutoConfig = ProcessState::Processing;
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] Auto Config");
-			AutoConfig.AutoConfig();
+			//AutoConfig.AutoConfig();
 			MainMenuState.AutoConfig = ProcessState::Completed;
 		}
 
 		if (MainMenuState.ParseGUObjectArray == ProcessState::Start) {
 			MainMenuState.ParseGUObjectArray = ProcessState::Processing;
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] Parse GUObject Array");
-			ParseMgr.ParseGUObjectArray();
+			GUObjectParser.ParseGUObjectArray();
 			MainMenuState.ParseGUObjectArray = ProcessState::Completed;
 		}
 
@@ -69,13 +71,13 @@ namespace ParseEntry
 			BaseAddressDumper.GetGUObjectArray();
 
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] Get Parse FName Pool");
-			ParseMgr.ParseFNamePool();
+			FNameParser.ParseFNamePool();
 			
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] Auto Config");
-			AutoConfig.AutoConfig();
+			//AutoConfig.AutoConfig();
 			
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] Parse GUObject Array");
-			ParseMgr.ParseGUObjectArray();
+			GUObjectParser.ParseGUObjectArray();
 
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, " ALL Completed !!! ");
 			MainMenuState.Prepareing = ProcessState::Completed;

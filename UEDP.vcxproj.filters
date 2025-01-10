@@ -117,7 +117,19 @@
     <ClCompile Include="Background\Core\BaseAddressDumper.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="Background\Core\Utils.cpp">
+    <ClCompile Include="Background\Core\DumperUtils.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Background\Core\Parser\FNamePoolParser.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Background\Core\Parser\GUObjectArrayParser.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Background\Core\Object.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Background\Storage\StorageManager.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
@@ -410,13 +422,31 @@
     <ClInclude Include="Background\Core\BaseAddressDumper.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Background\Core\Utils.h">
+    <ClInclude Include="Background\Core\DumperUtils.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Background\Storage\StorageManager.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Background\Storage\Interface.h">
+    <ClInclude Include="Background\Core\Parser\FNamePoolParser.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Core\Parser\GUObjectArrayParser.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Core\Parser.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Core\Object.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Core\UEOffset.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Interface\StorageInterface.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Interface\ObjectInterface.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

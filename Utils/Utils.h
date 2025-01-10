@@ -56,6 +56,11 @@ public:
 
     std::string rStringToLower(std::string Str);
 
+    bool IsStringContainControlChar(const std::string Str);
+
+    // number
+    int BytesToNum(const std::vector<BYTE> Data);
+
 
     // Transform String Type
     // ansi 為單 bytes，unicode 為多 bytes 可表示所有字符， UTF8 為 unicode 的一種編碼方式

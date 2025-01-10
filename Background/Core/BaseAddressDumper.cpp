@@ -367,4 +367,5 @@ ProcessState BaseAddressDumperClass::ShowBaseAddress()
 	printf("[ FNamePool ] %p \t [ Offset ] %llX\n", (void*)FNamePool, (size_t)FNamePool - (size_t)ProcessModule::hMainMoudle);
 	printf("[ GUObject  ] %p \t [ Offset ] %llX\n", (void*)GUObjectArray, (size_t)GUObjectArray - (size_t)ProcessModule::hMainMoudle);
 	printf("[ GWorld    ] %p \t [ Offset ] %llX\n", (void*)GWorld, (size_t)GWorld - (size_t)ProcessModule::hMainMoudle);
+	return ProcessState::Completed;
 }

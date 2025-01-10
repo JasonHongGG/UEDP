@@ -1,6 +1,4 @@
 #pragma once
-
-#pragma once
 #define WIN32_LEAN_AND_MEAN 
 
 #include <vector>
@@ -9,7 +7,7 @@
 #include "../../System/Process.h"
 #include "../../System/Memory.h"
 #include "../../Utils/Env.h"
-#include "Utils.h"
+#include "DumperUtils.h"
 #include "../Storage/StorageManager.h"
 #include "../../State/GUIState.h"
 

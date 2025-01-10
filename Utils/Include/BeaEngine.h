@@ -8,7 +8,7 @@
 #define BEA_ENGINE_STATIC  // 指明使用静态Lib库
 #define BEA_USE_STDCALL    // 指明使用stdcall调用约定
 extern "C" {
-#include "..\beaengine\BeaEngine.h"
+#include "Beaengine\BeaEngine.h"
 #pragma comment(lib, "BeaEngine_s_d_l_stdcall_64.lib")
 }
 
@@ -28,7 +28,7 @@ public:
 
 			//先 Read Byte，再給 Bea Engine 轉換成組合語言 [適用於透過程式本身讀取其他程式]		//Hack 一定是這邊
 		BYTE* pBuffer = new BYTE[size];
-		BYTE wirteByteNum = MemMgr.ReadBytes(address, pBuffer, size);		
+		BYTE wirteByteNum = MemMgr.MemReader.ReadBytes(address, pBuffer, size);		
 		DisassembleByBytes(address, pBuffer, size, Opcodes, PrintMode);
 		delete[] pBuffer;	
 		return Opcodes;

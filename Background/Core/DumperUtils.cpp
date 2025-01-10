@@ -1,18 +1,17 @@
-#include "Utils.h"
+#include "DumperUtils.h"
 
 template <class U>
-DWORD_PTR DumperUtilsSet::CheckValue(DWORD_PTR Address, size_t Size, U InputValue, size_t Type, bool literal)
+DWORD_PTR DumperUtilsSet::CheckValue(DWORD_PTR Address, size_t Size, U Value, size_t Type, bool StrFullCompare)
 {
     // 用途 : 在指定 Address 附近的 Size 範圍內，找尋 InputValue
     // 如果有找到則回傳找到的 Offest，反則為 NULL
 
     //檢查 Address 是否有效
-    ReadMemResult = MemMgr.ReadMem<DWORD_PTR>(Address);
-    if (ReadMemResult.second == false) return NULL;
+    if (MemMgr.MemReader.ReadMem<DWORD_PTR>(Address)) return NULL;
 
     // Read Bytes Form Address
     BYTE* BytesBuffer = new BYTE[Size + 0x10];
-    MemMgr.ReadBytes(Address, BytesBuffer, Size);
+    MemMgr.MemReader.ReadBytes(Address, BytesBuffer, Size);
 
     // 變數
     std::vector<unsigned char> Data;
@@ -40,10 +39,10 @@ DWORD_PTR DumperUtilsSet::CheckValue(DWORD_PTR Address, size_t Size, U InputValu
             // 4 bytes 轉數字
             for (size_t m = 0; m < 4; ++m)
                 Data.push_back(*(BytesBuffer + i + m));
-            TempValue = BytesToNum(Data);
+            TempValue = Utils.BytesToNum(Data);
 
             // 嘗試取字串
-            if (GetFNameStringByID(TempValue, FName, true)) {
+            if (FNameParser.GetFNameStringByID(TempValue, FName, true)) {
                 // FName 有字串，且 FName 和 InputString 部分匹配(StrFullCompare == false)、完整匹配(StrFullCompare == true)
                 if (!FName.empty()) {
                     if ((!StrFullCompare and FName.find(InputString) != std::string::npos) or (FName == InputString)) {    //完全匹配或部分匹配
@@ -60,7 +59,7 @@ DWORD_PTR DumperUtilsSet::CheckValue(DWORD_PTR Address, size_t Size, U InputValu
             for (size_t m = 0; m < Type; ++m) {
                 Data.push_back(*(BytesBuffer + i + m));
             }
-            TempValue = BytesToNum(Data);
+            TempValue = Utils.BytesToNum(Data);
             // 如果 TempValue 和 InputValue_1 相等
             // 或是 InputValue_2 存在，且InputValue_2 >= TempValue >= InputValue_1
             if (TempValue == InputValue_1 || (InputValue_2 && TempValue >= InputValue_1 && InputValue_2 >= InputValue_1)) {
@@ -85,3 +84,9 @@ bool DumperUtilsSet::GetUEVersion() {
     printf("[ UE Version ] %s\n\n", UEVersionStr.c_str());
     return true;
 }
+
+
+
+// 顯式實例化 (讓 template 可以定義在 cpp)
+template DWORD_PTR DumperUtilsSet::CheckValue<int>(DWORD_PTR, size_t, int, size_t, bool);
+template DWORD_PTR DumperUtilsSet::CheckValue<std::string>(DWORD_PTR, size_t, std::string, size_t, bool);

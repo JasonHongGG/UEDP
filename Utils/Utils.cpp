@@ -104,7 +104,7 @@ std::vector<std::string> UtilsSet::GetTokens(const std::string& input) {
     return tokens;
 }
 
-std::string FindSubStr(std::string input) {
+std::string UtilsSet::FindSubStr(std::string input) {
     // ﹚竡璶で皌﹃ EX : std::string input = "mov rax, qword [rsp+0x30]";
 
     std::regex pattern("\\[([^\\]]+)\\]");
@@ -148,6 +148,24 @@ std::string UtilsSet::rStringToLower(std::string Str) {
     }
     return Str;
 }
+
+bool UtilsSet::IsStringContainControlChar(const std::string Str) {
+    for (size_t i = 0; i < Str.length(); ++i) {
+        if ((Str[i] >= 0x00 && Str[i] <= 0x1F) || Str[i] == 0x7F) { // 狦琌北才
+            //std::cout << "т北才 '" << Str[i] << "'竚琌" << i << std::endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+int UtilsSet::BytesToNum(const std::vector<BYTE> Data) {
+    int Result = 0;
+    for (size_t i = 0; i < Data.size(); ++i) {
+        Result |= static_cast<int>(Data[i]) << (i * 8);
+    }
+    return Result;
+};
 
 
 // Transform String Type

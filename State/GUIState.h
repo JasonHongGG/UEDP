@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "../imgui/imgui.h"
 #include "GlobalState.h"
 
@@ -65,3 +66,10 @@ struct LoadAndSaveSettingStateManager
 	ProcessState LoadEvent = ProcessState::Idle;
 };
 inline LoadAndSaveSettingStateManager LoadAndSaveSettingStateMgr;
+
+struct ProgressBarStateManager
+{
+	ProcessState FNamePool = ProcessState::Idle;
+	ProcessState GUObjectArray = ProcessState::Idle;
+};
+inline ProgressBarStateManager ProgressBarStateMgr;

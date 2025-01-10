@@ -140,9 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Background\Core\BaseAddressDumper.cpp" />
-    <ClCompile Include="Background\Core\Utils.cpp" />
+    <ClCompile Include="Background\Core\Object.cpp" />
+    <ClCompile Include="Background\Core\Parser\FNamePoolParser.cpp" />
+    <ClCompile Include="Background\Core\Parser\GUObjectArrayParser.cpp" />
+    <ClCompile Include="Background\Core\DumperUtils.cpp" />
     <ClCompile Include="Background\Entry.cpp" />
     <ClCompile Include="Background\Entry\ParseEntry.h" />
+    <ClCompile Include="Background\Storage\StorageManager.cpp" />
     <ClCompile Include="GUI\Include\Gradient\ImGradientHDR.cpp" />
     <ClCompile Include="GUI\Include\Notify\imgui_notify.cpp" />
     <ClCompile Include="GUI\Include\Toggle\imgui_toggle.cpp" />
@@ -177,9 +181,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background\Core\BaseAddressDumper.h" />
-    <ClInclude Include="Background\Core\Utils.h" />
+    <ClInclude Include="Background\Core\Object.h" />
+    <ClInclude Include="Background\Core\Parser.h" />
+    <ClInclude Include="Background\Core\Parser\FNamePoolParser.h" />
+    <ClInclude Include="Background\Core\Parser\GUObjectArrayParser.h" />
+    <ClInclude Include="Background\Core\UEOffset.h" />
+    <ClInclude Include="Background\Core\DumperUtils.h" />
     <ClInclude Include="Background\Entry.h" />
-    <ClInclude Include="Background\Storage\Interface.h" />
+    <ClInclude Include="Background\Interface\ObjectInterface.h" />
+    <ClInclude Include="Background\Interface\StorageInterface.h" />
     <ClInclude Include="Background\Storage\StorageManager.h" />
     <ClInclude Include="Font\IconsFontAwesome6.h" />
     <ClInclude Include="GUI\Config\ColorConfig.h" />

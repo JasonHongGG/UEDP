@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include "../Storage/StorageManager.h"
 #include "../../System/FileAttribute.h"
+#include "../Core/Parser.h"
+#include "../../Utils/Utils.h"
 
 class DumperUtilsSet
 {
@@ -10,7 +12,7 @@ public:
     ~DumperUtilsSet() {}
 
     template <class U>
-    DWORD_PTR CheckValue(DWORD_PTR Address, size_t Size, U InputValue, size_t Type, bool literal = false);
+    DWORD_PTR CheckValue(DWORD_PTR Address, size_t Size, U Value, size_t Type, bool StrFullCompare = false);
 
     bool GetUEVersion();
 

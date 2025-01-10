@@ -124,6 +124,6 @@ void BackgroundEntry::Entry()
 	// Already Attach Process
 	if (ProcessWindow::MainWindow) 
 	{
-		ParseEntry:::Entry();
+		ParseEntry::Entry();
 	}
 }

@@ -272,7 +272,7 @@ public:
 		if (this->cur_height != this->target_height) {
 			//if (this->cur_height - this->target_height >= 270)
 			//	this->cur_height -= 20;
-			this->cur_height -= 8 * std::exp(-0.25 * loop_idx);	//逐漸緩和
+			this->cur_height -= (float)8 * std::exp(-0.25 * loop_idx);	//逐漸緩和
 			//current_toast->cur_height -= TestCompMgr.FloatSilder1 / (loop_idx + 1);		//等差
 
 			// 最小上限
