@@ -217,7 +217,9 @@
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_renderer.h" />
     <ClInclude Include="GUI\Interface\DumperConsoleInterface.h" />
     <ClInclude Include="GUI\Menu\MainConsole.h" />
+    <ClInclude Include="GUI\Menu\MainConsole\APIPanel.h" />
     <ClInclude Include="GUI\Menu\MainConsole\Console.h" />
+    <ClInclude Include="GUI\Menu\MainConsole\PackageViewer.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ColorStylePanelTab.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanelTab.h" />
@@ -266,6 +268,7 @@
     <ClInclude Include="State\EventHandler\ConsoleEvent.h" />
     <ClInclude Include="State\EventHandler\LoadAndSaveSettingEvent.h" />
     <ClInclude Include="State\EventHandler\MessageInterface.h" />
+    <ClInclude Include="State\EventHandler\PackageViewerEvent.h" />
     <ClInclude Include="State\EventHandler\Utils.h" />
     <ClInclude Include="State\GlobalState.h" />
     <ClInclude Include="State\GUIState.h" />

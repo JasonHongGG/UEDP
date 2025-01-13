@@ -15,6 +15,10 @@
 #include "./MyGuiComponent/ComboList.h"
 #include "./MyGuiComponent/Operator.h"
 
+#include "Config/FontConfig.h"
+#include "Config/ColorConfig.h"
+#include "Config/StyleConfig.h"
+
 
 namespace ImGui {
     inline void HelpMarker(const char* desc)
@@ -252,6 +256,41 @@ namespace ImGui {
         return held;
     }
 
+    inline void MoveBtn(std::string UniqueID, ImVec2 WindowSize, float* WindowWidthControl, ImVec2 ButtonSize)
+    {
+        ImGui::PushFont(Font::BigIconText);
+        Style::TransparentButtonStyleSwitch(true);
+        Style::FramePaddingSwitch(true);
+        ImGui::SetCursorPosY(WindowSize.y / 2 - ButtonSize.y / 2);    //50 是 move btn 的一半，如此才會置中
+        ImGui::SetCursorPosX(WindowSize.x - ButtonSize.x - 5);
+        float CalculatePos = 0;
+        if (ImGui::MoveButton(ICON_FA_GRIP_LINES_VERTICAL, "windowmover", ImVec2(ButtonSize.x, ButtonSize.y), &CalculatePos)) {
+
+            if (*(WindowWidthControl) >= ButtonSize.x and *(WindowWidthControl) <= 800) {
+                *(WindowWidthControl) += CalculatePos;
+
+                if (*(WindowWidthControl) < ButtonSize.x) *(WindowWidthControl) = ButtonSize.x;
+                if (*(WindowWidthControl) > 800)  *(WindowWidthControl) = 800;
+            }
+        }
+        Style::FramePaddingSwitch(false);
+        Style::TransparentButtonStyleSwitch(false);
+        ImGui::PopFont();
+    }
+
+    inline void CopyBtn(std::string UniqueID, std::string CopyContent, float Indentation = -1, float FrameHeight = 0, bool ShowIcon = true, bool ShowCopyContent = false, ImVec4 TextColor = Color::White)
+    {
+        ImGui::PushFont(Font::IconText);
+        Style::TransparentButtonStyleSwitch(true, TextColor);
+        Style::FramePaddingSwitch(true, FrameHeight);
+        if (Indentation >= 0) ImGui::SetCursorPosX(Indentation);
+        if (ImGui::Button(std::string((ShowIcon ? ICON_FA_COPY : "") + (ShowCopyContent ? CopyContent : "") + "##_" + UniqueID).c_str()))
+            Utils.CopyToClipBoard(CopyContent);
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_None)) ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+        Style::FramePaddingSwitch(false);
+        Style::TransparentButtonStyleSwitch(false);
+        ImGui::PopFont();
+    }
 
     static ImVector<ImRect> s_GroupPanelLabelStack;
     inline void BeginGroupPanel(const char* name, const ImVec2& size)

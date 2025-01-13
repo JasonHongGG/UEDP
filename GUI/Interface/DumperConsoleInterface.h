@@ -18,12 +18,6 @@ struct BasicDumperInfoObject
 	bool Clickable = false;
 };
 
-struct FunctionObject : BasicDumperInfoObject {
-	BasicDumperInfoObject Outer = BasicDumperInfoObject();
-	BasicDumperInfoObject Ret = BasicDumperInfoObject();
-	std::vector<BasicDumperInfoObject> Para;
-};
-
 struct BasicDumperObject : BasicDumperInfoObject // 子物件
 {
 	int Bit = -1;
@@ -34,13 +28,19 @@ struct BasicDumperObject : BasicDumperInfoObject // 子物件
 	std::vector<size_t> Size;			// 陣列空間的大小 => [0: 使用大小] [1: 空間大小]
 };
 
+struct FunctionObject : BasicDumperInfoObject {
+	BasicDumperObject Outer = BasicDumperObject();
+	BasicDumperObject Ret = BasicDumperObject();
+	std::vector<BasicDumperObject> Para;
+};
+
 struct DumperObject : BasicDumperInfoObject // 主物件
 {
 	std::vector<BasicDumperObject> Super;
 	std::vector<BasicDumperObject> Member;
 	std::vector<std::pair<std::string, size_t>> Enum;		//在 Enum 中取得
 	std::string TypeObject = "";
-	FunctionObject FunctObject = FunctionObject();
+	FunctionObject Funct = FunctionObject();
 };
 
 struct DumperItem : BasicDumperInfoObject {	// 框架

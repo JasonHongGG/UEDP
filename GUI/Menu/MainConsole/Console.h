@@ -26,9 +26,9 @@ namespace Console
     void ObjectDataRender();
     void ObjectInfoRender();
 
-    void Render() {
+    void Render(DumperConsoleCurPage& PageID) {
+        if (PageID != DumperConsoleCurPage::Console) return;
         ObjectDataRender();
-        ImGui::SameLine();
         ObjectInfoRender();
     }
 }
@@ -131,6 +131,7 @@ void Console::ObjectDataRender()
 
 void Console::ObjectInfoRender()
 {
+    ImGui::SameLine();
     ImGui::BeginChild("ObjectInfo", ImVec2(ObjectInfoWindoWidth, 0), true);
     {
         // ==================== Setting ====================

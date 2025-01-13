@@ -58,7 +58,19 @@ struct MainConsoleStateManager
 };
 inline MainConsoleStateManager MainConsoleState;
 
-
+struct PackageViwerStateManager
+{
+	ProcessState ObjectDataUpdateEvent = ProcessState::Idle;
+	MessageObject ObjectDataUpdateMsg = MessageObject();
+	ProcessState ObjectContentCreatEvent = ProcessState::Idle;
+	MessageObject ObjectContentCreatMsg = MessageObject();
+	ProcessState SearchUpdateEvent = ProcessState::Idle;
+	MessageObject SearchUpdateMsg = MessageObject();
+	ProcessState SearchShowEvent = ProcessState::Idle;
+	MessageObject SearchShowMsg = MessageObject();
+	
+};
+inline PackageViwerStateManager PackageViwerState;
 
 
 struct NotificationStateManager

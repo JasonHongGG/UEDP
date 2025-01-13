@@ -6,6 +6,7 @@
 #include "EventHandler/Utils.h"
 #include "EventHandler/LoadAndSaveSettingEvent.h"
 #include "EventHandler/ConsoleEvent.h"
+#include "EventHandler/PackageViewerEvent.h"
 
 #include "GlobalState.h"
 #include "GUIState.h"
@@ -27,48 +28,6 @@ namespace EventHandler
         }
     }
 
- 
-
-    //// ============================================================================================================
-    //// Package Inspector
-    //void UpdataPackageObjectList(std::string PackageName)
-    //{
-    //    const ProcessState State = PackageViwerConf.PackageObjectData.UpdateEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        PackageViwerConf.PackageObjectData.UpdateEvent.PackageName = PackageName;
-    //        PackageViwerConf.PackageObjectData.UpdateEvent.State = ProcessState::Start;
-    //    }
-    //}
-
-    //void OpenPackageObjectTab(std::string ObjectName, DWORD_PTR Address)
-    //{
-    //    const ProcessState State = PackageViwerConf.PackageObjectContent.CreatEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        PackageViwerConf.PackageObjectContent.CreatEvent.Name = ObjectName;
-    //        PackageViwerConf.PackageObjectContent.CreatEvent.Address = Address;
-    //        PackageViwerConf.PackageObjectContent.CreatEvent.State = ProcessState::Start;
-    //    }
-    //}
-
-    //void UpdataGlobalSearchObject(std::string SearchString) {
-    //    const ProcessState State = PackageViwerConf.GlobalPackageObject.UpdateEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        PackageViwerConf.GlobalPackageObject.UpdateEvent.SearchStr = SearchString;
-    //        PackageViwerConf.GlobalPackageObject.UpdateEvent.State = ProcessState::Start;
-    //    }
-    //}
-
-    //void ShowGlobalSearchPackageObjectResult(std::string PackageName, std::string TabName, std::string ObjectName, DWORD_PTR Address)
-    //{
-    //    const ProcessState State = PackageViwerConf.GlobalPackageObject.ShowEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        PackageViwerConf.GlobalPackageObject.ShowEvent.PackageName = PackageName;
-    //        PackageViwerConf.GlobalPackageObject.ShowEvent.TabName = TabName;
-    //        PackageViwerConf.GlobalPackageObject.ShowEvent.ObjectName = ObjectName;
-    //        PackageViwerConf.GlobalPackageObject.ShowEvent.Address = Address;
-    //        PackageViwerConf.GlobalPackageObject.ShowEvent.State = ProcessState::Start;
-    //    }
-    //}
 
     //// ============================================================================================================
     //// Inspector

@@ -470,5 +470,14 @@
     <ClInclude Include="GUI\MyGuiUtils.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Menu\MainConsole\PackageViewer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="State\EventHandler\PackageViewerEvent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainConsole\APIPanel.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

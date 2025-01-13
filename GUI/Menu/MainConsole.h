@@ -4,6 +4,7 @@
 #include "../Config/MainConsoleConfig.h"
 #include "../../State/GUIState.h"
 #include "MainConsole/Console.h"
+#include "MainConsole/PackageViewer.h"
 
 namespace MainConsole
 {
@@ -29,8 +30,8 @@ namespace MainConsole
         ImGui::Begin("UE Dumper Console", &MainConsoleState.OpenDumperConsole, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_MenuBar);
         {
             MenuBar();
-            Console::Render();
-            //PackageViwer();
+            Console::Render(PageID);
+            PackageViewer::Render(PageID);
             //Inspector();
             //PannelSetting();
             //APIPannel();
