@@ -1,12 +1,14 @@
 #pragma once
 #include <string>
-
+#include <vector>
 #include "../GUI/Config/NotificationConfig.h"
 
 #include "EventHandler/Utils.h"
 #include "EventHandler/LoadAndSaveSettingEvent.h"
 #include "EventHandler/ConsoleEvent.h"
 #include "EventHandler/PackageViewerEvent.h"
+#include "EventHandler/InspectorEvent.h"
+#include "EventHandler/APIEvent.h"
 
 #include "GlobalState.h"
 #include "GUIState.h"
@@ -82,20 +84,6 @@ namespace EventHandler
     //    return false;
     //}
 
-    //// ============================================================================================================
-    //// API
-    //void AddAPIObject(DWORD_PTR BasicAddress, DWORD_PTR CurAddress, size_t Offset, int Bit, DWORD_PTR ObjectAddress, std::vector<std::pair<DWORD_PTR, size_t>>& DepthPath) {
-    //    const ProcessState State = APIConf.AddEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        APIConf.AddEvent.BaseAddress = BasicAddress;
-    //        APIConf.AddEvent.Address = CurAddress;
-    //        APIConf.AddEvent.Offset = Offset;
-    //        APIConf.AddEvent.DepthPath = DepthPath;
-    //        APIConf.AddEvent.Bit = Bit;
-    //        APIConf.AddEvent.ObjectAddress = ObjectAddress;
-    //        APIConf.AddEvent.State = ProcessState::Start;
-    //    }
-    //}
 
 
     

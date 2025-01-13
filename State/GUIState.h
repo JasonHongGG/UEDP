@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "../imgui/imgui.h"
 #include "GlobalState.h"
 #include "EventHandler/MessageInterface.h"
@@ -60,17 +61,37 @@ inline MainConsoleStateManager MainConsoleState;
 
 struct PackageViwerStateManager
 {
-	ProcessState ObjectDataUpdateEvent = ProcessState::Idle;
-	MessageObject ObjectDataUpdateMsg = MessageObject();
-	ProcessState ObjectContentCreatEvent = ProcessState::Idle;
-	MessageObject ObjectContentCreatMsg = MessageObject();
-	ProcessState SearchUpdateEvent = ProcessState::Idle;
-	MessageObject SearchUpdateMsg = MessageObject();
-	ProcessState SearchShowEvent = ProcessState::Idle;
-	MessageObject SearchShowMsg = MessageObject();
+	MessageObject ObjectDataUpdateEvent = MessageObject();
+	MessageObject ObjectContentCreatEvent = MessageObject();
+	MessageObject SearchUpdateEvent = MessageObject();
+	MessageObject SearchShowEvent = MessageObject();
 	
 };
 inline PackageViwerStateManager PackageViwerState;
+
+struct InspectorStateManager
+{
+	MessageObject GetFNameEvent = MessageObject();
+	MessageObject ObjectContentCreatEvent = MessageObject();
+	MessageObject ObjectContentUpdateEvent = MessageObject();
+	MessageObject ObjectContentDeleteEvent = MessageObject();
+};
+inline InspectorStateManager InspectorState;
+
+struct APIStateManager
+{
+	struct SelfMessageObject : public MessageObject {
+		std::vector<std::pair<DWORD_PTR, size_t>> DepthPath;
+		std::string FilePath = "";
+	};
+	SelfMessageObject AddEvent = SelfMessageObject();
+	SelfMessageObject OpenFileEvent = SelfMessageObject();
+	SelfMessageObject SaveFileEvent = SelfMessageObject();
+	MessageObject UpdateEvent = MessageObject();
+};
+inline APIStateManager APIState;
+
+
 
 
 struct NotificationStateManager

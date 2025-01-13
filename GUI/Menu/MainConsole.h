@@ -6,6 +6,8 @@
 #include "MainConsole/Console.h"
 #include "MainConsole/PackageViewer.h"
 
+#include "MainConsole/APIPanel.h"
+
 namespace MainConsole
 {
     inline float Width = 1400.f;
@@ -34,7 +36,7 @@ namespace MainConsole
             PackageViewer::Render(PageID);
             //Inspector();
             //PannelSetting();
-            //APIPannel();
+            APIPanel::Render(PageID);
 
             //StateUpdate();
         }

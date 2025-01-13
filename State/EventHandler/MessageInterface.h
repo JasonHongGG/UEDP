@@ -1,9 +1,11 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include "../GlobalState.h"
 
 class MessageObject {
 public:
+	ProcessState State = ProcessState::Idle;
 	std::string Str = "";
 	std::string SearchStr = "";
 	std::string Name = "";
