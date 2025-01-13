@@ -2,6 +2,7 @@
 #include <string>
 #include "../imgui/imgui.h"
 #include "GlobalState.h"
+#include "EventHandler/MessageInterface.h"
 
 struct MainMenuStateManager
 {
@@ -31,23 +32,43 @@ struct MainMenuStateManager
 };
 inline MainMenuStateManager MainMenuState;
 
+
+
+
 struct SelectProcessWindowStateManager
 {
 	bool OpenSelectProcessWindow = false;
 };
 inline SelectProcessWindowStateManager SelectProcessWindowState;
 
-struct UEDumperConsoleStateManager
+
+
+
+struct MainConsoleStateManager
 {
-	bool OpenUEDumperConsole = false;
+	bool OpenDumperConsole = false;
+	bool OpenSettingPanel = false;
+
+	ProcessState FNameInfoGetEvent = ProcessState::Idle;
+	ProcessState GUObjectInfoGetEvent = ProcessState::Idle;
+	ProcessState GUObjectInfoAddEvent = ProcessState::Idle;
+	ProcessState GUObjectInfoParseEvent = ProcessState::Idle;
+	ProcessState GUObjectInfoExpandEvent = ProcessState::Idle;
+	MessageObject GUObjectInfoExpandMsg = MessageObject();
 };
-inline UEDumperConsoleStateManager UEDumperConsole;
+inline MainConsoleStateManager MainConsoleState;
+
+
+
 
 struct NotificationStateManager
 {
 	ProcessState NotifyEvent = ProcessState::Idle;
 };
 inline NotificationStateManager NotificationState;
+
+
+
 
 struct ConfigPageComponentStateManager
 {
@@ -56,6 +77,9 @@ struct ConfigPageComponentStateManager
 	bool OpenGradientEditor = false;
 };
 inline ConfigPageComponentStateManager ConfigPageComponentStateMgr;
+
+
+
 
 struct LoadAndSaveSettingStateManager
 {
@@ -67,9 +91,12 @@ struct LoadAndSaveSettingStateManager
 };
 inline LoadAndSaveSettingStateManager LoadAndSaveSettingStateMgr;
 
+
+
+
 struct ProgressBarStateManager
 {
-	ProcessState FNamePool = ProcessState::Idle;
-	ProcessState GUObjectArray = ProcessState::Idle;
+	ProcessState FNamePoolEvent = ProcessState::Idle;
+	ProcessState GUObjectArrayEvent = ProcessState::Idle;
 };
 inline ProgressBarStateManager ProgressBarStateMgr;

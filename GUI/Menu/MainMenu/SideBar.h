@@ -30,7 +30,7 @@ namespace SideBar
 
 		// Logo
 		static float ImageWidth = ImGui::GetContentRegionAvail().x;
-		static float ImageHeight = static_cast<int>(std::round(ImageWidth / LogConf.LogoProportion));
+		static float ImageHeight = (float)(static_cast<int>(std::round(ImageWidth / LogConf.LogoProportion)));
 		if (LogConf.LogoTextureVec.size() > 0)
 			ImGui::Image((void*)LogConf.LogoTextureVec[0], ImVec2(ImageWidth, ImageHeight));	// no consider gif
 
@@ -67,14 +67,14 @@ void SideBar::MenuSideBarComponent(std::string Name, MainMenuCurPage Type, ImVec
 {
 	static ImGuiStyle* StyleMgr = &ImGui::GetStyle();
 	static bool ColorState = false;
-	ColorState = (*PageID == Type or (Type == MainMenuCurPage::DumperConsole and UEDumperConsole.OpenUEDumperConsole));
+	ColorState = (*PageID == Type or (Type == MainMenuCurPage::DumperConsole and MainConsoleState.OpenDumperConsole));
 	ImVec2 CursorPos = ImGui::GetCursorPos();
 
 	ImGui::DummySpace();
 	if (ColorState) Style::ActivateBtnStyleSwitch(true);
 	if (ImGui::CenterButton(Name.c_str(), ButtonSize)) {
 		if (Type == MainMenuCurPage::DumperConsole)
-			UEDumperConsole.OpenUEDumperConsole = !UEDumperConsole.OpenUEDumperConsole;
+			MainConsoleState.OpenDumperConsole = !MainConsoleState.OpenDumperConsole;
 		else if (Type == MainMenuCurPage::Quit)
 			MainMenuState.CloseProcess = ProcessState::Start;
 		else

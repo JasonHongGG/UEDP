@@ -5,6 +5,7 @@
 
 #include "EventHandler/Utils.h"
 #include "EventHandler/LoadAndSaveSettingEvent.h"
+#include "EventHandler/ConsoleEvent.h"
 
 #include "GlobalState.h"
 #include "GUIState.h"
@@ -26,49 +27,7 @@ namespace EventHandler
         }
     }
 
-    // ============================================================================================================
-    // Main Console
-    //void GetFName()
-    //{
-    //    const ProcessState State = UEDumperConsoleConf.DumperTable.ExpendEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        UEDumperConsoleConf.FNameInfo.GetEvent.State = ProcessState::Start;
-    //    }
-    //}
-
-    //void GetGUObject()
-    //{
-    //    const ProcessState State = UEDumperConsoleConf.DumperTable.ExpendEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        UEDumperConsoleConf.GUObjectInfo.GetEvent.State = ProcessState::Start;
-    //    }
-    //}
-
-    //void AddToObjectTable()
-    //{
-    //    const ProcessState State = UEDumperConsoleConf.DumperTable.ExpendEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        UEDumperConsoleConf.GUObjectInfo.AddEvent.State = ProcessState::Start;
-    //    }
-    //}
-
-    //void ObjectParse()
-    //{
-    //    const ProcessState State = UEDumperConsoleConf.DumperTable.ExpendEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        UEDumperConsoleConf.GUObjectInfo.ParseEvent.State = ProcessState::Start;
-    //    }
-    //}
-
-    //void UpdateDumperObjectMap(DWORD_PTR Address, int Index)
-    //{
-    //    const ProcessState State = UEDumperConsoleConf.DumperTable.ExpendEvent.State;
-    //    if (IsEventAcceptable(State)) {
-    //        UEDumperConsoleConf.DumperTable.ExpendEvent.Index = Index;
-    //        UEDumperConsoleConf.DumperTable.ExpendEvent.Address = Address;
-    //        UEDumperConsoleConf.DumperTable.ExpendEvent.State = ProcessState::Start;
-    //    }
-    //}
+ 
 
     //// ============================================================================================================
     //// Package Inspector

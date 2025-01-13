@@ -27,7 +27,7 @@ bool FNamePoolParserClass::FindStringFromFNamePool(const std::string& InputStrin
 
     //ProgressBar 準備
     StorageMgr.FNamePoolParseProgressBarTotalValue.Set(SplitFNamePoolSize);
-    ProgressBarStateMgr.FNamePool = ProcessState::Processing;
+    ProgressBarStateMgr.FNamePoolEvent = ProcessState::Processing;
 
     const BS::multi_future<void> loop_future = Pool.submit_loop<size_t>(0, SplitFNamePoolSize,
         [this, InputString, BatchNum](const size_t i)
@@ -41,7 +41,7 @@ bool FNamePoolParserClass::FindStringFromFNamePool(const std::string& InputStrin
             StorageMgr.FNamePoolParseProgressBarValue.Set(StorageMgr.FNamePoolParseProgressBarValue.Get() + 1); //標記完成加一
         });
     loop_future.wait();
-    ProgressBarStateMgr.FNamePool = ProcessState::Completed;
+    ProgressBarStateMgr.FNamePoolEvent = ProcessState::Completed;
 
     if (StorageMgr.FNamePoolFindStringFlag.Get()) {
         StorageMgr.FNamePoolFindStringFlag.Set(false);

@@ -3,6 +3,8 @@
 #include "../Config/SelectProcessWindowConfig.h"
 #include "../../State/GUIState.h"
 #include "../../System/Process.h"
+#include "../DockingManager.h"
+#include "../MyGuiComponent.h"
 
 namespace SelectProcessWindow
 {

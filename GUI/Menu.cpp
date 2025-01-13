@@ -1,21 +1,18 @@
 #include "Menu.h"
+#include "Include/Notify/imgui_notify.h"
 #include "TextureLoader.h"
-
 #include "Config/NotificationConfig.h"
 #include "Config/LogoConfig.h"
-
 #include "../State/GUIState.h"
-
 #include "Menu/MainMenu.h"
-#include "Menu/SelectProcessWindow.h"
+#include "Menu/MainConsole.h"
 
-#include "Include/Notify/imgui_notify.h"
 
 void Menu::MenuEntry() 
 {
 	if (InitialFlag) Initial();
 	MainMenu::Render();
-	SelectProcessWindow::Render();
+	MainConsole::Render();
 
 	// ====================================================
 	//Notification

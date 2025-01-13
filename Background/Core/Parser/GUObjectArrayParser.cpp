@@ -84,7 +84,7 @@ DWORD_PTR GUObjectArrayParserClass::ParseGUObjectArray(GUObjectExecuteMode Mode,
                     StorageMgr.GUObjectArrayParseIndex.Set(i);
                     StorageMgr.GUObjectArrayParseProgressBarValue.Set(0);
                     StorageMgr.GUObjectArrayParseProgressBarTotalValue.Set(SplitGUObjectArraySize);
-                    ProgressBarStateMgr.GUObjectArray = ProcessState::Processing;
+                    ProgressBarStateMgr.GUObjectArrayEvent = ProcessState::Processing;
                     const BS::multi_future<void> loop_future = Pool.submit_loop<size_t>(0, SplitGUObjectArraySize,
                         [this, Address_Level_1, GUObjectArrayBatchSize, GUObjectArrayElementSize, Mode, FullName](const size_t i)
                         {
@@ -107,7 +107,7 @@ DWORD_PTR GUObjectArrayParserClass::ParseGUObjectArray(GUObjectExecuteMode Mode,
         }
 
     }
-    ProgressBarStateMgr.GUObjectArray = ProcessState::Completed;
+    ProgressBarStateMgr.GUObjectArrayEvent = ProcessState::Completed;
 
     //印出關於 Object 的相關訊息
     //for (const auto& TypeList : StorageMgr.GetObjectTypeListVector()) {

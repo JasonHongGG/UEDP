@@ -38,7 +38,7 @@ public:
         }
     }
 
-    size_t GetDockingDisableFlag() {
+    ImGuiWindowFlags GetDockingDisableFlag() {
         if (!DockingEnable) return 0;
         return Disable;
     }

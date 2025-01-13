@@ -8,6 +8,7 @@
 
 #include "../../System/Process.h"
 
+#include "SelectProcessWindow.h"
 #include "MainMenu/MainPage.h"
 #include "MainMenu/SideBar.h"
 #include "MainMenu/ToolPage.h"
@@ -34,6 +35,7 @@ namespace MainMenu
 	{
 		SideBarRender();
 		MainMenuRender();
+		SelectProcessWindow::Render();
 		ComponentPanelMgr.Render();
 	}
 }

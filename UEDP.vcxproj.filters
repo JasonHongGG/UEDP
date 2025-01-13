@@ -449,5 +449,26 @@
     <ClInclude Include="Background\Interface\ObjectInterface.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Menu\MainConsole.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Config\MainConsoleConfig.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainConsole\Console.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="State\EventHandler\ConsoleEvent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="State\EventHandler\MessageInterface.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Interface\DumperConsoleInterface.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\MyGuiUtils.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

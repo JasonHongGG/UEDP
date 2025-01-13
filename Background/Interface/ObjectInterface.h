@@ -4,12 +4,12 @@
 #include <vector>
 
 struct BasicObjectData {
-	size_t ObjectID = -1;
+	size_t ID = -1;
+	int16_t Offset = 0x0;
 	std::string Type = "";
 	std::string Name = "";
 	std::string FullName = "";
 	DWORD_PTR Address = NULL;
-	int16_t Offset = 0x0;
 };
 
 struct ObjectData : BasicObjectData {
@@ -33,3 +33,4 @@ struct ObjectData : BasicObjectData {
 	size_t BitMask = 0;
 	DWORD_PTR Funct = 0x0;
 };
+

@@ -193,6 +193,7 @@
     <ClInclude Include="Background\Storage\StorageManager.h" />
     <ClInclude Include="Font\IconsFontAwesome6.h" />
     <ClInclude Include="GUI\Config\ColorConfig.h" />
+    <ClInclude Include="GUI\Config\MainConsoleConfig.h" />
     <ClInclude Include="GUI\Config\FontConfig.h" />
     <ClInclude Include="GUI\Config\FPSConfig.h" />
     <ClInclude Include="GUI\Config\GradientHDRConfig.h" />
@@ -214,6 +215,9 @@
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_palette.h" />
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_presets.h" />
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_renderer.h" />
+    <ClInclude Include="GUI\Interface\DumperConsoleInterface.h" />
+    <ClInclude Include="GUI\Menu\MainConsole.h" />
+    <ClInclude Include="GUI\Menu\MainConsole\Console.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ColorStylePanelTab.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanelTab.h" />
@@ -242,6 +246,7 @@
     <ClInclude Include="GUI\MyGuiComponent\ListBox.h" />
     <ClInclude Include="GUI\MyGuiComponent\Operator.h" />
     <ClInclude Include="GUI\Config\NotificationConfig.h" />
+    <ClInclude Include="GUI\MyGuiUtils.h" />
     <ClInclude Include="State\EventHandler.h" />
     <ClInclude Include="GUI\Menu.h" />
     <ClInclude Include="GUI\Menu\MainMenu.h" />
@@ -258,7 +263,9 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="State\EventHandler\ConsoleEvent.h" />
     <ClInclude Include="State\EventHandler\LoadAndSaveSettingEvent.h" />
+    <ClInclude Include="State\EventHandler\MessageInterface.h" />
     <ClInclude Include="State\EventHandler\Utils.h" />
     <ClInclude Include="State\GlobalState.h" />
     <ClInclude Include="State\GUIState.h" />

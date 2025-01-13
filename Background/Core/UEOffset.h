@@ -7,7 +7,7 @@ class UEOffsetConfig
 {
 public:
     std::map<std::string, bool> UEOffestIsExist = {
-        {"ObjectID", true},     //
+        {"ID", true},     //
         {"Class", true},        //
         {"FNameIndex", true},   //
         {"Outer", true},        //
@@ -30,7 +30,7 @@ public:
         {"Funct", true}
     };
 
-    size_t ObjectID = 0xC - ProcessInfo::ProcOffestSub;
+    size_t ID = 0xC - ProcessInfo::ProcOffestSub;
     size_t Class = 0x10 - ProcessInfo::ProcOffestSub;                //Class ªº Outer ´N¬O Package
     size_t FNameIndex = 0x18 - (ProcessInfo::ProcOffestSub * 2);
     size_t Outer = 0x20 - (ProcessInfo::ProcOffestSub * 2);

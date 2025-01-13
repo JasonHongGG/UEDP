@@ -11,7 +11,7 @@ DWORD_PTR CorrectAddressDeviation(DWORD_PTR Address)
 
 bool ObjectManager::BasicObjectDataWapper(ObjectData& PropertyObject, BasicObjectData& TempBasicObjectData)
 {
-	TempBasicObjectData.ObjectID = PropertyObject.ObjectID;
+	TempBasicObjectData.ID = PropertyObject.ID;
 	TempBasicObjectData.Type = PropertyObject.Type;
 	TempBasicObjectData.Name = PropertyObject.Name;
 	TempBasicObjectData.FullName = PropertyObject.FullName;
@@ -23,7 +23,7 @@ bool ObjectManager::BasicObjectDataWapper(ObjectData& PropertyObject, BasicObjec
 bool ObjectManager::GetBasicInfo_1(DWORD_PTR Address, size_t& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Outer)
 {
 	//ID
-	ObjectId = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.ObjectID);
+	ObjectId = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.ID);
 
 	//Outer
 	Outer = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Outer);
@@ -58,7 +58,7 @@ bool ObjectManager::GetBasicInfo_2(DWORD_PTR Address, size_t& ObjectId, std::str
 	FNameParser.GetFNameStringByID(name, Name, true);
 
 	//ID
-	ObjectId = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.ObjectID);
+	ObjectId = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.ID);
 
 	//Outer
 	Outer = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Outer);
@@ -68,8 +68,8 @@ bool ObjectManager::GetBasicInfo_2(DWORD_PTR Address, size_t& ObjectId, std::str
 
 bool ObjectManager::GetBasicInfo(ObjectData& RetObjectData, DWORD_PTR Address, size_t Level, DWORD_PTR ClassPtr)
 {
-	if (!GetBasicInfo_1(Address, RetObjectData.ObjectID, RetObjectData.Name, RetObjectData.Type, RetObjectData.Outer)) {			//簡單來說 GetBasicInfo_1 是給特殊 Object 走的，一半狀況則會走到 GetBasicInfo_2
-		GetBasicInfo_2(Address, RetObjectData.ObjectID, RetObjectData.Name, RetObjectData.Type, ClassPtr, RetObjectData.Outer);
+	if (!GetBasicInfo_1(Address, RetObjectData.ID, RetObjectData.Name, RetObjectData.Type, RetObjectData.Outer)) {			//簡單來說 GetBasicInfo_1 是給特殊 Object 走的，一半狀況則會走到 GetBasicInfo_2
+		GetBasicInfo_2(Address, RetObjectData.ID, RetObjectData.Name, RetObjectData.Type, ClassPtr, RetObjectData.Outer);
 	}
 	RetObjectData.Address = Address;
 	if (RetObjectData.Name.empty()) RetObjectData.Name = "InvalidName";
@@ -283,8 +283,8 @@ bool ObjectManager::TrySaveObject(DWORD_PTR Address, ObjectData& ObjData, size_t
 		if (RetObjectData.Type.find("Property") == std::string::npos) {		//不是 Member
 			if (StorageMgr.GetObjectDictByID(Address, TempObjectData)) { ObjData = TempObjectData; return true; }
 
-			if (RetObjectData.ObjectID < 0xFFFFFFFF) {
-				StorageMgr.ObjectDictByID.Set(RetObjectData.ObjectID, RetObjectData.Address);		//By ID
+			if (RetObjectData.ID < 0xFFFFFFFF) {
+				StorageMgr.ObjectDictByID.Set(RetObjectData.ID, RetObjectData.Address);		//By ID
 			}
 		}
 
