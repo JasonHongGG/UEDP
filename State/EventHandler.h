@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include "../GUI/Config/NotificationConfig.h"
+#include "GlobalState.h"
+#include "GUIState.h"
 
 #include "EventHandler/Utils.h"
 #include "EventHandler/LoadAndSaveSettingEvent.h"
@@ -10,8 +12,7 @@
 #include "EventHandler/InspectorEvent.h"
 #include "EventHandler/APIEvent.h"
 
-#include "GlobalState.h"
-#include "GUIState.h"
+
 
 
 namespace EventHandler

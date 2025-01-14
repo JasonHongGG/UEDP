@@ -17,7 +17,7 @@ namespace APIEntry
 	void UpdateObjAddress();
 
 
-	void Entry()
+	inline void Entry()
 	{
 		if (APIState.AddEvent.State == ProcessState::Start) {
 			APIState.AddEvent.State = ProcessState::Processing;
@@ -33,7 +33,7 @@ namespace APIEntry
 		}
 	}
 
-	void FileEntry()
+	inline void FileEntry()
 	{
 		if (APIState.OpenFileEvent.State == ProcessState::Start) {
 			APIState.OpenFileEvent.State = ProcessState::Processing;

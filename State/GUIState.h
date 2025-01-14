@@ -94,8 +94,6 @@ struct APIStateManager
 inline APIStateManager APIState;
 
 
-
-
 struct NotificationStateManager
 {
 	ProcessState NotifyEvent = ProcessState::Idle;
@@ -119,12 +117,17 @@ inline ConfigPageComponentStateManager ConfigPageComponentStateMgr;
 struct LoadAndSaveSettingStateManager
 {
 	std::string CurTime = "";
-	ProcessState SaveEvent = ProcessState::Idle;
-	ProcessState ReadEvent = ProcessState::Idle; 
-	ProcessState DeleteEvent = ProcessState::Idle;
-	ProcessState LoadEvent = ProcessState::Idle;
+	struct SelfMessageObject : public MessageObject {
+		std::string Title = "";
+		std::string Description = "";
+		std::string SaveJasonFilePath = "./MenuSetting.json";
+	};
+	SelfMessageObject SaveEvent = SelfMessageObject();
+	MessageObject ReadEvent = MessageObject();
+	MessageObject DeleteEvent = MessageObject();
+	MessageObject LoadEvent = MessageObject();
 };
-inline LoadAndSaveSettingStateManager LoadAndSaveSettingStateMgr;
+inline LoadAndSaveSettingStateManager LoadAndSaveSettingState;
 
 
 

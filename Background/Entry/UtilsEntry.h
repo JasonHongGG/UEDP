@@ -12,39 +12,39 @@
 
 namespace UtilsEntry
 {
-	bool IsObjectNameInPackage(std::string TargetObjectName, DWORD_PTR& Address);
+	inline bool IsObjectNameInPackage(std::string TargetObjectName, DWORD_PTR& Address);
 
-	size_t CalcuTypeOffset(std::string Type);
-
-
-	DWORD_PTR PropertySelector(ObjectData& Object);
+	inline size_t CalcuTypeOffset(std::string Type);
 
 
-	bool DumperObjectWapper(ObjectData& Object, BasicDumperObject& TempBasicDumperObject);
+	inline DWORD_PTR PropertySelector(ObjectData& Object);
 
 
-	bool DumperObjectBasicWapper(BasicObjectData& BasicObject, BasicDumperObject& TempBasicDumperObject);
+	inline bool DumperObjectWapper(ObjectData& Object, BasicDumperObject& TempBasicDumperObject);
 
 
-	void InspectorAdditionalObjProc(ObjectData& Object, BasicDumperObject& TempBasicObject, int LoopIndex, size_t Offset);
+	inline bool DumperObjectBasicWapper(BasicObjectData& BasicObject, BasicDumperObject& TempBasicDumperObject);
 
 
-	bool ObjectSubTypeProc(DWORD_PTR Address, BasicDumperObject& TempBasicObject, bool CheckClickable = false);
+	inline void InspectorAdditionalObjProc(ObjectData& Object, BasicDumperObject& TempBasicObject, int LoopIndex, size_t Offset);
 
 
-	bool GetEnumList(DWORD_PTR Address, std::vector<std::pair<std::string, size_t>>& EnumList);
+	inline bool ObjectSubTypeProc(DWORD_PTR Address, BasicDumperObject& TempBasicObject, bool CheckClickable = false);
 
 
-	void ObjectEnumProc(ObjectData& EnumObject, BasicDumperObject& TempBasicObject, bool IsPropertyObject = true);
+	inline bool GetEnumList(DWORD_PTR Address, std::vector<std::pair<std::string, size_t>>& EnumList);
 
 
-	void ObjectMemberProcessSelector(DWORD_PTR Address, std::vector<BasicDumperObject>& MemberList, bool Preview = false, ProcessState* ProcessState = NULL, DWORD_PTR* ProcessAddress = NULL);
+	inline void ObjectEnumProc(ObjectData& EnumObject, BasicDumperObject& TempBasicObject, bool IsPropertyObject = true);
 
 
-	bool ObjectMemberProc(ObjectData& RetObjData, std::vector<BasicDumperObject>& MemberList, bool IsObject, bool Preview = false, ProcessState* ProcessState = NULL, DWORD_PTR* ProcessAddress = NULL);
+	inline void ObjectMemberProcessSelector(DWORD_PTR Address, std::vector<BasicDumperObject>& MemberList, bool Preview = false, ProcessState* ProcessState = NULL, DWORD_PTR* ProcessAddress = NULL);
 
 
-	ProcessState ObjectMemberListProc(ProcessClass ProcessClass, ObjectData& RetObjData, DumperObject& TempObjectItem, bool Preview = false, ProcessState* ProcessState = NULL, DWORD_PTR* ProcessAddress = NULL);
+	inline bool ObjectMemberProc(ObjectData& RetObjData, std::vector<BasicDumperObject>& MemberList, bool IsObject, bool Preview = false, ProcessState* ProcessState = NULL, DWORD_PTR* ProcessAddress = NULL);
+
+
+	inline ProcessState ObjectMemberListProc(ProcessClass ProcessClass, ObjectData& RetObjData, DumperObject& TempObjectItem, bool Preview = false, ProcessState* ProcessState = NULL, DWORD_PTR* ProcessAddress = NULL);
 
 }
 

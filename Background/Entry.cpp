@@ -13,6 +13,9 @@
 #include "Entry/ParseEntry.h"
 #include "Entry/ConsoleEntry.h"
 #include "Entry/PackageViewEntry.h"
+#include "Entry/InspectorEntry.h"
+#include "Entry/APIEntry.h"
+#include "Entry/LoadAndSaveSettingEntry.h"
 //#include "Console.h"
 //#include "../json/MyJson.h"
 #include "../Utils/Utils.h"
@@ -125,5 +128,9 @@ void BackgroundEntry::Entry()
 		ParseEntry::Entry();
 		ConsoleEntry::Entry();
 		PackageViewEntry::Entry();
+		InspectorEntry::Entry();
+		APIEntry::Entry();
 	}
+	APIEntry::FileEntry();
+	LoadAndSaveSettingEntry::Entry();
 }

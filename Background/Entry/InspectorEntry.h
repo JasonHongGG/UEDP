@@ -12,14 +12,14 @@ namespace InspectorEntry
 {
 	inline std::shared_mutex  GetObjectInstanceSearchLock;
 
-	void GetFName();
-	void AddObjectInspector();
-	void CreatObectNamePage();
-	bool ConditionValidation(std::vector < InspectorConfig::ConditionObject >& ConditionSet);
-	bool ScanFilter(std::vector < InspectorConfig::ConditionObject >& ConditionSet, DWORD_PTR Address);
-	void ObjectInstanceSearch();
+	inline void GetFName();
+	inline void AddObjectInspector();
+	inline void CreatObectNamePage();
+	inline bool ConditionValidation(std::vector < InspectorConfig::ConditionObject >& ConditionSet);
+	inline bool ScanFilter(std::vector < InspectorConfig::ConditionObject >& ConditionSet, DWORD_PTR Address);
+	inline void ObjectInstanceSearch();
 
-	void Entry()
+	inline void Entry()
 	{
 		if (InspectorState.GetFNameEvent.State == ProcessState::Start) {
 			InspectorState.GetFNameEvent.State = ProcessState::Processing;

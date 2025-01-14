@@ -3,9 +3,11 @@
 #include "../Utils/Utils.h"
 #include "../Gui/Menu.h"
 #include "../State/EventHandler.h"
+#include "../State/GUIState.h"
 #include "../GUI/Config/ColorConfig.h"
 #include "../GUI/Config/StyleConfig.h"
 #include "../GUI/Config/MainConsoleConfig.h"
+#include "../GUI/Config/LoadAndSaveSettingConfig.h"
 
 class SaveParaClass {
 public:
@@ -131,7 +133,7 @@ inline SaveParaClass SavePara = SaveParaClass();
 void JsonManager::DeleteMenuSettingFile(std::string DeleteKey)
 {
 	nlohmann::json JsonData;
-	std::ifstream OpenFile(ConfigSaveConf.OptionPanel.SaveEvent.SaveJasonFilePath);
+	std::ifstream OpenFile(LoadAndSaveSettingState.SaveEvent.SaveJasonFilePath);
 	if (OpenFile) {
 		if (OpenFile.peek() != std::ifstream::traits_type::eof())
 			OpenFile >> JsonData;
@@ -141,7 +143,7 @@ void JsonManager::DeleteMenuSettingFile(std::string DeleteKey)
 	if (JsonData.find(DeleteKey) != JsonData.end())
 		JsonData.erase(DeleteKey);
 
-	std::ofstream SaveFile(ConfigSaveConf.OptionPanel.SaveEvent.SaveJasonFilePath);
+	std::ofstream SaveFile(LoadAndSaveSettingState.SaveEvent.SaveJasonFilePath);
 	if (SaveFile) {
 		SaveFile << std::setw(4) << JsonData << std::endl;
 		SaveFile.close();
@@ -151,7 +153,7 @@ void JsonManager::DeleteMenuSettingFile(std::string DeleteKey)
 void JsonManager::LoadMenuSettingFile(std::string LoadKey)
 {
 	nlohmann::json JsonData;
-	std::ifstream OpenFile(ConfigSaveConf.OptionPanel.SaveEvent.SaveJasonFilePath);
+	std::ifstream OpenFile(LoadAndSaveSettingState.SaveEvent.SaveJasonFilePath);
 	if (OpenFile) {
 		if (OpenFile.peek() == std::ifstream::traits_type::eof()) return;	//如果檔案是空的
 		OpenFile >> JsonData;
@@ -175,19 +177,19 @@ void JsonManager::LoadMenuSettingFile(std::string LoadKey)
 void JsonManager::ReadMenuSettingFile()
 {
 	nlohmann::json JsonData;
-	std::ifstream OpenFile(ConfigSaveConf.OptionPanel.SaveEvent.SaveJasonFilePath);
+	std::ifstream OpenFile(LoadAndSaveSettingState.SaveEvent.SaveJasonFilePath);
 	if (OpenFile) {
 		if (OpenFile.peek() == std::ifstream::traits_type::eof()) return;	//如果檔案是空的
 		OpenFile >> JsonData;
 
 		if (!JsonData.empty()) {
 			for (auto& [key, value] : JsonData.items()) {
-				MenuConfigSaveConfig::MenuConfigSaveStruct TempMenuSettingSaveStruct;
+				LoadAndSaveSettingConfig::SaveObject TempMenuSettingSaveStruct;
 				TempMenuSettingSaveStruct.Title = value["Title"];
 				TempMenuSettingSaveStruct.Description = value["Description"];
 				TempMenuSettingSaveStruct.CurTime = value["CurTime"];
 
-				ConfigSaveConf.MenuConfigSaveList.push_back(TempMenuSettingSaveStruct);
+				LoadAndSaveSettingConf.SaveListConf.push_back(TempMenuSettingSaveStruct);
 			}
 		}
 	}
@@ -195,13 +197,13 @@ void JsonManager::ReadMenuSettingFile()
 
 void JsonManager::WriteMenuSettingFile()
 {
-	std::string Title = ConfigSaveConf.OptionPanel.SaveEvent.Title;
-	std::string Description = ConfigSaveConf.OptionPanel.SaveEvent.Description;
+	std::string Title = LoadAndSaveSettingState.SaveEvent.Title;
+	std::string Description = LoadAndSaveSettingState.SaveEvent.Description;
 	std::string CurTime = Utils.GetCurTime();
 
 	// 檢查並讀取現有的 JSON 文件
 	nlohmann::json JsonData;
-	std::ifstream OpenFile(ConfigSaveConf.OptionPanel.SaveEvent.SaveJasonFilePath);
+	std::ifstream OpenFile(LoadAndSaveSettingState.SaveEvent.SaveJasonFilePath);
 	if (OpenFile) {
 		if (OpenFile.peek() != std::ifstream::traits_type::eof())
 			OpenFile >> JsonData;
@@ -227,9 +229,9 @@ void JsonManager::WriteMenuSettingFile()
 
 		
 	// 寫入
-	std::ofstream SaveFile(ConfigSaveConf.OptionPanel.SaveEvent.SaveJasonFilePath, std::ios::out | std::ios::trunc); // 使用覆蓋模式
+	std::ofstream SaveFile(LoadAndSaveSettingState.SaveEvent.SaveJasonFilePath, std::ios::out | std::ios::trunc); // 使用覆蓋模式
 	if (!SaveFile) {
-		std::cerr << "Error: Unable to open file for writing at " << ConfigSaveConf.OptionPanel.SaveEvent.SaveJasonFilePath << std::endl;
+		std::cerr << "Error: Unable to open file for writing at " << LoadAndSaveSettingState.SaveEvent.SaveJasonFilePath << std::endl;
 		return;
 	}
 
@@ -238,11 +240,11 @@ void JsonManager::WriteMenuSettingFile()
 
 
 	// GUI Update
-	MenuConfigSaveConfig::MenuConfigSaveStruct TempMenuSettingSaveStruct;
+	LoadAndSaveSettingConfig::SaveObject TempMenuSettingSaveStruct;
 	TempMenuSettingSaveStruct.Title = Title;
 	TempMenuSettingSaveStruct.Description = Description;
 	TempMenuSettingSaveStruct.CurTime = CurTime;
-	ConfigSaveConf.MenuConfigSaveList.push_back(TempMenuSettingSaveStruct);
+	LoadAndSaveSettingConf.SaveListConf.push_back(TempMenuSettingSaveStruct);
 }
 
 

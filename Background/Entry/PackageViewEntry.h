@@ -19,7 +19,7 @@ namespace PackageViewEntry
 	void ShowGlobalSearchState();
 
 
-	void Entry()
+	inline void Entry()
 	{
 		if (PackageViwerState.ObjectDataUpdateEvent.State == ProcessState::Start) {
 			PackageViwerState.ObjectDataUpdateEvent.State = ProcessState::Processing;
