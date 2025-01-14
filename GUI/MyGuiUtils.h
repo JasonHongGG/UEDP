@@ -11,14 +11,16 @@ class GUIUtilsClass
 public:
     bool IsExpandType(std::string Type);
     void GetDisplayNextState(BasicDumperObject& MemberObject, DWORD_PTR Address, int CurOffset, float Indentation, bool EditorEnable);
+    void DrawTreeNavLine(int State, float IndentSize = 0);
+    float CursorPosCalcu(float ObjectIndentation, float Indentation, float IndentAccum, bool IsGroupHeaderEle = false, bool IsIndentationNecessary = false, float SetIndentation = -1);
+    void GetObjectName(BasicDumperObject& MemberObject, std::string& TargetObjectName, bool EditorEnable);
     // ============================================================================================
     //                                  Style 
     // ============================================================================================
 
     float GetFrameHeight();
     float GetFontHeight();
-
-
+    float GetStringWidth(std::string Str);
 
 
     void CEItemExport(std::string Name, std::string Type, DWORD_PTR Offset);
@@ -73,6 +75,91 @@ void GUIUtilsClass::GetDisplayNextState(BasicDumperObject& MemberObject, DWORD_P
     }
 }
 
+void GUIUtilsClass::DrawTreeNavLine(int State, float IndentSize)
+{
+    // 開關
+    if (InspectorConf.InspectorTreeNavLine == false) return;
+
+
+    if (State == InspectorConfig::TreeNavLine::Start) {
+        InspectorConf.NavLineStartStack.push(ImGui::GetCursorScreenPos());   // 用 stack 去紀錄 Start Pos
+        InspectorConf.NavLineEndStack.push(ImGui::GetCursorScreenPos());
+    }
+    else if (State == InspectorConfig::TreeNavLine::Update) {
+        // X 不變、Y 更新
+        float ItemMidPoint = (ImGui::GetItemRectMin().y + ImGui::GetItemRectMax().y) / 2;
+        ImVec2 UpdateVec = { InspectorConf.NavLineEndStack.top().x, ItemMidPoint };
+        InspectorConf.NavLineEndStack.pop();
+        InspectorConf.NavLineEndStack.push(UpdateVec);
+
+        // 每次 Update 的時候就是新 Item 出現時 => 畫分支
+        // RelativeDistanct > 0 表示 Cursor 大於 Offset 的位置
+        // RelativeDistanct 是相對於的位置，目前是以 Offset 的位置為準
+        ImVec2 RelativeDistanct = { InspectorConf.RelativeDistanctWithOffset, 0 };
+        ImVec2 Start = UpdateVec - RelativeDistanct;
+        ImVec2 End = UpdateVec - RelativeDistanct;
+        float NavLineOffset = UpdateVec.x - RelativeDistanct.x - ImGui::GetWindowPos().x;
+        IndentSize -= NavLineOffset;    // 減掉線本身的偏移，才時此 branch 真正的長度
+        End.x += IndentSize - (InspectorConf.InspectorTreeNavLineOffset / 2) + InspectorConf.InspectorTreeNavBranchLineSize;
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        drawList->AddLine(Start, End, ImGui::ColorConvertFloat4ToU32(Color::TreeNavLineColor));
+    }
+    else if (State == InspectorConfig::TreeNavLine::Draw) {
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        ImVec2 RelativeDistanct = { InspectorConf.RelativeDistanctWithOffset, 0 };
+        ImVec2 Start = InspectorConf.NavLineStartStack.top() - RelativeDistanct; // pop 出 Start Pos
+        ImVec2 End = InspectorConf.NavLineEndStack.top() - RelativeDistanct;
+        drawList->AddLine(Start, End, ImGui::ColorConvertFloat4ToU32(Color::TreeNavLineColor));
+        InspectorConf.NavLineStartStack.pop();
+        InspectorConf.NavLineEndStack.pop();
+    }
+}
+
+float GUIUtilsClass::CursorPosCalcu(float ObjectIndentation, float Indentation, float IndentAccum, bool IsGroupHeaderEle, bool IsIndentationNecessary, float SetIndentation)
+{
+    // ObjectIndentation :  當前物件的 Indentation 
+    // Indentation : 目前為止，到上一回合已經累積的 Indentation
+    // IndentAccum : 此回合累積(考量物件字串寬度)的 Indentation
+    // IsGroupHeaderEle : 該 ROW 的錨點元素用來定位的
+    // IsIndentationNecessary : 該 ROW 的開頭元素，讓不管結構怎麼調樹狀的縮排都一定要有
+    if (!IsGroupHeaderEle and !InspectorConf.IndentationIndependent)    // 是 relative 且不是 group 的第一個元素，則跟著前面元素尾巴依序接下去
+        return SetIndentation == -1 ? ImGui::GetCursorPosX() : SetIndentation;
+
+    float UseObjectIndentation = (InspectorConf.IndentationIndependent or IsGroupHeaderEle) ? ObjectIndentation : 0;    // 是否使用 Indentation      //如果是 IsGroupHeaderEle 則必須得用 ObjectIndentation
+    float CurrentIndentation = InspectorConf.IndentationAccumulate ? Indentation : IndentAccum;     // Indentation 是否考量到每個物件字串本身的寬度
+
+    if ((InspectorConf.IndentationIndependent or (InspectorConf.AlignGroupObjectIndentation and IsGroupHeaderEle)) and !IsIndentationNecessary)   // 獨立使用 ObjectIndentation// 使用 ObjectIndentation 且考慮縮排
+        return UseObjectIndentation;            // 有沒有數值取決於是否 UseObjectIndentation
+    else
+        return UseObjectIndentation + CurrentIndentation;   //考慮到縮排、縮排是否考慮字串長度取決於 IndentationAccumulate、 是某使用 ObjectIndentation 取決於 UseObjectIndentation 
+}
+
+void GUIUtilsClass::GetObjectName(BasicDumperObject& MemberObject, std::string& TargetObjectName, bool EditorEnable)
+{
+    if (MemberObject.Type.find("StructProperty") != std::string::npos or
+        MemberObject.Type.find("ObjectProperty") != std::string::npos or
+        MemberObject.Type.find("ClassProperty") != std::string::npos)
+        TargetObjectName = (MemberObject.Index != -1 ? std::to_string(MemberObject.Index) + " " : "") +
+        MemberObject.SubType[0].Name;
+
+    else if (MemberObject.Type.find("ArrayProperty") != std::string::npos)
+        TargetObjectName = (MemberObject.Index != -1 ? std::to_string(MemberObject.Index) + " " : "") + "[Array] " +
+        ((EditorEnable and MemberObject.Size[0] < 200) ? "[" + std::to_string(MemberObject.Size[0]) + "]" + "[" + std::to_string(MemberObject.Size[1]) + "]" : "") +
+        (MemberObject.SubType[0].Type.find("Property") != std::string::npos ? MemberObject.SubType[0].Name : MemberObject.SubType[0].Type);
+
+    else if (MemberObject.Type.find("MapProperty") != std::string::npos)
+        TargetObjectName = (MemberObject.Index != -1 ? std::to_string(MemberObject.Index) + " " : "") + "[Map] " +
+        ((EditorEnable and MemberObject.Size[0] < 200) ? "[" + std::to_string(MemberObject.Size[0]) + "]" + "[" + std::to_string(MemberObject.Size[1]) + "]" : "") +
+        (MemberObject.SubType[0].Type.find("Property") != std::string::npos ? MemberObject.SubType[0].Name : MemberObject.SubType[0].Type);
+
+    else if (MemberObject.Type.find("ScriptStruct") != std::string::npos)
+        TargetObjectName = MemberObject.Name;
+
+    else if (MemberObject.Type.find("EnumProperty") != std::string::npos)
+        TargetObjectName = (MemberObject.Index != -1 ? std::to_string(MemberObject.Index) + " " : "") + "[Enum] " +
+        MemberObject.SubType[0].Name;
+}
+
 float GUIUtilsClass::GetFrameHeight()
 {
     ImGuiContext& g = *GImGui;
@@ -89,7 +176,13 @@ float GUIUtilsClass::GetFontHeight()
     return FontHeight;
 }
 
-
+float GUIUtilsClass::GetStringWidth(std::string Str)
+{
+    ImGuiContext& g = *GImGui;
+    const ImGuiStyle& style = g.Style;
+    const float StringWidth = ImGui::CalcTextSize(Str.c_str(), NULL, true).x;
+    return StringWidth;
+}
 
 void GUIUtilsClass::CEItemExport(std::string Name, std::string Type, DWORD_PTR Offset) {
     std::string CheatEngineItemFormat =

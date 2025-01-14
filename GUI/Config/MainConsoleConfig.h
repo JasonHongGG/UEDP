@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
+#include <stack>
 #include "../Interface/DumperConsoleInterface.h"
 #include "../../Font/IconsFontAwesome6.h"
+#include "../../State/GlobalState.h"
 
 enum class DumperConsoleCurPage
 {
@@ -9,6 +11,12 @@ enum class DumperConsoleCurPage
     PackageViewer = 1,
     Inspector = 2,
     API = 3
+};
+
+enum class ProcessClass {
+    C_DumperConsole = 0,
+    C_PackageViewer = 1,
+    C_Inspector = 2,
 };
 
 struct DisplayNextStateStruct {
@@ -22,6 +30,8 @@ inline DisplayNextStateStruct DisplayNextState;
 
 struct MainConsoleConfig
 {
+    ImVec2 CurrentWindowPosition = { 0, 0 };
+    ImVec2 CurentWindowSize = { 0 ,0 };
     std::vector<DumperItem> DumperTable = {};
     FNameInfoStruct FNameInfo;
     GUObjectInfoStruct GUObjectInfo;
@@ -44,7 +54,8 @@ inline MainConsoleConfig MainConsoleConf;
 
 struct PackageViwerConfig
 {
-    bool PackageDataResizeable = true;
+    int PackageDataResizeable = true;
+    int PackageObjectResizeable = true;
     float PackageDataWindowWidth = 200;
     float PackageObjectWindowWidth = 300;
     float GlobalSearchPackageObjectWindowWidth = 20;
@@ -127,14 +138,91 @@ struct InspectorConfig
 
     float AdditionIndentWidth = 10;		// tree 展開的 node 前有一個剪頭符號也會占空間
 
-
+    int InspectorTreeNavLine = true;
     float InspectorTreeNavLineOffset = 10.f;		// 所有 TreeNavLine 的偏移 => 主軸以及Branch長度
     float InspectorTreeObjectNavLineOffset = 35.f;
     float InspectorTreeMemberNavLineOffset = 25.f;
     float InspectorTreeNavBranchLineSize = 0.f;
+
+
+
+	// Inspector List
+    enum InspectorListMode {
+        Derived = 0,
+        Super = 1
+    };
+    struct  InspectorListObject {
+        std::string Name = "";
+        std::string Type = "";
+        DWORD_PTR Address = NULL;
+        int Mode = InspectorListMode::Super;
+        int EditorEnable = false;
+        int IsInstance = false;
+    };
+    struct DerivedListStruct {
+        bool IsOpen = false;
+        std::string CurOpenName = "";
+        std::string FilterStr = "";
+        int SelectIndex = -1;
+        std::map<std::string, std::vector<InspectorListObject>> Map;
+    };
+    DerivedListStruct DerivedList;
+    std::string InputStr;
+    int InspectorListMode = InspectorListMode::Super;
+    int InspectorListSelectIndex = -1;
+    std::string InspectorListFilterStr = "";
+    std::vector<InspectorListObject>InspectorList = { };
+    
+
+
+
+    
+    // Object Content Tree Nav Line
+    enum TreeNavLine {
+        Start = 0,		// Tree 開始時
+        Update = 1,		// 每個顯示一個 Item 都會更新 End 
+        Draw = 2,		// Tree 結束時
+    };
+    float RelativeDistanctWithOffset = 0.f;
+    std::stack<ImVec2> NavLineStartStack;
+    std::stack<ImVec2> NavLineEndStack;
+    int InspectorObjectContentSearchIdx = 1;
+    std::string InspectorObjectContentSearchStr = "";
+    std::map<std::string, std::vector<DumperObject> > InspectorObjectContentMap;
+
+
+
+    // Object Instance Sarch
+    enum SearchMode {
+        Normal = 0,
+        Condition = 1,
+    };
+    struct ConditionObject
+    {
+        bool IsOpen = false;
+        int ID = -1;
+        int TypeListSelectIndex = 2;// Default Int32;
+        ValueType Type = ValueType::Int32;
+        std::string DisplayType = "Int";
+        std::string Offset = "";
+        std::string Value = "";
+        std::vector<std::string> Pointer;
+        bool PointerEnable = false;
+    };
+    // Serch Panel
+    std::string ObjectInstanceSearchInputStr = "";
+    int ObjectInstanceSearchMapSelectedIndex = -1;
+    std::map<std::string, DWORD_PTR> ObjectInstanceSearchMap;	// str(Address) : Address
+    // Option Panel
+    int ObjectInstanceSearchMode = SearchMode::Normal;
+    std::vector<std::string> TypeList = { "Byte", "Int16", "Int", "Int64", "Float", "Double", "String" };	//需要和 ValueType 同步更新 
+    int TypeListSelectIndex = 2;		// Default Int32
+    std::vector<ConditionObject> ConditionSet = { ConditionObject() };
+
+
+
 };
 inline InspectorConfig InspectorConf;
-
 
 struct APIConfig
 {

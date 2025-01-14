@@ -1,8 +1,9 @@
 #pragma once
 #include <Windows.h>
+#include "Parser.h"
 #include "../Storage/StorageManager.h"
+#include "../../System/Memory.h"
 #include "../../System/FileAttribute.h"
-#include "../Core/Parser.h"
 #include "../../Utils/Utils.h"
 
 class DumperUtilsSet

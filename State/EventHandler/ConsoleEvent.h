@@ -36,11 +36,11 @@ namespace EventHandler
 
     inline void UpdateDumperObjectMap(DWORD_PTR Address, int Index)
     {
-        const ProcessState State = MainConsoleState.GUObjectInfoExpandEvent;
+        const ProcessState State = MainConsoleState.GUObjectInfoExpandEvent.State;
         if (IsEventAcceptable(State)) {
-            MainConsoleState.GUObjectInfoExpandMsg.Index = Index;
-            MainConsoleState.GUObjectInfoExpandMsg.Address = Address;
-            MainConsoleState.GUObjectInfoExpandEvent = ProcessState::Start;
+            MainConsoleState.GUObjectInfoExpandEvent.Index = Index;
+            MainConsoleState.GUObjectInfoExpandEvent.Address = Address;
+            MainConsoleState.GUObjectInfoExpandEvent.State = ProcessState::Start;
         }
     }
 }

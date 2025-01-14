@@ -11,10 +11,8 @@
 #include "../State/EventHandler.h"
 
 #include "Entry/ParseEntry.h"
+#include "Entry/ConsoleEntry.h"
 
-//#include "BaseAddress.h"
-//#include "DumperUtils.h"
-//#include "UEOffset.h"				//AutoConfig
 //#include "Console.h"
 //#include "../json/MyJson.h"
 #include "../Utils/Utils.h"
@@ -125,5 +123,6 @@ void BackgroundEntry::Entry()
 	if (ProcessWindow::MainWindow) 
 	{
 		ParseEntry::Entry();
+		ConsoleEntry::Entry();
 	}
 }

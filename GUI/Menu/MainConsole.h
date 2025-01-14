@@ -5,14 +5,17 @@
 #include "../../State/GUIState.h"
 #include "MainConsole/Console.h"
 #include "MainConsole/PackageViewer.h"
-
+#include "MainConsole/Inspector.h"
 #include "MainConsole/APIPanel.h"
+#include "MainConsole/SettingPanel.h"
 
 namespace MainConsole
 {
     inline float Width = 1400.f;
     inline float Height = 600.f;
     inline DumperConsoleCurPage PageID = DumperConsoleCurPage::Console;
+
+    inline void StateUpdate();
 
     inline void MenuBar() {
         ImGui::BeginMenuBar();
@@ -34,8 +37,8 @@ namespace MainConsole
             MenuBar();
             Console::Render(PageID);
             PackageViewer::Render(PageID);
-            //Inspector();
-            //PannelSetting();
+            Inspector::Render(PageID);
+            SettingPanel::Render();
             APIPanel::Render(PageID);
 
             //StateUpdate();
@@ -43,4 +46,11 @@ namespace MainConsole
         ImGui::End();
         ImGui::PopFont();
 	}
+}
+
+void MainConsole::StateUpdate()
+{
+    // Update Window Position
+    MainConsoleConf.CurrentWindowPosition = ImGui::GetWindowPos();
+    MainConsoleConf.CurentWindowSize = ImGui::GetWindowSize();
 }

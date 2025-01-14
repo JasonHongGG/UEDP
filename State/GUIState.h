@@ -54,8 +54,7 @@ struct MainConsoleStateManager
 	ProcessState GUObjectInfoGetEvent = ProcessState::Idle;
 	ProcessState GUObjectInfoAddEvent = ProcessState::Idle;
 	ProcessState GUObjectInfoParseEvent = ProcessState::Idle;
-	ProcessState GUObjectInfoExpandEvent = ProcessState::Idle;
-	MessageObject GUObjectInfoExpandMsg = MessageObject();
+	MessageObject GUObjectInfoExpandEvent = MessageObject();
 };
 inline MainConsoleStateManager MainConsoleState;
 
@@ -72,9 +71,13 @@ inline PackageViwerStateManager PackageViwerState;
 struct InspectorStateManager
 {
 	MessageObject GetFNameEvent = MessageObject();
+	MessageObject AddInspectorEvent = MessageObject();
+	
+	MessageObject ObjectContentOpenEvent = MessageObject();
 	MessageObject ObjectContentCreatEvent = MessageObject();
 	MessageObject ObjectContentUpdateEvent = MessageObject();
 	MessageObject ObjectContentDeleteEvent = MessageObject();
+	MessageObject ObjectInstanceSearchEvent = MessageObject();
 };
 inline InspectorStateManager InspectorState;
 

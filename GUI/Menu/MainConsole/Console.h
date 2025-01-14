@@ -167,7 +167,7 @@ void Console::ObjectInfoRender()
             }
             ImGui::SameLine();
             ImGui::PushItemWidth(InputTextWidth - 90.0f);
-            ImGui::InputTextWithHintWithWidth("##GetFNameByIDInput_Result", "Enter Object ID", MainConsoleConf.FNameInfo.Input);
+            ImGui::InputTextWithHintWithWidth("##GetFNameByIDInput_Result", "Enter Object ID", MainConsoleConf.FNameInfo.InputStr);
             ImGui::PopItemWidth();
             ImGui::DummySpace();
             ImGui::InputTextWithWidth("##GetFNameByIDOutput_Result", MainConsoleConf.FNameInfo.FName, InputTextWidth);
@@ -211,7 +211,7 @@ void Console::ObjectInfoRender()
             // Input
             ImGui::SameLine();
             ImGui::PushItemWidth(InputTextWidth - 190.0f);
-            ImGui::InputTextWithHintWithWidth("##GetGUObjectByAddress_Result", ("Enter Object " + MainConsoleConf.GUObjectInfo.ModeList[MainConsoleConf.GUObjectInfo.ModeListSelectIndex]).c_str(), MainConsoleConf.GUObjectInfo.Input);
+            ImGui::InputTextWithHintWithWidth("##GetGUObjectByAddress_Result", ("Enter Object " + MainConsoleConf.GUObjectInfo.ModeList[MainConsoleConf.GUObjectInfo.ModeListSelectIndex]).c_str(), MainConsoleConf.GUObjectInfo.InputStr);
             ImGui::PopItemWidth();
             ImGui::SameLine();
             if (MainConsoleState.GUObjectInfoParseEvent == ProcessState::Processing) {

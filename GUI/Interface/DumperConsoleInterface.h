@@ -55,7 +55,7 @@ struct DumperItem : BasicDumperInfoObject {	// ®Ø¬[
 
 
 struct FNameInfoStruct {
-	std::string Input = "";
+	std::string InputStr = "";
 	std::string FName = "[Result][ Get FName By ID  ]";
 };
 
@@ -65,7 +65,7 @@ struct GUObjectInfoStruct {
 	int ModeListSelectIndex = 0;
 
 	// Panel
-	std::string Input = "";
+	std::string InputStr = "";
 	std::string ID = "[Result][ ObjectID  ]";
 	std::string Type = "[Result][ Type  ]";
 	std::string Name = "[Result][ Name  ]";

@@ -188,6 +188,8 @@
     <ClInclude Include="Background\Core\UEOffset.h" />
     <ClInclude Include="Background\Core\DumperUtils.h" />
     <ClInclude Include="Background\Entry.h" />
+    <ClInclude Include="Background\Entry\ConsoleEntry.h" />
+    <ClInclude Include="Background\Entry\UtilsEntry.h" />
     <ClInclude Include="Background\Interface\ObjectInterface.h" />
     <ClInclude Include="Background\Interface\StorageInterface.h" />
     <ClInclude Include="Background\Storage\StorageManager.h" />
@@ -220,7 +222,9 @@
     <ClInclude Include="GUI\Menu\MainConsole.h" />
     <ClInclude Include="GUI\Menu\MainConsole\APIPanel.h" />
     <ClInclude Include="GUI\Menu\MainConsole\Console.h" />
+    <ClInclude Include="GUI\Menu\MainConsole\Inspector.h" />
     <ClInclude Include="GUI\Menu\MainConsole\PackageViewer.h" />
+    <ClInclude Include="GUI\Menu\MainConsole\SettingPanel.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ColorStylePanelTab.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage\ComponentPanelTab.h" />

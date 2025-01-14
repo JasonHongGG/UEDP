@@ -8,6 +8,16 @@ enum class ProcessState {
 	Retry = 4
 };
 
+enum class ValueType {
+	Byte = 0,
+	Int16 = 1,
+	Int32,
+	Int64,
+	Float,
+	Double,
+	String,
+};
+
 namespace GlobalState 
 {
 }

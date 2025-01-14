@@ -434,9 +434,6 @@
     <ClInclude Include="Background\Core\Parser\GUObjectArrayParser.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Background\Core\Parser.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="Background\Core\Object.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -489,6 +486,21 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="State\EventHandler\InspectorEvent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainConsole\Inspector.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Menu\MainConsole\SettingPanel.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Entry\ConsoleEntry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Entry\UtilsEntry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Core\Parser.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

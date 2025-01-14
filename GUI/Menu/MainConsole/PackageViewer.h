@@ -24,14 +24,14 @@ namespace PackageViewer
     void PackageListRender();
     void ObjectInfoListRender();
     void GlobalSearchListRender();
-    void PackageObjectContentRender();
+    void ObjectContentRender();
 
 	void Render(DumperConsoleCurPage& PageID) {
         if (PageID != DumperConsoleCurPage::PackageViewer) return;
         PackageListRender();
         ObjectInfoListRender();
         GlobalSearchListRender();
-        PackageObjectContentRender();
+        ObjectContentRender();
 	}
 }
 
@@ -87,7 +87,7 @@ void PackageViewer::PackageListRender()
 void PackageViewer::ObjectInfoListRender()
 {
     ImGui::SameLine(0, 4);
-    if (PackageViwerConf.PackageDataResizeable) ChildWindowFlag |= ImGuiChildFlags_ResizeX;
+    if (PackageViwerConf.PackageObjectResizeable) ChildWindowFlag |= ImGuiChildFlags_ResizeX;
     else                                        ChildWindowFlag &= ~ImGuiChildFlags_ResizeX;
     ImGui::BeginChild("PackageObject", ImVec2(PackageViwerConf.PackageObjectWindowWidth, 0), ChildWindowFlag);
     {
@@ -215,7 +215,7 @@ void PackageViewer::GlobalSearchListRender()
     ImGui::EndChild();
 }
 
-void PackageViewer::PackageObjectContentRender()
+void PackageViewer::ObjectContentRender()
 {
     static float CurPanelWindow_Width = ImGui::GetWindowSize().x;
     ImGui::SameLine();
