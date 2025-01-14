@@ -132,6 +132,9 @@
     <ClCompile Include="Background\Storage\StorageManager.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Json\JsonManager.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background\Entry.h">
@@ -504,6 +507,21 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Background\Entry\PackageViewEntry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Entry\InspectorEntry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Entry\APIEntry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\json.hpp">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\JsonManager.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Entry\LoadAndSaveSettingEntry.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

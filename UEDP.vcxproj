@@ -166,6 +166,7 @@
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Json\JsonManager.cpp" />
     <ClCompile Include="System\FileAttribute.cpp" />
     <ClCompile Include="System\Memory.cpp" />
     <ClCompile Include="System\Memory\MemoryReader.cpp" />
@@ -188,7 +189,10 @@
     <ClInclude Include="Background\Core\UEOffset.h" />
     <ClInclude Include="Background\Core\DumperUtils.h" />
     <ClInclude Include="Background\Entry.h" />
+    <ClInclude Include="Background\Entry\APIEntry.h" />
     <ClInclude Include="Background\Entry\ConsoleEntry.h" />
+    <ClInclude Include="Background\Entry\InspectorEntry.h" />
+    <ClInclude Include="Background\Entry\LoadAndSaveSettingEntry.h" />
     <ClInclude Include="Background\Entry\PackageViewEntry.h" />
     <ClInclude Include="Background\Entry\UtilsEntry.h" />
     <ClInclude Include="Background\Interface\ObjectInterface.h" />
@@ -255,6 +259,8 @@
     <ClInclude Include="GUI\MyGuiComponent\Operator.h" />
     <ClInclude Include="GUI\Config\NotificationConfig.h" />
     <ClInclude Include="GUI\MyGuiUtils.h" />
+    <ClInclude Include="Json\json.hpp" />
+    <ClInclude Include="Json\JsonManager.h" />
     <ClInclude Include="State\EventHandler.h" />
     <ClInclude Include="GUI\Menu.h" />
     <ClInclude Include="GUI\Menu\MainMenu.h" />

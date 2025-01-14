@@ -42,7 +42,7 @@ public:
 
 	
 	
-	
+	bool SetObjectUper(DWORD_PTR Address);
 	bool GetObjectDict(DWORD_PTR Address, ObjectData& ObjData, bool TryParseIfNoFind = false);
 	bool GetObjectDictByID(size_t ID, ObjectData& ObjData);
 	bool GetObjectDictByName(std::string Name, ObjectData& ObjData);

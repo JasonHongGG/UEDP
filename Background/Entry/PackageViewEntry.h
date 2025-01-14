@@ -11,7 +11,7 @@
 
 namespace PackageViewEntry
 {
-	inline std::shared_mutex GetGlobalSearchObject;
+	inline std::shared_mutex GetGlobalSearchObjectLock;
 
 	void UpdataPackageObjectList();
 	void CreatPackageObectTab();
@@ -311,7 +311,7 @@ void PackageViewEntry::UpdataGlobalSearchObject()
 void PackageViewEntry::ShowGlobalSearchState()
 {
 	// 會調用到 PackageObjectData(ObjectCateory)，需要先把 PackageObjectData 鎖起來才能避免兩條線程同時使用到的問題
-	GetGlobalSearchObject.lock();
+	GetGlobalSearchObjectLock.lock();
 
 	// clear serch string
 	if (PackageViwerConf.PackageDataListFilterStr[0] != '\0')
@@ -338,5 +338,5 @@ void PackageViewEntry::ShowGlobalSearchState()
 
 	// Show Object Content [Send Event]
 	EventHandler::OpenPackageObjectTab(PackageViwerState.SearchShowEvent.ObjectName, PackageViwerState.SearchShowEvent.Address);
-	GetGlobalSearchObject.unlock();
+	GetGlobalSearchObjectLock.unlock();
 }

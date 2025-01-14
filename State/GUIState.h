@@ -76,7 +76,6 @@ struct InspectorStateManager
 	MessageObject ObjectContentOpenEvent = MessageObject();
 	MessageObject ObjectContentCreatEvent = MessageObject();
 	MessageObject ObjectContentUpdateEvent = MessageObject();
-	MessageObject ObjectContentDeleteEvent = MessageObject();
 	MessageObject ObjectInstanceSearchEvent = MessageObject();
 };
 inline InspectorStateManager InspectorState;

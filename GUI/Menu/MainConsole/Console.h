@@ -14,12 +14,6 @@ namespace Console
 {
     std::shared_mutex DumperTableLock;
 
-    float ObjectInfoWindoWidth = 460;
-    float DumperTableWidth = 900.0f;
-    float DumperTableHeight = 200.f;
-	float DragAreaWidth = 235.0f;
-    float InputTextWidth = 350.0f;
-
     void DisplayDumperObject(DumperItem& DumperItem, DumperObject& DumperObject, size_t Offset = 0x0);
     void DisplayDumperObjectEntry(DumperItem& DumperItem);
 
@@ -39,7 +33,7 @@ namespace Console
 
 void Console::ObjectDataRender()
 {
-    ImGui::BeginChild("ObjectData", ImVec2(0 - ObjectInfoWindoWidth, 0), true);      //設成 0 就會自動伸縮
+    ImGui::BeginChild("ObjectData", ImVec2(0 - MainConsoleConf.ObjectInfoWindoWidth, 0), true);      //設成 0 就會自動伸縮
     {
         ImGui::PushFont(Font::TitleText);
         ImGui::Text("Object Data");
@@ -64,7 +58,7 @@ void Console::ObjectDataRender()
                     ImGuiTableFlags_ScrollY |       //Y 軸可滾動
                     ImGuiTableFlags_NoBordersInBody;
 
-                if (ImGui::BeginTable(("ObjectTable" + std::to_string(n)).c_str(), 4, TableFlags, ImVec2(DumperTableWidth, DumperTableHeight)))           //colum 調整時這邊要調整
+                if (ImGui::BeginTable(("ObjectTable" + std::to_string(n)).c_str(), 4, TableFlags, ImVec2(MainConsoleConf.DumperTableWidth, MainConsoleConf.DumperTableHeight)))           //colum 調整時這邊要調整
                 {
                     ImGui::TableSetupScrollFreeze(1, 1);    //固定顯示開頭第一 column、row(照順序)
 
@@ -132,7 +126,7 @@ void Console::ObjectDataRender()
 void Console::ObjectInfoRender()
 {
     ImGui::SameLine();
-    ImGui::BeginChild("ObjectInfo", ImVec2(ObjectInfoWindoWidth, 0), true);
+    ImGui::BeginChild("ObjectInfo", ImVec2(MainConsoleConf.ObjectInfoWindoWidth, 0), true);
     {
         // ==================== Setting ====================
         ImGui::PushFont(Font::TitleText);
@@ -140,19 +134,19 @@ void Console::ObjectInfoRender()
         ImGui::PopFont();
 
         ImGui::DummySpace();
-        ImGui::DragFloatWithWidth("Object Info Width", ObjectInfoWindoWidth, DragAreaWidth);
+        ImGui::DragFloatWithWidth("Object Info Width", MainConsoleConf.ObjectInfoWindoWidth, MainConsoleConf.DragAreaWidth);
 
         ImGui::DummySpace();
-        ImGui::DragFloatWithWidth("Setting DragArea Width", DragAreaWidth, DragAreaWidth);
+        ImGui::DragFloatWithWidth("Setting DragArea Width", MainConsoleConf.DragAreaWidth, MainConsoleConf.DragAreaWidth);
 
         ImGui::DummySpace();
-        ImGui::DragFloatWithWidth("Input Area Width", InputTextWidth, DragAreaWidth);
+        ImGui::DragFloatWithWidth("Input Area Width", MainConsoleConf.InputTextWidth, MainConsoleConf.DragAreaWidth);
 
         ImGui::DummySpace();
-        ImGui::DragFloatWithWidth("Dumper TB Width", DumperTableWidth, DragAreaWidth);
+        ImGui::DragFloatWithWidth("Dumper TB Width", MainConsoleConf.DumperTableWidth, MainConsoleConf.DragAreaWidth);
 
         ImGui::DummySpace();
-        ImGui::DragFloatWithWidth("Dumper TB Height", DumperTableHeight, DragAreaWidth);
+        ImGui::DragFloatWithWidth("Dumper TB Height", MainConsoleConf.DumperTableHeight, MainConsoleConf.DragAreaWidth);
 
         // ==================== Option ====================
         ImGui::SeparatorText("");
@@ -166,11 +160,11 @@ void Console::ObjectInfoRender()
                 EventHandler::GetFName();
             }
             ImGui::SameLine();
-            ImGui::PushItemWidth(InputTextWidth - 90.0f);
+            ImGui::PushItemWidth(MainConsoleConf.InputTextWidth - 90.0f);
             ImGui::InputTextWithHintWithWidth("##GetFNameByIDInput_Result", "Enter Object ID", MainConsoleConf.FNameInfo.InputStr);
             ImGui::PopItemWidth();
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("##GetFNameByIDOutput_Result", MainConsoleConf.FNameInfo.FName, InputTextWidth);
+            ImGui::InputTextWithWidth("##GetFNameByIDOutput_Result", MainConsoleConf.FNameInfo.FName, MainConsoleConf.InputTextWidth);
         }
 
         ImGui::DummySpace();
@@ -210,7 +204,7 @@ void Console::ObjectInfoRender()
             }
             // Input
             ImGui::SameLine();
-            ImGui::PushItemWidth(InputTextWidth - 190.0f);
+            ImGui::PushItemWidth(MainConsoleConf.InputTextWidth - 190.0f);
             ImGui::InputTextWithHintWithWidth("##GetGUObjectByAddress_Result", ("Enter Object " + MainConsoleConf.GUObjectInfo.ModeList[MainConsoleConf.GUObjectInfo.ModeListSelectIndex]).c_str(), MainConsoleConf.GUObjectInfo.InputStr);
             ImGui::PopItemWidth();
             ImGui::SameLine();
@@ -237,65 +231,65 @@ void Console::ObjectInfoRender()
         {
             // ID
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("ID", MainConsoleConf.GUObjectInfo.ID, InputTextWidth);
+            ImGui::InputTextWithWidth("ID", MainConsoleConf.GUObjectInfo.ID, MainConsoleConf.InputTextWidth);
 
             //Type
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("Type", MainConsoleConf.GUObjectInfo.Type, InputTextWidth);
+            ImGui::InputTextWithWidth("Type", MainConsoleConf.GUObjectInfo.Type, MainConsoleConf.InputTextWidth);
 
             //Name
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("Name", MainConsoleConf.GUObjectInfo.Name, InputTextWidth);
+            ImGui::InputTextWithWidth("Name", MainConsoleConf.GUObjectInfo.Name, MainConsoleConf.InputTextWidth);
 
             //FullName
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("FullName", MainConsoleConf.GUObjectInfo.FullName, InputTextWidth);
+            ImGui::InputTextWithWidth("FullName", MainConsoleConf.GUObjectInfo.FullName, MainConsoleConf.InputTextWidth);
 
             //Address
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("Address", MainConsoleConf.GUObjectInfo.Address, InputTextWidth);
+            ImGui::InputTextWithWidth("Address", MainConsoleConf.GUObjectInfo.Address, MainConsoleConf.InputTextWidth);
 
             //Offset
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("Offset", MainConsoleConf.GUObjectInfo.Offset, InputTextWidth);
+            ImGui::InputTextWithWidth("Offset", MainConsoleConf.GUObjectInfo.Offset, MainConsoleConf.InputTextWidth);
 
             //ClassPtr
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("ClassPtr", MainConsoleConf.GUObjectInfo.ClassPtr, InputTextWidth);
+            ImGui::InputTextWithWidth("ClassPtr", MainConsoleConf.GUObjectInfo.ClassPtr, MainConsoleConf.InputTextWidth);
 
             //Funct
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("Funct", MainConsoleConf.GUObjectInfo.Funct, InputTextWidth);
+            ImGui::InputTextWithWidth("Funct", MainConsoleConf.GUObjectInfo.Funct, MainConsoleConf.InputTextWidth);
 
             //Outer
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("Outer", MainConsoleConf.GUObjectInfo.Outer, InputTextWidth);
+            ImGui::InputTextWithWidth("Outer", MainConsoleConf.GUObjectInfo.Outer, MainConsoleConf.InputTextWidth);
 
             //SuperPtr
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("SuperPtr", MainConsoleConf.GUObjectInfo.SuperPtr, InputTextWidth);
+            ImGui::InputTextWithWidth("SuperPtr", MainConsoleConf.GUObjectInfo.SuperPtr, MainConsoleConf.InputTextWidth);
 
             //Propsize
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("Propsize", MainConsoleConf.GUObjectInfo.PropSize, InputTextWidth);
+            ImGui::InputTextWithWidth("Propsize", MainConsoleConf.GUObjectInfo.PropSize, MainConsoleConf.InputTextWidth);
 
             //Property
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("PropPtr 0", MainConsoleConf.GUObjectInfo.PropPtr_0, InputTextWidth);
+            ImGui::InputTextWithWidth("PropPtr 0", MainConsoleConf.GUObjectInfo.PropPtr_0, MainConsoleConf.InputTextWidth);
 
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("PropPtr 1", MainConsoleConf.GUObjectInfo.PropPtr_1, InputTextWidth);
+            ImGui::InputTextWithWidth("PropPtr 1", MainConsoleConf.GUObjectInfo.PropPtr_1, MainConsoleConf.InputTextWidth);
 
             //MemberSize
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("MemberSize", MainConsoleConf.GUObjectInfo.MemberSize, InputTextWidth);
+            ImGui::InputTextWithWidth("MemberSize", MainConsoleConf.GUObjectInfo.MemberSize, MainConsoleConf.InputTextWidth);
 
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("MemberPtr 0", MainConsoleConf.GUObjectInfo.MemberPtr_0, InputTextWidth);
+            ImGui::InputTextWithWidth("MemberPtr 0", MainConsoleConf.GUObjectInfo.MemberPtr_0, MainConsoleConf.InputTextWidth);
 
             //BitMask
             ImGui::DummySpace();
-            ImGui::InputTextWithWidth("BitMask", MainConsoleConf.GUObjectInfo.Bitmask, InputTextWidth);
+            ImGui::InputTextWithWidth("BitMask", MainConsoleConf.GUObjectInfo.Bitmask, MainConsoleConf.InputTextWidth);
         }
     }
     ImGui::EndChild();

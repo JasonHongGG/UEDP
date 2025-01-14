@@ -2,6 +2,23 @@
 #include "StorageManager.h"
 #include "../Core/Object.h"
 
+bool StorageManager::SetObjectUper(DWORD_PTR Address) {
+	//std::shared_lock<std::shared_mutex> lock(GetObjectDict_Lock);
+
+	if (!ObjectDict.Empty()) {
+		for (auto Obj : ObjectDict.GetAll()) {
+			if (Obj.second.SuperPtr.Address == Address) {
+				BasicObjectData BasicObjData;
+				ObjectMgr.BasicObjectDataWapper(Obj.second, BasicObjData);
+				ObjectDict.Get(Address).Uper.push_back(BasicObjData);
+			}
+		}
+		return true;
+	}
+	else return false;
+
+}
+
 bool StorageManager::GetObjectDict(DWORD_PTR Address, ObjectData& ObjData, bool TryParseIfNoFind) {
 	if (ObjectDictByAddress.Empty()) return false;
 	if (!ObjectDictByAddress.Contains(Address)) return false;

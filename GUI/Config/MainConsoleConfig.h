@@ -38,6 +38,11 @@ struct MainConsoleConfig
     ImGuiTreeNodeFlags TreeNodeExFlag = ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
     ImGuiTreeNodeFlags TreeNodeExLeafFlag = ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
 
+    float ObjectInfoWindoWidth = 460;
+    float InputTextWidth = 350.0f;
+    float DumperTableWidth = 900.0f;
+    float DumperTableHeight = 200.f;
+    float DragAreaWidth = 235.0f;
     
 	bool AddButtonIsHovered = false;
     std::string AddButtonStr = ICON_FA_CIRCLE_ARROW_DOWN;
