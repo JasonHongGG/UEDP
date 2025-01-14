@@ -12,7 +12,7 @@
 
 #include "Entry/ParseEntry.h"
 #include "Entry/ConsoleEntry.h"
-
+#include "Entry/PackageViewEntry.h"
 //#include "Console.h"
 //#include "../json/MyJson.h"
 #include "../Utils/Utils.h"
@@ -124,5 +124,6 @@ void BackgroundEntry::Entry()
 	{
 		ParseEntry::Entry();
 		ConsoleEntry::Entry();
+		PackageViewEntry::Entry();
 	}
 }

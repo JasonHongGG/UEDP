@@ -80,7 +80,7 @@ struct PackageViwerConfig
     int PackageObjectDataSortMode = SortMode::Object;
     std::map<std::string, int> PackageObjectDataTabFlagMap = { {"Class", ImGuiTabItemFlags_None}, {"Struct", ImGuiTabItemFlags_None}, {"Enum", ImGuiTabItemFlags_None}, {"Function", ImGuiTabItemFlags_None} };
     int PackageObjectDataListSelectIndex = -1;
-    std::string PackageObjectDataFilterStr = "";
+    std::string PackageObjectDataListFilterStr = "";
     std::map<std::string, std::map<std::string, std::pair<std::string, DWORD_PTR>>> PackageObjectDataList = {};
     
 

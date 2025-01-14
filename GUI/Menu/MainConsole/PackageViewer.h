@@ -129,7 +129,7 @@ void PackageViewer::ObjectInfoListRender()
                             ImGui::EndGroupPanel();
                         }
 
-                        MyListBox("##Package Object", PackageViwerConf.PackageObjectDataListSelectIndex, PackageViwerConf.PackageObjectDataList[TargetList], ImVec2(-FLT_MIN, -FLT_MIN - 30), PackageViwerConf.PackageObjectDataFilterStr)
+                        MyListBox("##Package Object", PackageViwerConf.PackageObjectDataListSelectIndex, PackageViwerConf.PackageObjectDataList[TargetList], ImVec2(-FLT_MIN, -FLT_MIN - 30), PackageViwerConf.PackageObjectDataListFilterStr)
                             .SetNamePreProcCallBack([&](std::string& Name) {
                             // None
                                 })
@@ -156,7 +156,7 @@ void PackageViewer::ObjectInfoListRender()
 
         // ========================= Search Bar =========================
         ImGui::PushItemWidth(-FLT_MIN);
-        ImGui::InputTextWithHintWithWidth("##PackageObjectInput_Result", "Search Object", PackageViwerConf.PackageObjectDataFilterStr);
+        ImGui::InputTextWithHintWithWidth("##PackageObjectInput_Result", "Search Object", PackageViwerConf.PackageObjectDataListFilterStr);
         ImGui::PopItemWidth();
     }
     ImGui::EndChild();
