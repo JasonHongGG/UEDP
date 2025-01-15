@@ -28,21 +28,20 @@ void StorageManager::SetObjectDict(DWORD_PTR Address, ObjectData& ObjData)
 
 bool StorageManager::GetObjectDict(DWORD_PTR Address, ObjectData& ObjData, bool TryParseIfNoFind) {
 	if (ObjectDictByAddress.Empty()) return false;
-	if (!ObjectDictByAddress.Contains(Address)) return false;
 	if (ObjectDict.Empty()) return false;
-	try {
+	if (ObjectDictByAddress.Contains(Address)) {
 		ObjData = ObjectDict.Get(Address); // 在 ObjectDict 中找到
 		return true;
 	}
-	catch (std::string e) {
-		//沒找到，但嘗試再 Parse 一次
-		if (TryParseIfNoFind) {
-			ObjectData TempObjectData;
-			if (!ObjectMgr.TrySaveObject(Address, TempObjectData, ObjectMgr.MaxLevel)) return false;
-			ObjData = TempObjectData;
-			return true;
-		}
+
+	//沒找到，但嘗試再 Parse 一次
+	if (TryParseIfNoFind) {
+		ObjectData TempObjectData;
+		if (!ObjectMgr.TrySaveObject(Address, TempObjectData, ObjectMgr.MaxLevel)) return false;
+		ObjData = TempObjectData;
+		return true;
 	}
+
 	return false;
 }
 
