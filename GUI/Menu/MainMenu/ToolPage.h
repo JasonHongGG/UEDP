@@ -1,4 +1,5 @@
 #pragma once
+#include "../../../Font/IconsFontAwesome6.h"
 #include "../../../imgui/imgui.h"
 #include "../../Config/MainMenuConfig.h"
 #include "../../Config/FontConfig.h"
@@ -171,10 +172,10 @@ void ToolPage::NotificationBlock()
 		if (ImGui::Button(ICON_FA_ARROW_UP_FROM_BRACKET "Info")) {       //"Add Object"
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "", "Info Test Message", NotificationConf.DismissTimeBar);
 		}
+		ImGui::PopFont();
 
 		ImGui::DragFloat("Dismiss#TestBar", &NotificationConf.DismissTimeBar, (float)0.1);
 		ImGui::DragFloat("DescendingSpeed#TestBar", &NotificationConf.DescendingSpeed, (float)0.1);
 		ImGui::DragFloat("DecaySpeed#TestBar", &NotificationConf.DecaySpeed, (float)0.1);
-		ImGui::PopFont();
 	}
 }

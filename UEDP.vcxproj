@@ -216,6 +216,7 @@
     <ClInclude Include="Background\Interface\ObjectInterface.h" />
     <ClInclude Include="Background\Interface\StorageInterface.h" />
     <ClInclude Include="Background\Storage\StorageManager.h" />
+    <ClInclude Include="Font\IconRegular.h" />
     <ClInclude Include="Font\IconsFontAwesome6.h" />
     <ClInclude Include="GUI\Config\ColorConfig.h" />
     <ClInclude Include="GUI\Config\MainConsoleConfig.h" />

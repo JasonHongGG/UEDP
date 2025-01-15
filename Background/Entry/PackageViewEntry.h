@@ -159,7 +159,7 @@ void PackageViewEntry::CreatPackageObectTab()
 			ObjectData MemberObj;
 			if (StorageMgr.GetObjectDict(Address_Level_1, MemberObj, true)) {
 				// 基本檢查 (如果不符合就跳過該 Member)
-				if (MemberObj.Offset < 0) {	//MemberObj.Type.find("Function") != std::string::npos or
+				if (MemberObj.Offset < 0) {	
 					MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember); continue;
 				}
 

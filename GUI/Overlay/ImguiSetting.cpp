@@ -2,7 +2,7 @@
 #include "../DockingManager.h"
 #include "../Config/FontConfig.h"
 #include "../../Font/IconsFontAwesome6.h"
-//#include "../../Font/IconRegular.h"
+#include "../../Font/IconRegular.h"
 //#include "../../Font/TahomaFont.h"
 //#include "../../Font/NotoSans.h"
 
@@ -54,9 +54,9 @@ void ImguiSetting::SetFont(bool IsReload)
 		Font::ChineseText = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", FontConf.ChineseFontSize * FontConf.FontProportion, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 		// Icon 字體
-		FontWrapper(Font::IconText, FontConf.IconFontSize * FontConf.FontProportion, false, "C:\\Windows\\Fonts\\Verdana.ttf");
+		FontWrapper(Font::IconText, FontConf.IconFontSize * FontConf.FontProportion, true, "C:\\Windows\\Fonts\\Verdana.ttf");
 		FontWrapper(Font::BigIconText, FontConf.BigIconFontSize * FontConf.FontProportion, true, "C:\\Windows\\Fonts\\Verdana.ttf");
-		FontWrapper(Font::NotifyText, FontConf.NotifyFontSize * FontConf.FontProportion, true, "C:\\Windows\\Fonts\\msyh.ttc");
+		FontWrapper(Font::NotifyText, FontConf.NotifyFontSize * FontConf.FontProportion, false, "C:\\Windows\\Fonts\\msyh.ttc");
 		FontWrapper(Font::NotifyContentText, FontConf.NotifyContentFontSize * FontConf.FontProportion, true, "C:\\Windows\\Fonts\\msyh.ttc");
 		//FontWrapper(io, baseFontSize, Menu::IconText, NULL, false, (void*)tahoma, sizeof(tahoma));
 		//FontWrapper(io, (baseFontSize * 3.f), Menu::LogoIconText, "C:\\Windows\\Fonts\\msyh.ttc");
@@ -90,7 +90,7 @@ void ImguiSetting::FontWrapper(ImFont*& TarFont, float FontSize, bool IsIconFont
 	// Icon 字體 (綁定到主要字體上)
 	if (IsIconFont) {
 		static const ImWchar iconsRanges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-		TarFont = io.Fonts->AddFontFromFileTTF("./font/fa-solid-900.ttf", IconFontSize, &IconFontConfig, iconsRanges);		//fa-regular-400.ttf  //fa-solid-900.ttf
-		//TarFont = io.Fonts->AddFontFromMemoryTTF((void*)iconRegular, sizeof(iconRegular), IconFontSize, &IconFontConfig, iconsRanges);
+		//TarFont = io.Fonts->AddFontFromFileTTF("./font/fa-solid-900.ttf", IconFontSize, &IconFontConfig, iconsRanges);		//fa-regular-400.ttf  //fa-solid-900.ttf
+		TarFont = io.Fonts->AddFontFromMemoryTTF((void*)iconRegular, sizeof(iconRegular), IconFontSize, &IconFontConfig, iconsRanges);
 	}
 }
