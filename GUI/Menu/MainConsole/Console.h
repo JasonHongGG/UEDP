@@ -182,7 +182,7 @@ void Console::ObjectInfoRender()
             ImGui::SameLine();
             {
                 ImGui::PushFont(Font::IconText);
-                if (ImGui::Button(MainConsoleConf.AddButtonStr.c_str(), ImVec2(MainConsoleConf.AddButtonInitialWidth, FrameHeight))) {       //"Add Object"
+                if (ImGui::Button(MainConsoleConf.AddButtonStr.c_str(), ImVec2(MainConsoleConf.AddButtonWidth, FrameHeight))) {       //"Add Object"
                     EventHandler::AddToObjectTable();
                 }
 
