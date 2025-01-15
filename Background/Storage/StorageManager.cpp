@@ -20,6 +20,12 @@ bool StorageManager::SetObjectUper(DWORD_PTR Address) {
 
 }
 
+void StorageManager::SetObjectDict(DWORD_PTR Address, ObjectData& ObjData) 
+{
+	ObjectDictByAddress.Set(Address, ObjData.Address);
+	ObjectDict.Set(Address, ObjData);
+}
+
 bool StorageManager::GetObjectDict(DWORD_PTR Address, ObjectData& ObjData, bool TryParseIfNoFind) {
 	if (ObjectDictByAddress.Empty()) return false;
 	if (!ObjectDictByAddress.Contains(Address)) return false;

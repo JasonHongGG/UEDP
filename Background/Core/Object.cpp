@@ -294,7 +294,7 @@ bool ObjectManager::TrySaveObject(DWORD_PTR Address, ObjectData& ObjData, size_t
 
 		//儲存所有物件，不分類型
 		if (StorageMgr.GetObjectDict(Address, TempObjectData)) { ObjData = TempObjectData; return true; }
-		else StorageMgr.ObjectDict.Set(Address, RetObjectData);		//By Address
+		else StorageMgr.SetObjectDict(Address, RetObjectData);		//By Address
 
 		//儲存所有物件 (Name)
 		std::string FullName = Utils.rStringToLower(RetObjectData.FullName);
@@ -366,7 +366,7 @@ bool ObjectManager::TrySaveObject(DWORD_PTR Address, ObjectData& ObjData, size_t
 	}
 
 	// 第一次進來的 Obejct 一定會完整走過一趟才會 Return True
-	StorageMgr.ObjectDict.Set(Address, RetObjectData);		//By Address  //這時候儲存的就是完整個資訊
+	StorageMgr.SetObjectDict(Address, RetObjectData);		//By Address  //這時候儲存的就是完整個資訊
 
 	//成功 !! 最終結果回傳
 	//if (RetObjectData.FullName.find("Engine.") != std::string::npos) printf("[ FName FullName ] %p %s\n", RetObjectData.Address, RetObjectData.FullName.c_str());

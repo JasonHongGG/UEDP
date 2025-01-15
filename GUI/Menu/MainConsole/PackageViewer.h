@@ -136,16 +136,16 @@ void PackageViewer::ObjectInfoListRender()
                             .SetSelectCallBack([&](int Idx, std::pair<const std::string, std::pair<std::string, DWORD_PTR>>& Obj) {
                                     EventHandler::OpenPackageObjectTab(Obj.second.first, Obj.second.second);
                                 })
-                                    .SetPostCallBack([&](int Idx, std::pair<const std::string, std::pair<std::string, DWORD_PTR>>& Obj) {
-                                    if (Obj.second.first == PackageViwerConf.SetObjectDataListScrollYPos) {
-                                        PackageViwerConf.SetObjectDataListScrollYPos = "";
-                                        PackageViwerConf.PackageObjectDataListSelectIndex = Idx;
-                                        float posY = ImGui::GetCursorPosY() + ImGui::GetFontSize() + 6 - ImGui::GetScrollY() + 80;
-                                        ImGui::SetScrollFromPosY(posY);
-                                    }
-                                        })
-                                    .Show();
-                                        ImGui::EndTabItem();
+                            .SetPostCallBack([&](int Idx, std::pair<const std::string, std::pair<std::string, DWORD_PTR>>& Obj) {
+                                if (Obj.second.first == PackageViwerConf.SetObjectDataListScrollYPos) {
+                                    PackageViwerConf.SetObjectDataListScrollYPos = "";
+                                    PackageViwerConf.PackageObjectDataListSelectIndex = Idx;
+                                    float posY = ImGui::GetCursorPosY() + ImGui::GetFontSize() + 6 - ImGui::GetScrollY() + 80;
+                                    ImGui::SetScrollFromPosY(posY);
+                                }
+                            })
+                            .Show();
+                                ImGui::EndTabItem();
                     }
                 }
                 GlobalSearchObjectLock.unlock();

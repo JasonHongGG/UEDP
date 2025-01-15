@@ -41,6 +41,7 @@ public:
 	
 	void SetPackageDataList(std::vector<std::string> Value);
 	bool SetObjectUper(DWORD_PTR Address);
+	void SetObjectDict(DWORD_PTR Address, ObjectData& ObjData);
 	bool GetObjectDict(DWORD_PTR Address, ObjectData& ObjData, bool TryParseIfNoFind = false);
 	bool GetObjectDictByID(size_t ID, ObjectData& ObjData);
 	bool GetObjectDictByName(std::string Name, ObjectData& ObjData);
