@@ -44,7 +44,8 @@ void BackgroundEntry::InitialProcess()
 		ProcessWindow::WindowName = Utils.UnicodeToUTF8(Const::WindowName.c_str());
 	}
 
-	std::wstring L_ProcessName = Utils.UTF8ToUnicode(ProcessWindow::WindowName.c_str());
+	std::wstring wProcessName = Utils.UTF8ToUnicode(ProcessInfo::ProcessName.c_str());
+	std::wstring wWindowName = Utils.UTF8ToUnicode(ProcessWindow::WindowName.c_str());
 
 	// ==========  Get Process ID、Handler  ==========
 	if (!ProcMgr.InfoMgr.GetPID(Utils.UTF8ToUnicode(ProcessInfo::ProcessName.c_str()).c_str())) {
@@ -61,8 +62,8 @@ void BackgroundEntry::InitialProcess()
 
 
 	// ==========  Get Module、Module Base  ==========
-	ProcMgr.ModuleMgr.GetModule(ProcessInfo::PID, L_ProcessName.c_str());
-	DWORD_PTR base = ProcMgr.ModuleMgr.GetModuleBaseAddress(ProcessInfo::PID, L_ProcessName.c_str());
+	ProcMgr.ModuleMgr.GetModule(ProcessInfo::PID, wProcessName.c_str());
+	DWORD_PTR base = ProcMgr.ModuleMgr.GetModuleBaseAddress(ProcessInfo::PID, wProcessName.c_str());
 	DWORD size = ProcMgr.ModuleMgr.GetModuleSize(ProcessInfo::hProcess, ProcessModule::hMainMoudle);
 	printf("[ Module Obj Address ] %p\n", ProcessModule::hMainMoudle);		// module handler 取得的就是 module base address
 	printf("[ Module Base Address ] %p\n", (void*)base);
@@ -74,7 +75,7 @@ void BackgroundEntry::InitialProcess()
 	std::vector<HWND> windowsHandler;
 	ProcMgr.WindowMgr.GetWindowsFromProcessID((DWORD)ProcessInfo::PID, windowsHandler, ProcessWindow::WindowName.c_str());
 	ProcMgr.WindowMgr.GetWindowsNameFromHWND(windowsHandler[0]);
-	wprintf(L"[ windowTitle ] %ls\n", L_ProcessName.c_str());
+	wprintf(L"[ windowTitle ] %ls\n", wWindowName.c_str());
 	printf("[ WindowsHandler Size ] %d\n", (int)windowsHandler.size());
 	printf("\n");
 

@@ -4,7 +4,7 @@
 #include <vector>
 
 struct BasicObjectData {
-	size_t ID = -1;
+	int ID = -1;
 	int16_t Offset = 0x0;
 	std::string Type = "";
 	std::string Name = "";

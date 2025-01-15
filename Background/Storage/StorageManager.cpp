@@ -1,10 +1,11 @@
 #pragma once
 #include "StorageManager.h"
 #include "../Core/Object.h"
+#include "../../GUI/Config/MainConsoleConfig.h"
+
+void StorageManager::SetPackageDataList(std::vector<std::string> Value) { PackageViwerConf.PackageDataList = Value; }
 
 bool StorageManager::SetObjectUper(DWORD_PTR Address) {
-	//std::shared_lock<std::shared_mutex> lock(GetObjectDict_Lock);
-
 	if (!ObjectDict.Empty()) {
 		for (auto Obj : ObjectDict.GetAll()) {
 			if (Obj.second.SuperPtr.Address == Address) {

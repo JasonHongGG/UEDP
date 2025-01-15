@@ -23,11 +23,11 @@ namespace ComponentPanelTab
 		ImGui::PushFont(Font::BigIconText);
 		Style::DefaultBtnStyleSwitch(true);
 		static ImVec2 BtnSize = ImVec2(65, 60);
-		BtnComponent(ConfigPageComponentStateMgr.OpenShadowEditor, "ShadowEditor", BtnSize);
+		BtnComponent(ConfigPageComponentState.OpenShadowEditor, "ShadowEditor", BtnSize);
 		ImGui::SameLine();
-		BtnComponent(ConfigPageComponentStateMgr.OpenToggleEditor, "ToggleEditor", BtnSize);
+		BtnComponent(ConfigPageComponentState.OpenToggleEditor, "ToggleEditor", BtnSize);
 		ImGui::SameLine();
-		BtnComponent(ConfigPageComponentStateMgr.OpenGradientEditor, "GradientEditor", BtnSize);
+		BtnComponent(ConfigPageComponentState.OpenGradientEditor, "GradientEditor", BtnSize);
 		Style::DefaultBtnStyleSwitch(false);
 		ImGui::PopFont();
 	}

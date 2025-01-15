@@ -27,7 +27,7 @@ bool FNamePoolParserClass::FindStringFromFNamePool(const std::string& InputStrin
 
     //ProgressBar 準備
     StorageMgr.FNamePoolParseProgressBarTotalValue.Set(SplitFNamePoolSize);
-    ProgressBarStateMgr.FNamePoolEvent = ProcessState::Processing;
+    ProgressBarState.FNamePoolEvent = ProcessState::Processing;
 
     const BS::multi_future<void> loop_future = Pool.submit_loop<size_t>(0, SplitFNamePoolSize,
         [this, InputString, BatchNum](const size_t i)
@@ -35,23 +35,23 @@ bool FNamePoolParserClass::FindStringFromFNamePool(const std::string& InputStrin
             size_t Start = i * BatchNum;
             size_t End = Start + BatchNum - 1;
 
-            if (StorageMgr.FNamePoolFindStringFlag.Get()) return;
+            if (StorageMgr.FNamePoolFindStringFlag.IsInitialized()) return;
             Thread_FindString(InputString, Start, End);
 
             StorageMgr.FNamePoolParseProgressBarValue.Set(StorageMgr.FNamePoolParseProgressBarValue.Get() + 1); //標記完成加一
         });
     loop_future.wait();
-    ProgressBarStateMgr.FNamePoolEvent = ProcessState::Completed;
+    ProgressBarState.FNamePoolEvent = ProcessState::Completed;
 
-    if (StorageMgr.FNamePoolFindStringFlag.Get()) {
-        StorageMgr.FNamePoolFindStringFlag.Set(false);
+    if (StorageMgr.FNamePoolFindStringFlag.IsInitialized()) {
+        StorageMgr.FNamePoolFindStringFlag.UnIsInitialized();
         return true;
     }
     else return false;
 }
 
 void FNamePoolParserClass::ParseFNamePool() {
-    if (StorageMgr.FNamePoolBaseAddress.IsInitialized()) {
+    if (!StorageMgr.FNamePoolBaseAddress.IsInitialized()) {
         printf("[ FNamePool Not Exist ]\n");
         printf("[ Please Get The FNamePool First ]\n\n");
         return;
@@ -62,13 +62,13 @@ void FNamePoolParserClass::ParseFNamePool() {
 
     int NullCnt = 0;        //計算遇到 Null Address 的次數
     int FNamePoolCnt = 0;
-    DWORD_PTR Address_Level_1;
+    DWORD_PTR Address_Level_1 = NULL;
 
+    StorageMgr.FNamePoolSize.Set(0);
     for (int i = 0; i < 500; i++) {                 //最多只掃 500 的 FNamePool => 再多就拋棄 (通常都不到 100 個，頂多 50 幾個)
-        Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(FNamePool_Entry + i * (8 - ProcessInfo::ProcOffestSub));              //32bit => 4bytes 一組   //64bit => 8bytes 一組
-        if (Address_Level_1) {
-            if (MemMgr.MemReader.ReadMem<DWORD_PTR>(Address_Level_1)) {    // Is Pointer ?
-                StorageMgr.FNamePoolSize.Get();
+        if (MemMgr.MemReader.ReadMem(Address_Level_1, FNamePool_Entry + i * (8 - ProcessInfo::ProcOffestSub))) {  //32bit => 4bytes 一組   //64bit => 8bytes 一組
+            if (MemMgr.MemReader.IsPointer(Address_Level_1)) {    // Is Pointer ?
+                StorageMgr.FNamePoolSize.Set(StorageMgr.FNamePoolSize.Get() + 1);
                 FNamePoolCnt += 1;
             }
             else {
@@ -80,8 +80,7 @@ void FNamePoolParserClass::ParseFNamePool() {
     }
 
     printf("[ FNamePool Quantity ] %d\n", FNamePoolCnt);
-    bool CoreUObjectFind_Flag = FindStringFromFNamePool("/Script/CoreUObject");
-    if (CoreUObjectFind_Flag) printf("[ UE Version >= 4 ]\n\n");
+    if (FindStringFromFNamePool("/Script/CoreUObject")) printf("[ UE Version >= 4 ]\n\n");
     else printf("[ UE Version == 3 ]\n\n");
 
 }

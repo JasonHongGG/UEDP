@@ -4,20 +4,34 @@
 
 class MemoryReader {
 public:
+    DWORD_PTR TempDWORD = NULL;
+
     template <class T>
-    T ReadMem(DWORD_PTR baseAddress, size_t size = -1);
+    bool ReadMem(T& target, DWORD_PTR baseAddress, size_t size = -1);
 
     bool ReadBytes(DWORD_PTR baseAddress, BYTE* buffer, size_t size);
 
     DWORD_PTR ReadMultiLevelPointer(DWORD_PTR baseAddress, size_t Level);
+
+    bool IsPointer(DWORD_PTR address);
+
+    template <class T>
+    bool IsEqual(DWORD_PTR address, T value);
 private:
 };
 
 template <class T>
-T MemoryReader::ReadMem(DWORD_PTR baseAddress, size_t size)
+bool MemoryReader::ReadMem(T& target, DWORD_PTR baseAddress, size_t size) 
 {
-    T x;
-    if (size == -1) size = sizeof(x);
-    if (ReadProcessMemory(ProcessInfo::hProcess, reinterpret_cast<LPCVOID>(baseAddress), &x, size, NULL) == FALSE) return T(); // 回傳預設值和失敗標誌
-    return x;
+    if (size == -1) size = sizeof(target);
+    if (ReadProcessMemory(ProcessInfo::hProcess, reinterpret_cast<LPCVOID>(baseAddress), &target, size, NULL) == FALSE) return false; // 回傳預設值和失敗標誌
+    return true;
+}
+
+template <class T>
+bool MemoryReader::IsEqual(DWORD_PTR address, T value)
+{
+    T result;
+    ReadMem(result, address);
+    return result == value;
 }

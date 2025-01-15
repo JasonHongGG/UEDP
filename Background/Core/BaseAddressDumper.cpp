@@ -58,21 +58,20 @@ bool BaseAddressDumperClass::ValidateFNamePool(DWORD_PTR Address, DWORD_PTR& FNa
 	if (!Address || Address % 4 != 0) return false;
 
 	bool FNamePoolFind_Flag = false;
-	DWORD_PTR Address_Level_1;
+	DWORD_PTR Address_Level_1 = NULL;
 
 	// Address 是否是一個 Pointer
-	if (MemMgr.MemReader.ReadMem<DWORD_PTR>(Address)) {
+	if (MemMgr.MemReader.IsPointer(Address)) {
 
 		for (int i = 0; i <= 0x10; i += 4) {
 			//讀一層進去
 			//printf("[ Level 1 ] %p\n", Address + i);
-			Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + i);
-			if (Address_Level_1) { // Address_Level_1 => NamePool 的第一層
+			if (MemMgr.MemReader.ReadMem(Address_Level_1, Address + i)) { // Address_Level_1 => NamePool 的第一層
 				//printf("[ Level 2 ] %p\n", Address_Level_1);
 
 				for (int j = 0; j < 2; j++) {
 					// Address_Level_1 是否是一個 Pointer
-					if (MemMgr.MemReader.ReadMem<DWORD_PTR>(Address_Level_1)) {
+					if (MemMgr.MemReader.IsPointer(Address_Level_1)) {
 						for (int k = 0; k < 0x30; k += 2) {		//0x30 = 48		//24迴圈
 							char Buffer[5];
 							MemMgr.MemReader.ReadBytes(Address_Level_1 + k, (BYTE*)Buffer, 4);
@@ -91,8 +90,7 @@ bool BaseAddressDumperClass::ValidateFNamePool(DWORD_PTR Address, DWORD_PTR& FNa
 					else break;
 
 					//這邊表示是在上邊內層迴圈遞迴完後沒有找到 None 字串，因此再進去一層找(如果可以的話) => [[ Address_Level_1 ]]
-					Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address_Level_1);
-					if (!Address_Level_1) break;
+					if (!MemMgr.MemReader.ReadMem(Address_Level_1, Address_Level_1)) break;
 				}
 			}
 			else continue;
@@ -146,7 +144,7 @@ void BaseAddressDumperClass::GetFNamePool()
 				printf("[ BaseAddressList ][k = % d] % p\n", k, (void*)FindAddressResult[k]);
 
 				//是否是一個 Pointer
-				if (MemMgr.MemReader.ReadMem<DWORD_PTR>(FindAddressResult[k])) {
+				if (MemMgr.MemReader.IsPointer(FindAddressResult[k])) {
 					//驗證該 Pointer 是 NamePool BaseAddress
 					FindFlag = ValidateFNamePool(FindAddressResult[k], FNamePoolBaseAddress, FNamePoolFirstPoolOffest);
 					if (FindFlag) {
@@ -170,25 +168,23 @@ void BaseAddressDumperClass::GetFNamePool()
 bool BaseAddressDumperClass::ValidateGUObjectArray(DWORD_PTR Address, DWORD_PTR& GUObjectArrayBaseAddress, size_t& GUObjectArrayElementSize)
 {
 	bool FindFlag = false;
-	DWORD_PTR Address_Level_0;
-	DWORD_PTR Address_Level_1;
+	DWORD_PTR Address_Level_0 = NULL;
+	DWORD_PTR Address_Level_1 = NULL;
 
 	// Address 是否是一個 Pointer
-	if (MemMgr.MemReader.ReadMem<DWORD_PTR>(Address)) {
+	if (MemMgr.MemReader.IsPointer(Address)) {
 		for (int i = -0x50; i <= 0x200; i += 0x4) {
 			if (MemMgr.MemReader.ReadMultiLevelPointer(Address + i, 4)) {
-				Address_Level_0 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + i);
+				MemMgr.MemReader.ReadMem(Address_Level_0, Address + i);
 
 				for (int j = 0; j < 2; j++) {
 					// 找出 Array 中每個 Object 之間的 Offset (只有在 Step 剛好 10 次都落在 Object Entry 上，才會滿足第一個 if 條件)
 					for (int k = 0x4; k < 0x20; k += 0x4) {		//0x30 = 48		//24迴圈		// Step
 						for (int n = 0; n <= 10 * k; n += k) {									// 10 loop cnt
-							Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address_Level_0 + n);
-							if (Address_Level_1) {
+							if (MemMgr.MemReader.ReadMem(Address_Level_1, Address_Level_0 + n)) {
 
 								if (
-									MemMgr.MemReader.ReadMultiLevelPointer(Address_Level_1, 2) ||
-									MemMgr.MemReader.ReadMultiLevelPointer(Address_Level_1, 3) ||
+									!MemMgr.MemReader.ReadMultiLevelPointer(Address_Level_1, 3) ||
 									ProcMgr.ModuleMgr.InMoudle(ProcessInfo::PID, MemMgr.MemReader.ReadMultiLevelPointer(Address_Level_1, 2)) == false ||
 									DumperUtils.CheckValue<int>(Address_Level_1, 0x50, n / k, 2) == NULL			// 預設 0x50 的偏差範圍 (n / k 表示現在成功 loop 到第幾個 Object Entry) //簡單來說 Array 的 Obj 內會標示該 Obj 是第幾個，該數字要和 (n / k) 相同
 									)
@@ -208,8 +204,7 @@ bool BaseAddressDumperClass::ValidateGUObjectArray(DWORD_PTR Address, DWORD_PTR&
 					if (FindFlag) break;
 
 					//再進去一層找(如果可以的話) => [ Address_Leve0 ]
-					Address_Level_0 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address_Level_0);
-					if (!Address_Level_0) break;
+					if (!MemMgr.MemReader.ReadMem(Address_Level_0, Address_Level_0)) break;
 				}
 			}
 			if (FindFlag) break;
@@ -264,7 +259,7 @@ void BaseAddressDumperClass::GetGUObjectArray()
 				printf("[ BaseAddressList ][k = % d] % p\n", k, (void*)FindAddressResult[k]);
 
 				//是否是一個 Pointer
-				if (MemMgr.MemReader.ReadMem<DWORD_PTR>(FindAddressResult[k])) {
+				if (MemMgr.MemReader.IsPointer(FindAddressResult[k])) {
 					// 驗證該 Pointer 是 GUObjectArray BaseAddress
 					FindFlag = ValidateGUObjectArray(FindAddressResult[k], GUObjectArrayBaseAddress, GUObjectArrayElementSize);
 					if (FindFlag) {
@@ -329,7 +324,7 @@ void BaseAddressDumperClass::GetGWorld()
 
 				// 暫時不作驗證，直接取 FindAddressResult[0]
 				////是否是一個 Pointer
-				//ReadMemResult = MemMgr.ReadMem<DWORD_PTR>(FindAddressResult[k]);
+				//ReadMemResult = MemMgr.ReadMem(FindAddressResult[k]);
 				//if (ReadMemResult.second == true) {
 				//	// 驗證該 Pointer 是 GetGWorld BaseAddress
 				//	GetGWorldFind_Flag = ValidateGetGWorld(FindAddressResult[k], GetGWorldBaseAddress, GetGWorld_ArrEleSize);

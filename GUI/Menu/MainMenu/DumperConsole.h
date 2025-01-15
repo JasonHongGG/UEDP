@@ -12,6 +12,7 @@
 
 #include "../../MyGuiComponent.h"
 #include "../../../System/Process.h"
+#include "../../../Background/Storage/StorageManager.h"
 
 
 namespace DumperConsole
@@ -223,38 +224,38 @@ namespace DumperConsole
 			const ImU32 bg = ImGui::GetColorU32(Color::ProgressBarBGColor);
 
 			// ParseFNamePool Progress
-			if (MainMenuConf.ParseFNamePool_ProgressBar == ProcessState::Processing or MainMenuConf.ParseFNamePool_ProgressBar == ProcessState::Completed) {
+			if (ProgressBarState.FNamePoolEvent == ProcessState::Processing or ProgressBarState.FNamePoolEvent == ProcessState::Completed) {
 				ImGui::DummySpace();
-				if (MainMenuConf.ParseFNamePool_ProgressBar == ProcessState::Processing) {
+				if (ProgressBarState.FNamePoolEvent == ProcessState::Processing) {
 					ImGui::Spinner("##ParseFNamePool_Spinner", 10, 6, col);
 					ImGui::SameLine();
 				}
 
-				std::string BarStr = std::to_string(MainMenuConf.ParseFNamePool_ProgressBar_Value) + "/" + std::to_string(MainMenuConf.ParseFNamePool_ProgressBar_TotalValue);
-				float BarValue = static_cast<float>(MainMenuConf.ParseFNamePool_ProgressBar_Value) / static_cast<float>(MainMenuConf.ParseFNamePool_ProgressBar_TotalValue);
-				if (MainMenuConf.ParseFNamePool_ProgressBar == ProcessState::Completed) { BarStr = "[ Completed ]"; BarValue = 1.0f; }
+				std::string BarStr = std::to_string(StorageMgr.FNamePoolParseProgressBarValue.Get()) + "/" + std::to_string(StorageMgr.FNamePoolParseProgressBarTotalValue.Get());
+				float BarValue = static_cast<float>(StorageMgr.FNamePoolParseProgressBarValue.Get()) / static_cast<float>(StorageMgr.FNamePoolParseProgressBarTotalValue.Get());
+				if (ProgressBarState.FNamePoolEvent == ProcessState::Completed) { BarStr = "[ Completed ]"; BarValue = 1.0f; }
 				ImGui::BufferingBar("##ParseFNamePool_BufferBar", BarValue, ImVec2(400, 30), bg, col, BarStr.c_str());
 			}
 
 			// ParseGUObjectArray Progress
-			if (MainMenuState.ParseGUObjectArray_ProgressBar == ProcessState::Processing or MainMenuState.ParseGUObjectArray_ProgressBar == ProcessState::Completed) {
+			if (ProgressBarState.GUObjectArrayEvent == ProcessState::Processing or ProgressBarState.GUObjectArrayEvent == ProcessState::Completed) {
 				{
 					ImGui::DummySpace();
-					if (MainMenuState.ParseGUObjectArray_ProgressBar == ProcessState::Processing) {
+					if (ProgressBarState.GUObjectArrayEvent == ProcessState::Processing) {
 						ImGui::Spinner("##ParseGUObjectArray_Spinner", 10, 6, col);
 						ImGui::SameLine();
 					}
 
-					std::string BarStr = "[ " + std::to_string(MainMenuConf.ParseGUObjectArray_ProgressBar_Index) + " ] " + std::to_string(MainMenuConf.ParseGUObjectArray_ProgressBar_Value) + "/" + std::to_string(MainMenuConf.ParseGUObjectArray_ProgressBar_TotalValue);
-					float BarValue = static_cast<float>(MainMenuConf.ParseGUObjectArray_ProgressBar_Value) / static_cast<float>(MainMenuConf.ParseGUObjectArray_ProgressBar_TotalValue);
-					if (MainMenuState.ParseGUObjectArray_ProgressBar == ProcessState::Completed) { BarStr = "[ Completed ]"; BarValue = 1.0f; }
+					std::string BarStr = "[ " + std::to_string(StorageMgr.GUObjectArrayParseIndex.Get()) + " ] " + std::to_string(StorageMgr.GUObjectArrayParseProgressBarValue.Get()) + "/" + std::to_string(StorageMgr.GUObjectArrayParseProgressBarTotalValue.Get());
+					float BarValue = static_cast<float>(StorageMgr.GUObjectArrayParseProgressBarValue.Get()) / static_cast<float>(StorageMgr.GUObjectArrayParseProgressBarTotalValue.Get());
+					if (ProgressBarState.GUObjectArrayEvent == ProcessState::Completed) { BarStr = "[ Completed ]"; BarValue = 1.0f; }
 					ImGui::BufferingBar("##ParseGUObjectArray_BufferBar", BarValue, ImVec2(400, 30), bg, col, BarStr.c_str());
 				}
 				{
 					ImGui::DummySpace();
-					if (MainMenuConf.TotalObject_Counter_ProgressBar_TotalValue - 10 <= MainMenuConf.TotalObject_Counter_ProgressBar_Value) MainMenuConf.TotalObject_Counter_ProgressBar_TotalValue *= 2;
-					std::string BarStr = "[ Total Object Counter ] " + std::to_string(MainMenuConf.TotalObject_Counter_ProgressBar_Value) + "/" + std::to_string(MainMenuConf.TotalObject_Counter_ProgressBar_TotalValue);
-					float BarValue = static_cast<float>(MainMenuConf.TotalObject_Counter_ProgressBar_Value) / static_cast<float>(MainMenuConf.TotalObject_Counter_ProgressBar_TotalValue);
+					if (MainMenuConf.GUObjectArrayTotalObjectProgressBarTotalValue - 10 <= StorageMgr.GUObjectArrayTotalObjectCounter.Get()) MainMenuConf.GUObjectArrayTotalObjectProgressBarTotalValue *= 2;
+					std::string BarStr = "[ Total Object Counter ] " + std::to_string(StorageMgr.GUObjectArrayTotalObjectCounter.Get()) + "/" + std::to_string(MainMenuConf.GUObjectArrayTotalObjectProgressBarTotalValue);
+					float BarValue = static_cast<float>(StorageMgr.GUObjectArrayTotalObjectCounter.Get()) / static_cast<float>(MainMenuConf.GUObjectArrayTotalObjectProgressBarTotalValue);
 					ImGui::BufferingBar("##ParseGUObjectArray_BufferBar", BarValue, ImVec2(400, 30), bg, col, BarStr.c_str());
 				}
 			}

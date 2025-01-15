@@ -187,13 +187,15 @@ bool UtilsEntry::GetEnumList(DWORD_PTR Address, std::vector<std::pair<std::strin
 	DWORD_PTR Address_Level_1;
 	std::string EnumName;
 	size_t EnumIndex, EnumFNameIndex;		// EnumIndex 好像不會用到，畢竟 Emun 大多都是從 0 開始
-	DWORD_PTR EnumListAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.EnumList);
-	int EnumListSize = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.EnumList + ProcessInfo::ProcOffestAdd);
+	DWORD_PTR EnumListAddress = NULL;
+	MemMgr.MemReader.ReadMem(EnumListAddress, Address + UEOffset.EnumList);
+	int EnumListSize = 0;
+	MemMgr.MemReader.ReadMem(EnumListSize, Address + UEOffset.EnumList + ProcessInfo::ProcOffestAdd);
 	for (int i = 0; i < EnumListSize; i++) {
 		Address_Level_1 = EnumListAddress + i * UEOffset.EnumPropMul;
-		EnumFNameIndex = MemMgr.MemReader.ReadMem<int>(Address_Level_1 + UEOffset.EnumPropName);
+		MemMgr.MemReader.ReadMem(EnumFNameIndex, Address_Level_1 + UEOffset.EnumPropName);
 		FNameParser.GetFNameStringByID(EnumFNameIndex, EnumName, true);
-		EnumIndex = MemMgr.MemReader.ReadMem<int>(Address_Level_1 + UEOffset.EnumPropIndex);
+		MemMgr.MemReader.ReadMem(EnumIndex, Address_Level_1 + UEOffset.EnumPropIndex);
 		EnumList.push_back(std::make_pair(EnumName, EnumIndex));
 	}
 
@@ -239,7 +241,7 @@ bool UtilsEntry::ObjectMemberProc(ObjectData& RetObjData, std::vector<BasicDumpe
 
 	// 否則就取 TypeObject
 	else {
-		Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(RetObjData.Address + UEOffset.TypeObject);
+		MemMgr.MemReader.ReadMem(Address_Level_1, RetObjData.Address + UEOffset.TypeObject);
 		StorageMgr.GetObjectDict(Address_Level_1, TempObjData);
 
 		// 如果有 Member 則直接回傳該物件  || 如果是已經是 Object 
@@ -342,7 +344,7 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 			if (StorageMgr.GetObjectDict(Address_Level_1, MemberObj, true)) {
 				// 基本檢查 (如果不符合就跳過該 Member)
 				if (MemberObj.Type.find("Function") != std::string::npos or MemberObj.Offset < 0) {
-					Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(MemberObj.Address + UEOffset.NextMember); continue;
+					MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember); continue;
 				}
 
 				// Bool
@@ -373,8 +375,9 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 						// Array 、 Map
 						if (MemberObj.Type.find("ArrayProperty") != std::string::npos or MemberObj.Type.find("MapProperty") != std::string::npos) {
 							//Size
-							int ObjectSize = MemMgr.MemReader.ReadMem<int>(InspectorState.ObjectContentCreatEvent.InstanceAddress + MemberObj.Offset + ProcessInfo::ProcOffestAdd);
-							int AllocSize = MemMgr.MemReader.ReadMem<int>(InspectorState.ObjectContentCreatEvent.InstanceAddress + MemberObj.Offset + ProcessInfo::ProcOffestAdd + 4);
+							int ObjectSize = 0, AllocSize = 0;
+							MemMgr.MemReader.ReadMem(ObjectSize, InspectorState.ObjectContentCreatEvent.InstanceAddress + MemberObj.Offset + ProcessInfo::ProcOffestAdd);
+							MemMgr.MemReader.ReadMem(AllocSize, InspectorState.ObjectContentCreatEvent.InstanceAddress + MemberObj.Offset + ProcessInfo::ProcOffestAdd + 4);
 
 							TempBasicObject.Size.push_back(ObjectSize);
 							TempBasicObject.Size.push_back(AllocSize);
@@ -384,7 +387,7 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 				TempMemberList.push_back(TempBasicObject);
 
 				//下一個 Member
-				Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(MemberObj.Address + UEOffset.NextMember);
+				MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember);
 			}
 			else break;
 		}

@@ -144,7 +144,7 @@ void APIEntry::Update(DumperItem& APIItem, DWORD_PTR OriginAddress, DWORD_PTR Ne
 		APIItem.ObjectMap[NewAddress].Address = NewAddress;
 		for (BasicDumperObject& memberObj : APIItem.ObjectMap[NewAddress].Member) {
 			OriginAddress = memberObj.Address;
-			memberObj.Address = MemMgr.MemReader.ReadMem<DWORD_PTR>(NewAddress + memberObj.Offset);
+			MemMgr.MemReader.ReadMem(memberObj.Address, NewAddress + memberObj.Offset);
 			Update(APIItem, OriginAddress, memberObj.Address);
 		}
 	}

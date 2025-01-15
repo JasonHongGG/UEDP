@@ -25,6 +25,7 @@ enum class MainConfigTabType
 struct MainMenuConfig
 {
 	//Dumper Console
+	size_t GUObjectArrayTotalObjectProgressBarTotalValue = 1000;
 	ProcessState DumperGlobalExecution = ProcessState::Idle;		// 目前只有 Global 的執行會計時
 	int DumperGlobalExecutionMode_SelectedIndex = 1;	// 預設是 Activate
 	int DumperGlobalExecutionFilterMode_SelectedIndex = 0;
@@ -38,17 +39,7 @@ struct MainMenuConfig
 		{"ParseGUObjectArray", true}
 	};
 
-	size_t ParseFNamePool_ProgressBar_Value = 0;
-	size_t ParseFNamePool_ProgressBar_TotalValue = 0;
-	ProcessState ParseFNamePool_ProgressBar = ProcessState::Idle;
 
-	size_t ParseGUObjectArray_ProgressBar_Value = 0;
-	size_t ParseGUObjectArray_ProgressBar_TotalValue = 0;
-	size_t ParseGUObjectArray_ProgressBar_Index = 0;
-
-	size_t TotalObject_Counter_ProgressBar_Value = 0;
-	size_t TotalObject_Counter_ProgressBar_TotalValue = 1000;
-	
 	// Config Page
 	struct TabStruct {
 		bool isOpen = false;

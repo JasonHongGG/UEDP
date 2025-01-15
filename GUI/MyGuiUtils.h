@@ -50,7 +50,7 @@ void GUIUtilsClass::GetDisplayNextState(BasicDumperObject& MemberObject, DWORD_P
 {
     if (MemberObject.Type.find("ObjectProperty") != std::string::npos or MemberObject.Type == "Class") {
         DisplayNextState.ShowHeader = true;
-        DisplayNextState.NextAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + CurOffset);
+        MemMgr.MemReader.ReadMem(DisplayNextState.NextAddress, Address + CurOffset);
         DisplayNextState.NextOffest = 0; //遇到 Object 時歸零 (每個 Object 內的變數 Offset 是各自獨立的)
         DisplayNextState.NextIndentation = Indentation + InspectorConf.InspectorBaseIndentation;
     }
@@ -62,7 +62,7 @@ void GUIUtilsClass::GetDisplayNextState(BasicDumperObject& MemberObject, DWORD_P
     }
     else if (MemberObject.Type.find("ArrayProperty") != std::string::npos or MemberObject.Type.find("MapProperty") != std::string::npos) {
         DisplayNextState.ShowHeader = false;
-        DisplayNextState.NextAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + CurOffset);;
+        MemMgr.MemReader.ReadMem(DisplayNextState.NextAddress, Address + CurOffset);;
         DisplayNextState.NextOffest = 0;
         DisplayNextState.Size = (EditorEnable ? MemberObject.Size[0] : 1);
         DisplayNextState.NextIndentation = Indentation + InspectorConf.InspectorBaseIndentation;
@@ -206,8 +206,8 @@ void GUIUtilsClass::CEItemExport(std::string Name, std::string Type, DWORD_PTR O
 template<typename T>
 bool GUIUtilsClass::ValueRenderComponent(std::string UniqueLabel, std::string Type, DWORD_PTR BaseAddress, DWORD_PTR MemberAddress)
 {
-    T Value = MemMgr.MemReader.ReadMem<T>(MemberAddress);
-    if (!Value) return false;
+    T Value = 0;
+    if (!MemMgr.MemReader.ReadMem<T>(Value, MemberAddress)) return false;
 
     ImGui::PushItemWidth(50);
     if (Type == "Int") {
@@ -301,8 +301,8 @@ bool GUIUtilsClass::ValueRender(std::string UniqueLabel, DWORD_PTR BaseAddress, 
     }
     // Bool
     else if (Type.find("BoolProperty") != std::string::npos) {          //Drag
-        uint8_t Value = MemMgr.MemReader.ReadMem<uint8_t>(Address);
-        if (!Value) return false;
+        uint8_t Value = 0;
+        if (!MemMgr.MemReader.ReadMem<uint8_t>(Value, Address)) return false;
         bool IsBitActivate = Value & Utils.BitMaskTable.at(BitIdx);
         EditorMemMgr.ObjectStroageData[BaseAddress].BoolType[UniqueLabel] = IsBitActivate;
         if (ImGui::Toggle(("##Bool_Property" + UniqueLabel).c_str(), &EditorMemMgr.ObjectStroageData[BaseAddress].BoolType[UniqueLabel], ToggleConf)) {
@@ -316,8 +316,8 @@ bool GUIUtilsClass::ValueRender(std::string UniqueLabel, DWORD_PTR BaseAddress, 
     }
     //Enum
     else if (Type.find("EnumProperty") != std::string::npos) {          //Drag
-        uint8_t Value = MemMgr.MemReader.ReadMem<uint8_t>(Address);
-        if (!Value) return false;
+        uint8_t Value = 0;
+        if (!MemMgr.MemReader.ReadMem<uint8_t>(Value, Address)) return false;
         
         if (!EnumList.empty()) {
             // 初始化
@@ -364,16 +364,15 @@ bool GUIUtilsClass::ValueRender(std::string UniqueLabel, DWORD_PTR BaseAddress, 
         static DWORD_PTR StrAddress;
         static BYTE buffer[60];
         static std::wstring output;
-        StrAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address);
-        if (!StrAddress) return false;
+        if (!MemMgr.MemReader.ReadMem(StrAddress, Address)) return false;
         MemMgr.MemReader.ReadBytes(StrAddress, buffer, 50);     // 字串最常以讀取 50
         buffer[58] = '\0'; buffer[59] = '\0';
         output = std::wstring((wchar_t*)buffer);
         ImGui::TextColored(Color::White, (!output.empty()) ? Utils.UnicodeToUTF8(output.c_str()).c_str() : "None");
     }
     else {
-        DWORD_PTR Value = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address);
-        if (!Value) return false;
+        DWORD_PTR Value = 0;
+        if (!MemMgr.MemReader.ReadMem(Value, Address)) return false;
         // => Address
         if (
             Type.find("MapProperty") != std::string::npos or

@@ -135,6 +135,9 @@
     <ClCompile Include="Json\JsonManager.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Background\Core\AutoConfig.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background\Entry.h">
@@ -522,6 +525,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Background\Entry\LoadAndSaveSettingEntry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Core\AutoConfig.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

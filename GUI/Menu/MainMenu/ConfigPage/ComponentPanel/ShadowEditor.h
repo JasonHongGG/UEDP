@@ -9,7 +9,7 @@ namespace ShadowEditor
 {
 	void Render()
 	{
-		bool& state = ConfigPageComponentStateMgr.OpenShadowEditor;
+		bool& state = ConfigPageComponentState.OpenShadowEditor;
 
 		if (state and ImGui::Begin("StyleEditor", &state))
 		{

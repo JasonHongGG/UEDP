@@ -43,12 +43,12 @@ bool FNamePoolParserClass::GetFNameStringByID(U InputValue, std::string& RetStr,
     }
     else {
         //IS Address
-        FNamePoolID_LargerThanExpected = MemMgr.MemReader.ReadMem<int>(InputValue + 4);
-        ID = MemMgr.MemReader.ReadMem<int>(InputValue);
+        MemMgr.MemReader.ReadMem(FNamePoolID_LargerThanExpected, InputValue + 4);
+        MemMgr.MemReader.ReadMem(ID, InputValue);
     }
 
     //如果已處理過，則直接返回結果
-    if (!(StorageMgr.FNamePoolDict.Get(ID).empty())) {
+    if (!StorageMgr.FNamePoolDict.Get(ID).empty()) {
         if (FNamePoolID_LargerThanExpected > 0) RetStr = StorageMgr.FNamePoolDict.Get(ID) + "_" + std::to_string(FNamePoolID_LargerThanExpected - 1);
         else RetStr = StorageMgr.FNamePoolDict.Get(ID);
         return true;
@@ -57,8 +57,10 @@ bool FNamePoolParserClass::GetFNameStringByID(U InputValue, std::string& RetStr,
     //基本設定
     int FNamePoolIndex = ID >> 0x10;
     int FNameOffest = (ID & 0xFFFF) << 1;            //後面這個 2 根據不同遊戲可能會有所不同，但都是 2 的倍數
-    DWORD_PTR FNamePoolAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(StorageMgr.FNamePoolBaseAddress.Get() + StorageMgr.FNamePoolFirstPoolOffest.Get() + FNamePoolIndex * ProcessInfo::ProcOffestAdd);
-    int16_t StringLen = MemMgr.MemReader.ReadMem<int16_t>(FNamePoolAddress + FNameOffest);
+    DWORD_PTR FNamePoolAddress = NULL;
+    MemMgr.MemReader.ReadMem(FNamePoolAddress, StorageMgr.FNamePoolBaseAddress.Get() + StorageMgr.FNamePoolFirstPoolOffest.Get() + FNamePoolIndex * ProcessInfo::ProcOffestAdd);
+    int16_t StringLen = 0;
+    MemMgr.MemReader.ReadMem<int16_t>(StringLen, FNamePoolAddress + FNameOffest);
     StringLen = StringLen >> 6;                             //字串中的前兩 bytes 整數，往右 shift 6 位後，就是後面的字串長度
     if (StringLen > 200 or StringLen < 1) return false;     //字串太長則捨去  // StringLen 可能會為 1，Ex: X、Y、Z 座標的 Name
 

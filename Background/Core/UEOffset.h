@@ -3,6 +3,22 @@
 #include <string>
 #include "../../System/Process.h"
 
+inline std::map<std::string, int> UETypeTable = {
+    {"BoolProperty", 1},
+    {"ByteProperty", 1},
+    {"FloatProperty", 4},
+    {"StructProperty", ProcessInfo::ProcOffestAdd},     //大小不定，別用
+    {"IntProperty", 4},
+    {"NameProperty", ProcessInfo::ProcOffestAdd},
+    {"Int64Property", 8},
+    {"TextProperty", ProcessInfo::ProcOffestAdd},
+    {"StrProperty", ProcessInfo::ProcOffestAdd},
+    {"ArrayProperty", ProcessInfo::ProcOffestAdd},
+    {"MapProperty", ProcessInfo::ProcOffestAdd},
+    {"ClassProperty", ProcessInfo::ProcOffestAdd},
+    {"ObjectProperty", ProcessInfo::ProcOffestAdd}
+};
+
 class UEOffsetConfig
 {
 public:

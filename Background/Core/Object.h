@@ -16,8 +16,8 @@ public:
 
 	bool BasicObjectDataWapper(ObjectData& PropertyObject, BasicObjectData& TempBasicObjectData);
 
-	bool GetBasicInfo_1(DWORD_PTR Address, size_t& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Outer);
-	bool GetBasicInfo_2(DWORD_PTR Address, size_t& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Class, DWORD_PTR& Outer);
+	bool GetBasicInfo_1(DWORD_PTR Address, int& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Outer);
+	bool GetBasicInfo_2(DWORD_PTR Address, int& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Class, DWORD_PTR& Outer);
 	bool GetBasicInfo(ObjectData& RetObjectData, DWORD_PTR Address, size_t Level, DWORD_PTR ClassPtr);
 
 	void GetFullName(ObjectData& RetObjectData, DWORD_PTR Address, size_t Level);
@@ -49,7 +49,7 @@ public:
 private:
 
 public:
-	size_t MaxLevel = 100;
+	size_t MaxLevel = 10;
 
 };
 

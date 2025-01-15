@@ -7,7 +7,7 @@ DWORD_PTR DumperUtilsSet::CheckValue(DWORD_PTR Address, size_t Size, U Value, si
     // 如果有找到則回傳找到的 Offest，反則為 NULL
 
     //檢查 Address 是否有效
-    if (MemMgr.MemReader.ReadMem<DWORD_PTR>(Address)) return NULL;
+    if (!MemMgr.MemReader.IsPointer(Address)) return NULL;
 
     // Read Bytes Form Address
     BYTE* BytesBuffer = new BYTE[Size + 0x10];

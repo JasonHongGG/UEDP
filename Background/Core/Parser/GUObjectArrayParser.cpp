@@ -2,17 +2,15 @@
 
 
 void GUObjectArrayParserClass::Thread_SearchAllObject(DWORD_PTR Address, size_t Start, size_t End, size_t GUObjectArray_ArrEleSize, std::string FullName) {
-    DWORD_PTR Address_Level_2;
-    DWORD_PTR Address_Level_3;
+    DWORD_PTR Address_Level_2 = NULL;
+    DWORD_PTR Address_Level_3 = NULL;
     ObjectData TempObjData;
     bool SearchMode = (!FullName.empty() ? true : false);
 
-    Address_Level_2 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address);
-    if (Address_Level_2) {
+    if (MemMgr.MemReader.ReadMem(Address_Level_2, Address)) {
         for (int i = (int)Start; i <= (int)End; i++) {
-            Address_Level_3 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address_Level_2 + i * GUObjectArray_ArrEleSize);
-            if (Address_Level_3) { //Object
-                if (!MemMgr.MemReader.ReadMem<DWORD_PTR>(Address_Level_3)) break;
+            if (MemMgr.MemReader.ReadMem(Address_Level_3, Address_Level_2 + i * GUObjectArray_ArrEleSize)) { //Object
+                if (!MemMgr.MemReader.IsPointer(Address_Level_3)) break;
                 ObjectMgr.TrySaveObject(Address_Level_3, TempObjData, ObjectMgr.MaxLevel, false, SearchMode);
 
                 // 終止條件
@@ -23,7 +21,7 @@ void GUObjectArrayParserClass::Thread_SearchAllObject(DWORD_PTR Address, size_t 
                         return;  //找到 => 提早結束
                     }
                 }
-                else if (StorageMgr.GUObjectArrayParseIndex.Get() > MaxObjectArray and StorageMgr.GUObjectArrayTotalObjectCounter.Get() > MaxObjectQuantity) return;
+                else if (StorageMgr.GUObjectArrayParseIndex.Get() > MaxObjectArray or StorageMgr.GUObjectArrayTotalObjectCounter.Get() > MaxObjectQuantity) return;
             }
         }
     }
@@ -64,7 +62,7 @@ DWORD_PTR GUObjectArrayParserClass::ParseGUObjectArray(GUObjectExecuteMode Mode,
 
     //主程式開始，遞迴 GUObjectArray 找到目標 Object
     size_t LoopStep = ProcessInfo::ProcOffestAdd;
-    DWORD_PTR Address_Level_1;
+    DWORD_PTR Address_Level_1 = NULL;
     size_t TempGUObjectArraySize;
 
     DWORD_PTR GUObjectArrayBaseAddress = StorageMgr.GUObjectArrayBaseAddress.Get();
@@ -73,18 +71,17 @@ DWORD_PTR GUObjectArrayParserClass::ParseGUObjectArray(GUObjectExecuteMode Mode,
     size_t GUObjectArrayBatchSize = GUObjectArrayElementSize * GUObjectArrayElementCnt;        //讓 0x200 個 GUObject 為一組做遞迴
     size_t SplitGUObjectArraySize = 0;
     for (int i = 0x0; i < 0x1000; i += (int)LoopStep) {        //0x1000          //也許這不只 0x1000，而是根據申請的記憶體空間大小決定
-        Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(GUObjectArrayBaseAddress + i);
-        if (Address_Level_1) {
+        if (MemMgr.MemReader.ReadMem(Address_Level_1, GUObjectArrayBaseAddress + i)) {
 
             //Address_Level_1 Is not Pointer
-            if (!MemMgr.MemReader.ReadMem<DWORD_PTR>(Address_Level_1)) continue;
+            if (!MemMgr.MemReader.IsPointer(Address_Level_1)) continue;
             else {
                 if (MemMgr.RegionEnumerator.GetMemoryRegionSizeByAddress(ProcessInfo::hProcess, Address_Level_1, TempGUObjectArraySize, false)) {
                     SplitGUObjectArraySize = floor((TempGUObjectArraySize / GUObjectArrayBatchSize) + 0.5);
                     StorageMgr.GUObjectArrayParseIndex.Set(i);
                     StorageMgr.GUObjectArrayParseProgressBarValue.Set(0);
                     StorageMgr.GUObjectArrayParseProgressBarTotalValue.Set(SplitGUObjectArraySize);
-                    ProgressBarStateMgr.GUObjectArrayEvent = ProcessState::Processing;
+                    ProgressBarState.GUObjectArrayEvent = ProcessState::Processing;
                     const BS::multi_future<void> loop_future = Pool.submit_loop<size_t>(0, SplitGUObjectArraySize,
                         [this, Address_Level_1, GUObjectArrayBatchSize, GUObjectArrayElementSize, Mode, FullName](const size_t i)
                         {
@@ -107,7 +104,7 @@ DWORD_PTR GUObjectArrayParserClass::ParseGUObjectArray(GUObjectExecuteMode Mode,
         }
 
     }
-    ProgressBarStateMgr.GUObjectArrayEvent = ProcessState::Completed;
+    ProgressBarState.GUObjectArrayEvent = ProcessState::Completed;
 
     //印出關於 Object 的相關訊息
     //for (const auto& TypeList : StorageMgr.GetObjectTypeListVector()) {
@@ -130,7 +127,7 @@ DWORD_PTR GUObjectArrayParserClass::ParseGUObjectArray(GUObjectExecuteMode Mode,
             PackageNameList.push_back(PackageList.first);
             if (Const::PrintDumpInfo) printf("[ Package Name List ] %s\n", PackageList.first.c_str());
         }
-        //StorageMgr.SetPackageDataList(PackageNameList); <= TODO
+        StorageMgr.SetPackageDataList(PackageNameList); 
         printf("[ Package Name List Size ] %llu\n", StorageMgr.GetPackage().size());
         printf("\n");
     }

@@ -10,8 +10,6 @@ public:
 	Property<size_t> UEVersion;
 	Property<size_t> GWorldBaseAddress;
 
-
-
 	Property<size_t> FNamePoolBaseAddress;
 	Property<size_t> FNamePoolFirstPoolOffest;
 	Property<size_t> FNamePoolFirstStringOffest;
@@ -21,7 +19,7 @@ public:
 	Property<size_t> FNamePoolParseProgressBarTotalValue;
 	Property<bool> FNamePoolFindStringFlag;
 
-	PropertyMap<size_t, std::string> FNamePoolDict;
+	PropertyMap<size_t, std::string> FNamePoolDict = PropertyMap<size_t, std::string>(true);
 
 
 
@@ -33,7 +31,7 @@ public:
 	Property<size_t> GUObjectArrayParseProgressBarTotalValue;
 	Property<size_t> GUObjectArrayTotalObjectCounter;
 	
-	PropertyMap<DWORD_PTR, ObjectData> ObjectDict = PropertyMap<DWORD_PTR, ObjectData>();
+	PropertyMap<DWORD_PTR, ObjectData> ObjectDict = PropertyMap<DWORD_PTR, ObjectData>(true);
 	PropertyMap<DWORD_PTR, DWORD_PTR> ObjectDictByAddress = PropertyMap<DWORD_PTR, DWORD_PTR>();
 	PropertyMap<size_t, DWORD_PTR> ObjectDictByID;
 	PropertyMap<std::string, DWORD_PTR> ObjectDictByName;
@@ -41,7 +39,7 @@ public:
 	PropertyMap<std::string, std::string> ObjectTypeList;
 
 	
-	
+	void SetPackageDataList(std::vector<std::string> Value);
 	bool SetObjectUper(DWORD_PTR Address);
 	bool GetObjectDict(DWORD_PTR Address, ObjectData& ObjData, bool TryParseIfNoFind = false);
 	bool GetObjectDictByID(size_t ID, ObjectData& ObjData);

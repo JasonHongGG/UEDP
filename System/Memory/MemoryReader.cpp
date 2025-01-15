@@ -12,11 +12,10 @@ DWORD_PTR MemoryReader::ReadMultiLevelPointer(DWORD_PTR baseAddress, size_t Leve
 
     bool success = false;
     DWORD_PTR ptr = baseAddress;
-    DWORD_PTR nextPtr;
+    DWORD_PTR nextPtr = NULL;
 
     for (int i = 1; i <= Level; i++) {
-        nextPtr = ReadMem<DWORD_PTR>(ptr);
-        if (nextPtr) {
+        if (ReadMem(nextPtr, ptr)) {
             ptr = nextPtr;
             if (i == Level) success = true;
         }
@@ -24,4 +23,9 @@ DWORD_PTR MemoryReader::ReadMultiLevelPointer(DWORD_PTR baseAddress, size_t Leve
     }
 
     return success ? ptr : NULL;
+}
+
+bool MemoryReader::IsPointer(DWORD_PTR address)
+{
+    return ReadMem<DWORD_PTR>(TempDWORD, address);
 }

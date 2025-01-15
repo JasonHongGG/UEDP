@@ -62,8 +62,8 @@ int Inspector::CalcuNextMapItemOffset(DWORD_PTR Address, size_t MemberSize)
     int RetOffset = 0;
     for (int i = 0; i < MaxLevel; i++) {
         Offset = i * (int)ProcessInfo::ProcOffestAdd;
-        if (MemMgr.MemReader.ReadMem<int>(Address + Offset) == 0xFFFFFFFF        // 0xFFFFFFFF 表示結尾，用這個方式在記憶體上做對齊
-            //and MemMgr.ReadMem<int>(Address + Offset + 0x4).first <= MemberSize     // Map Item ID 會 < MemberSize
+        if (MemMgr.MemReader.IsEqual(Address + Offset, 0xFFFFFFFF)         // 0xFFFFFFFF 表示結尾，用這個方式在記憶體上做對齊
+            //and MemMgr.ReadMem(Address + Offset + 0x4).first <= MemberSize     // Map Item ID 會 < MemberSize
             )
         {
             RetOffset = Offset + (int)ProcessInfo::ProcOffestAdd;

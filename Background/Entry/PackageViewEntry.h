@@ -103,7 +103,7 @@ void PackageViewEntry::CreatPackageObectTab()
 			StorageMgr.GetObjectDict(RetObjData.Property[0].Address, RetObjData);
 		// TypeObject 才有東西
 		else {
-			Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(RetObjData.Address + UEOffset.TypeObject);
+			MemMgr.MemReader.ReadMem(Address_Level_1, RetObjData.Address + UEOffset.TypeObject);
 			StorageMgr.GetObjectDict(Address_Level_1, RetObjData);
 		}
 	}
@@ -115,7 +115,7 @@ void PackageViewEntry::CreatPackageObectTab()
 		}
 		// 否則就取 TypeObject
 		else {
-			Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(RetObjData.Address + UEOffset.TypeObject);
+			MemMgr.MemReader.ReadMem(Address_Level_1, RetObjData.Address + UEOffset.TypeObject);
 			StorageMgr.GetObjectDict(Address_Level_1, TempObjData);
 
 			// 如果 ScriptStruct 有 Member 則直接回傳該物件
@@ -138,7 +138,7 @@ void PackageViewEntry::CreatPackageObectTab()
 	// Enum List
 	else if (RetObjData.Type.find("EnumProperty") != std::string::npos) {
 		// Type
-		Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(RetObjData.Address + UEOffset.TypeObject);
+		MemMgr.MemReader.ReadMem(Address_Level_1, RetObjData.Address + UEOffset.TypeObject);
 		if (StorageMgr.GetObjectDict(Address_Level_1, TempObjData, true))
 			PackageObject.TypeObject = TempObjData.Type;
 
@@ -160,7 +160,7 @@ void PackageViewEntry::CreatPackageObectTab()
 			if (StorageMgr.GetObjectDict(Address_Level_1, MemberObj, true)) {
 				// 基本檢查 (如果不符合就跳過該 Member)
 				if (MemberObj.Offset < 0) {	//MemberObj.Type.find("Function") != std::string::npos or
-					Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(MemberObj.Address + UEOffset.NextMember); continue;
+					MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember); continue;
 				}
 
 				BasicDumperObject TempBasicPackageObject;
@@ -175,7 +175,7 @@ void PackageViewEntry::CreatPackageObectTab()
 				TempMemberList.push_back(TempBasicPackageObject);
 
 				//下一個 Member
-				Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(MemberObj.Address + UEOffset.NextMember);
+				MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember);
 			}
 			else break;
 		}
@@ -234,7 +234,7 @@ void PackageViewEntry::CreatPackageObectTab()
 				else TempFunctParaList.push_back(TempBasicParaObject);
 
 				//下一個 Member
-				Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(ParaObj.Address + UEOffset.NextPara);
+				MemMgr.MemReader.ReadMem(Address_Level_1, ParaObj.Address + UEOffset.NextPara);
 			}
 			else break;
 		}
@@ -280,7 +280,7 @@ void PackageViewEntry::UpdataGlobalSearchObject()
 							if (StorageMgr.GetObjectDict(Address_Level_1, MemberObj, true)) {
 								// 基本檢查 (如果不符合就跳過該 Member)
 								if (MemberObj.Offset < 0) {
-									Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(MemberObj.Address + UEOffset.NextMember); continue;
+									MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember); continue;
 								}
 
 								// 名稱比對
@@ -296,7 +296,7 @@ void PackageViewEntry::UpdataGlobalSearchObject()
 								}
 
 								//下一個 Member
-								Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(MemberObj.Address + UEOffset.NextMember);
+								MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember);
 							}
 							else break;
 						}

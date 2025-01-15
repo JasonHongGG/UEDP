@@ -29,7 +29,6 @@ struct MainMenuStateManager
 	ProcessState GetGWorld = ProcessState::Idle;
 	ProcessState ParseFNamePool = ProcessState::Idle;
 	ProcessState ParseGUObjectArray = ProcessState::Idle;
-	ProcessState ParseGUObjectArray_ProgressBar = ProcessState::Idle;
 };
 inline MainMenuStateManager MainMenuState;
 
@@ -109,7 +108,7 @@ struct ConfigPageComponentStateManager
 	bool OpenToggleEditor = false;
 	bool OpenGradientEditor = false;
 };
-inline ConfigPageComponentStateManager ConfigPageComponentStateMgr;
+inline ConfigPageComponentStateManager ConfigPageComponentState;
 
 
 
@@ -137,4 +136,4 @@ struct ProgressBarStateManager
 	ProcessState FNamePoolEvent = ProcessState::Idle;
 	ProcessState GUObjectArrayEvent = ProcessState::Idle;
 };
-inline ProgressBarStateManager ProgressBarStateMgr;
+inline ProgressBarStateManager ProgressBarState;

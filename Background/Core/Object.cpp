@@ -20,48 +20,51 @@ bool ObjectManager::BasicObjectDataWapper(ObjectData& PropertyObject, BasicObjec
 	return true;
 }
 
-bool ObjectManager::GetBasicInfo_1(DWORD_PTR Address, size_t& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Outer)
+bool ObjectManager::GetBasicInfo_1(DWORD_PTR Address, int& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Outer)
 {
 	//ID
-	ObjectId = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.ID);
+	MemMgr.MemReader.ReadMem(ObjectId, Address + UEOffset.ID);
 
 	//Outer
-	Outer = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Outer);
+	MemMgr.MemReader.ReadMem(Outer, Address + UEOffset.Outer);
 
 	//Type
-	DWORD_PTR Address_Level_1 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.MemberTypeOffest);
-	int type = MemMgr.MemReader.ReadMem<int>(Address_Level_1 + UEOffset.MemberType);
-	if (type) return false;	//確認 Address_Level_1 確實是一個 Address  
+	DWORD_PTR Address_Level_1 = NULL;
+	MemMgr.MemReader.ReadMem(Address_Level_1, Address + UEOffset.MemberTypeOffest);
+	int type = 0;
+	if (!MemMgr.MemReader.ReadMem(type, Address_Level_1 + UEOffset.MemberType)) return false;	//確認 Address_Level_1 確實是一個 Address  
 	FNameParser.GetFNameStringByID(type, Type, true);
 	if (Type.empty()) return false;		//假設只是形式上像 Address，結果該區塊又剛好是有效記憶體區塊，但只要不是正確位置仍然會讀不到字串 EX : 000002C400000043
 
 	//Name
-	int name = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.MemberFNameIndex);			// "None" Object 、"Member" Object 會走進這裡
+	int name = 0;			// "None" Object 、"Member" Object 會走進這裡
+	MemMgr.MemReader.ReadMem(name, Address + UEOffset.MemberFNameIndex);
 	FNameParser.GetFNameStringByID(name, Name, true);
 	if (Name.empty()) return (!Type.empty()) ? true : false;		// 如果 type 有，name 卻是空的，表示當前確實是 member 只是 name offset 是錯的，需要 autoConfig 去修正
 
 	return true;
 }
 
-bool ObjectManager::GetBasicInfo_2(DWORD_PTR Address, size_t& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Class, DWORD_PTR& Outer)
+bool ObjectManager::GetBasicInfo_2(DWORD_PTR Address, int& ObjectId, std::string& Name, std::string& Type, DWORD_PTR& Class, DWORD_PTR& Outer)
 {
 	//Class
-	Class = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Class);
+	 MemMgr.MemReader.ReadMem(Class, Address + UEOffset.Class);
 
 	//Type
-	int type = MemMgr.MemReader.ReadMem<int>(Class + UEOffset.FNameIndex);
-	if (type) return false;			// 確認 Class 確實是一個 Address
+	int type = 0;
+	if (!MemMgr.MemReader.ReadMem(type, Class + UEOffset.FNameIndex)) return false;			// 確認 Class 確實是一個 Address
 	FNameParser.GetFNameStringByID(type, Type, true);
 
 	//Name
-	int name = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.FNameIndex);
+	int name = 0;
+	MemMgr.MemReader.ReadMem(name, Address + UEOffset.FNameIndex);
 	FNameParser.GetFNameStringByID(name, Name, true);
 
 	//ID
-	ObjectId = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.ID);
+	MemMgr.MemReader.ReadMem(ObjectId, Address + UEOffset.ID);
 
 	//Outer
-	Outer = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Outer);
+	MemMgr.MemReader.ReadMem(Outer, Address + UEOffset.Outer);
 
 	return true;
 }
@@ -125,23 +128,23 @@ bool ObjectManager::PropertyProcess(ObjectData& RetObjectData, DWORD_PTR Address
 
 void ObjectManager::GetProperty(ObjectData& RetObjectData, DWORD_PTR Address, size_t Level)
 {
-	int16_t Offset;
-	int16_t PropSize;
+	int16_t Offset = 0;
+	int16_t PropSize = 0;
 	int BitMask = 0;		//相關要給 Return Object 的數值都要初始化
 	DWORD_PTR Property_0 = NULL, Property_8 = NULL, TypeObject = NULL;
 	ObjectData PropertyObject;
 
 	//讀取 Offset、Propsize
-	Offset = MemMgr.MemReader.ReadMem<int16_t>(Address + UEOffset.Offset);
+	MemMgr.MemReader.ReadMem<int16_t>(Offset, Address + UEOffset.Offset);
 	RetObjectData.Offset = Offset;
-	PropSize = MemMgr.MemReader.ReadMem<int16_t>(Address + UEOffset.PropSize);
+	MemMgr.MemReader.ReadMem<int16_t>(PropSize, Address + UEOffset.PropSize);
 	RetObjectData.PropSize = PropSize;
 
 	//準備相關數據
-	Property_0 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Property);
-	Property_8 = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Property + ProcessInfo::ProcOffestAdd);
-	TypeObject = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.TypeObject);
-	BitMask = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.BitMask);
+	MemMgr.MemReader.ReadMem(Property_0, Address + UEOffset.Property);
+	MemMgr.MemReader.ReadMem(Property_8, Address + UEOffset.Property + ProcessInfo::ProcOffestAdd);
+	MemMgr.MemReader.ReadMem(TypeObject, Address + UEOffset.TypeObject);
+	MemMgr.MemReader.ReadMem(BitMask, Address + UEOffset.BitMask);
 
 	//在物件中，如果有以下這些特殊的變數，則將這些變數都視為一個 Object 再繼續作解析
 	// Class Type 為 StructProperty、ObjectProperty、ClassProperty、Enum、Array
@@ -186,18 +189,18 @@ void ObjectManager::GetMember(ObjectData& RetObjectData, DWORD_PTR Address, size
 	DWORD_PTR MemberAddress = NULL;
 	ObjectData MemberObject;
 	BasicObjectData TempBasicObjectData;
-	MemberAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Member);
+	MemMgr.MemReader.ReadMem(MemberAddress, Address + UEOffset.Member);
 	if (TrySaveObject(MemberAddress, MemberObject, Level - 1, true)) {
 		//取得 Member 、 MemberSize
 		BasicObjectDataWapper(MemberObject, TempBasicObjectData);
 		RetObjectData.MemberPtr = TempBasicObjectData;
-		RetObjectData.MemberSize = MemMgr.MemReader.ReadMem<int>(Address + UEOffset.Member + ProcessInfo::ProcOffestAdd);
+		MemMgr.MemReader.ReadMem(RetObjectData.MemberSize, Address + UEOffset.Member + ProcessInfo::ProcOffestAdd);
 	}
 }
 
 void ObjectManager::GetFunction(ObjectData& RetObjectData, DWORD_PTR Address, size_t Level)
 {
-	RetObjectData.Funct = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Funct);
+	MemMgr.MemReader.ReadMem(RetObjectData.Funct, Address + UEOffset.Funct);
 }
 
 std::string ObjectManager::ExtractPackageName(const std::string& input) {
@@ -238,7 +241,8 @@ void ObjectManager::SetPackage(ObjectData& RetObjectData)
 
 			std::string OuterObjectName = "";
 			if (Type == "Function") {
-				int NameIdx = MemMgr.MemReader.ReadMem<int>(RetObjectData.Outer + UEOffset.FNameIndex);			// "None" Object 、"Member" Object 會走進這裡
+				int NameIdx = 0;
+				MemMgr.MemReader.ReadMem(NameIdx, RetObjectData.Outer + UEOffset.FNameIndex);			// "None" Object 、"Member" Object 會走進這裡
 				FNameParser.GetFNameStringByID(NameIdx, OuterObjectName, true);
 				OuterObjectName = "[ " + OuterObjectName + " ] " + ObjectName;
 			}
@@ -257,7 +261,7 @@ bool ObjectManager::TrySaveObject(DWORD_PTR Address, ObjectData& ObjData, size_t
 	DWORD_PTR Address_Level_1 = NULL, Address_Level_2 = NULL;
 
 	//確認 Address 是一個 Pointer
-	if (MemMgr.MemReader.ReadMem<DWORD_PTR>(Address)) return false;
+	if (!MemMgr.MemReader.IsPointer(Address)) return false;
 
 	//查看該 Address 是否已經處理過，若處理過則直接返回結果
 	if (StorageMgr.GetObjectDict(Address, TempObjectData)) { ObjData = TempObjectData; return true; }
@@ -275,7 +279,7 @@ bool ObjectManager::TrySaveObject(DWORD_PTR Address, ObjectData& ObjData, size_t
 
 
 	// 這邊主要是避免 Overflow，只要次數用完就取得基本資訊直接回傳，不儲存，後續進來該物件時再繼續解析
-	if (Level >= MaxLevel) { ObjData = RetObjectData; return true; }
+	if (MaxLevel - Level >= MaxLevel) { ObjData = RetObjectData; return true; }
 
 	//做第一次的物件存檔，加快執行流程
 	{
@@ -326,10 +330,10 @@ bool ObjectManager::TrySaveObject(DWORD_PTR Address, ObjectData& ObjData, size_t
 	//	-- 注意!!!!搞清楚 super 、 Outer 各是甚麼
 	//	-- super 是該 Object 的類別 / 型態，不論是本身的class或是繼承的class
 	//	-- Outer 是該 Object 的父 Object，該父 Object 跟 Object 是兩個不同的東西，只是 父Object 有使用 Object 而已，Object 並沒有使用 父Object 的任何參數，也沒任何繼承
-	DWORD_PTR Super;
+	DWORD_PTR Super = NULL;
 	ObjectData SuperObject;
 	if (UEOffset.UEOffestIsExist["Super"]) {		//如果設為 0 就關閉功能
-		Super = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + UEOffset.Super);
+		MemMgr.MemReader.ReadMem(Super, Address + UEOffset.Super);
 		if (TrySaveObject(Super, SuperObject, Level - 1)) {
 			// 用 Uper 去紀錄有哪些 Object 會使用到該 父類別(Super)
 			BasicObjectDataWapper(SuperObject, TempBasicObjectData);

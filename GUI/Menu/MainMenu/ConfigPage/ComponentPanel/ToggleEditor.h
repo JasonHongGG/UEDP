@@ -13,7 +13,7 @@ namespace ToggleEditor
 
 	void Render()
 	{
-		bool& state = ConfigPageComponentStateMgr.OpenToggleEditor;
+		bool& state = ConfigPageComponentState.OpenToggleEditor;
 
 		ImGui::SetNextWindowSize({ 620,700 }, ImGuiCond_FirstUseEver);
 		if (state and ImGui::Begin("ToggleEditor", &state)) {

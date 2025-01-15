@@ -7,7 +7,7 @@ namespace GradientEditor
 {
 	void Render()
 	{
-		bool& state = ConfigPageComponentStateMgr.OpenGradientEditor;
+		bool& state = ConfigPageComponentState.OpenGradientEditor;
 
 		ImGui::SetNextWindowSize({ 620,300 }, ImGuiCond_FirstUseEver);
 		if (state and ImGui::Begin("Gradient HDR", &state))

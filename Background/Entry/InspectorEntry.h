@@ -125,15 +125,15 @@ void InspectorEntry::CreatObectNamePage()
 			(MsgObj.Type.find("ObjectProperty") != std::string::npos or
 				MsgObj.Type.find("ClassProperty") != std::string::npos)
 			)
-			EntryAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(MsgObj.InstanceAddress + 0x10); //路口點偏移 0x10
+			MemMgr.MemReader.ReadMem(EntryAddress, MsgObj.InstanceAddress + 0x10); //路口點偏移 0x10
 
 		else if ((TempObjData.FullName.find("/Game/") != std::string::npos or TempObjData.FullName.find("/Engine/") != std::string::npos) and							//是 Game 的物件
 			TempObjData.ClassPtr.Name.compare("BlueprintGeneratedClass") != 0 and						// Type 不為 Class 的 Root Object
 			TempObjData.ClassPtr.Name.compare("Class") != 0)
-			EntryAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(EntryAddress + 0x10); //路口點偏移 0x10
+			MemMgr.MemReader.ReadMem(EntryAddress, EntryAddress + 0x10); //路口點偏移 0x10
 
 		else if (InspectorState.ObjectContentCreatEvent.IsInstance)
-			EntryAddress = MemMgr.MemReader.ReadMem<DWORD_PTR>(EntryAddress + 0x10);
+			MemMgr.MemReader.ReadMem(EntryAddress, EntryAddress + 0x10);
 	}
 
 	// Main
@@ -206,8 +206,7 @@ bool InspectorEntry::ScanFilter(std::vector < InspectorConfig::ConditionObject >
 		if (PointerEnable) {
 			size_t Pointer;
 			std::string PointerStr;
-			Address = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + BaseOffset);
-			if (!Address)
+			if (!MemMgr.MemReader.ReadMem(Address, Address + BaseOffset))
 			{
 				EventHandler::NotifyEvent(NotificationConfig::NotiyType::Warning, Utils.StringWrapper("[Skip Condition % d]", j), "[Base Offset] Invalid Memory Address"); 
 				continue; 
@@ -223,8 +222,7 @@ bool InspectorEntry::ScanFilter(std::vector < InspectorConfig::ConditionObject >
 				if (k == ConditionSet[j].Pointer.size() - 1) { LastOffset = Pointer; break; }
 
 				// 下一個
-				Address = MemMgr.MemReader.ReadMem<DWORD_PTR>(Address + Pointer);
-				if (!Address) 
+				if (!MemMgr.MemReader.ReadMem(Address, Address + Pointer))
 				{ 
 					EventHandler::NotifyEvent(NotificationConfig::NotiyType::Warning, Utils.StringWrapper("[Skip Condition % d]", j), Utils.StringWrapper("[ Pointer %d ] Invalid memory address", k)); 
 					break; 
@@ -236,27 +234,27 @@ bool InspectorEntry::ScanFilter(std::vector < InspectorConfig::ConditionObject >
 		// 都是用 16 進位比對
 		if (Type == ValueType::Byte) {
 			BYTE Value = std::stoi(ValueStr, nullptr, 10);
-			if (MemMgr.MemReader.ReadMem<BYTE>(Address + LastOffset) != Value) { IgnoreFlag = true; break; };
+			if (!MemMgr.MemReader.IsEqual<BYTE>(Address + LastOffset, Value)) { IgnoreFlag = true; break; };
 		}
 		if (Type == ValueType::Int16) {
 			int16_t Value = std::stoi(ValueStr, nullptr, 10);
-			if (MemMgr.MemReader.ReadMem<int16_t>(Address + LastOffset) != Value) { IgnoreFlag = true; break; };
+			if (!MemMgr.MemReader.IsEqual<int16_t>(Address + LastOffset, Value)) { IgnoreFlag = true; break; };
 		}
 		else if (Type == ValueType::Int32) {
 			int Value = std::stoi(ValueStr, nullptr, 10);
-			if (MemMgr.MemReader.ReadMem<int>(Address + LastOffset) != Value) { IgnoreFlag = true; break; };
+			if (!MemMgr.MemReader.IsEqual<int>(Address + LastOffset, Value)) { IgnoreFlag = true; break; };
 		}
 		else if (Type == ValueType::Int64) {
 			int64_t Value = std::stoi(ValueStr, nullptr, 10);
-			if (MemMgr.MemReader.ReadMem<int64_t>(Address + LastOffset) != Value) { IgnoreFlag = true; break; };
+			if (!MemMgr.MemReader.IsEqual<int64_t>(Address + LastOffset, Value)) { IgnoreFlag = true; break; };
 		}
 		else if (Type == ValueType::Float) {
 			float Value = std::stof(ValueStr);
-			if (MemMgr.MemReader.ReadMem<float>(Address + LastOffset) != Value) { IgnoreFlag = true; break; };
+			if (!MemMgr.MemReader.IsEqual<float>(Address + LastOffset, Value)) { IgnoreFlag = true; break; };
 		}
 		else if (Type == ValueType::Double) {
 			double Value = std::stod(ValueStr);
-			if (MemMgr.MemReader.ReadMem<double>(Address + LastOffset) != Value) { IgnoreFlag = true; break; };
+			if (!MemMgr.MemReader.IsEqual<double>(Address + LastOffset, Value)) { IgnoreFlag = true; break; };
 		}
 	}
 
