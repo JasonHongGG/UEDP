@@ -30,6 +30,10 @@ void Menu::MenuEntry()
 		ImGui::InsertNotification(toast);
 		NotificationState.NotifyEvent = ProcessState::Completed;
 	}
+
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 255));
+	ImGui::RenderNotifications(Font::NotifyText, Font::NotifyContentText);
+	ImGui::PopStyleColor();
 }
 
 void Menu::Initial() {

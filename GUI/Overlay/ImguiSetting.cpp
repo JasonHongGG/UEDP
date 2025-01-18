@@ -56,7 +56,7 @@ void ImguiSetting::SetFont(bool IsReload)
 		// Icon ¶r≈È
 		FontWrapper(Font::IconText, FontConf.IconFontSize * FontConf.FontProportion, true, "C:\\Windows\\Fonts\\Verdana.ttf");
 		FontWrapper(Font::BigIconText, FontConf.BigIconFontSize * FontConf.FontProportion, true, "C:\\Windows\\Fonts\\Verdana.ttf");
-		FontWrapper(Font::NotifyText, FontConf.NotifyFontSize * FontConf.FontProportion, false, "C:\\Windows\\Fonts\\msyh.ttc");
+		FontWrapper(Font::NotifyText, FontConf.NotifyFontSize * FontConf.FontProportion, true, "C:\\Windows\\Fonts\\msyh.ttc");
 		FontWrapper(Font::NotifyContentText, FontConf.NotifyContentFontSize * FontConf.FontProportion, true, "C:\\Windows\\Fonts\\msyh.ttc");
 		//FontWrapper(io, baseFontSize, Menu::IconText, NULL, false, (void*)tahoma, sizeof(tahoma));
 		//FontWrapper(io, (baseFontSize * 3.f), Menu::LogoIconText, "C:\\Windows\\Fonts\\msyh.ttc");

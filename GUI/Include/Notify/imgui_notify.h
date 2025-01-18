@@ -354,14 +354,13 @@ namespace ImGui
 			if (current_toast->get_phase() == ImGuiToastPhase_Expired)
 				continue;
 
-
 			// Get icon, title and other data
 			const char* icon = current_toast->get_icon();
 			const char* title = current_toast->get_title();
 			const char* content = current_toast->get_content();
 			const char* default_title = current_toast->get_default_title();
 			ImVec2 StrSize = (ImGui::CalcTextSize(icon) + ImGui::CalcTextSize(title)) > ImGui::CalcTextSize(content) ? (ImGui::CalcTextSize(icon) + ImGui::CalcTextSize(title)) : ImGui::CalcTextSize(content);
-			float opacity = 1.f; // current_toast->get_fade_percent(); // Get opacity based of the current phase //目前不考慮透明度
+			float opacity = 1.f; 
 			float xOffset = current_toast->get_fade_xpos(StrSize.x * 3 + NOTIFY_PADDING_X);
 			ImVec4 text_color = current_toast->get_color();
 			text_color.w = opacity;
@@ -383,10 +382,8 @@ namespace ImGui
 				{
 					// icon
 					if (!NOTIFY_NULL_OR_EMPTY(icon))
-						//ImGui::ShadowText(icon, text_color, text_color, 100);
-						ImGui::Text(icon, text_color, text_color, 100);
+						ImGui::ShadowText(icon, text_color, text_color, 100);
 
-					
 					if (!NOTIFY_NULL_OR_EMPTY(icon))
 						SameLine();
 
