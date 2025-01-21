@@ -33,7 +33,7 @@ std::vector<DWORD_PTR> BaseAddressDumperClass::FindAddress(DWORD_PTR Address)
 			if (Token.substr(0, 3) == "[0x") {
 				DWORD_PTR ptr;
 
-				// 刪除中括號
+				// 刪除中括號 (取出 0x.....)
 				Token.erase(0, 1);	//刪除第一個字元
 				Token.pop_back();	//刪除最後一個字元
 
@@ -61,41 +61,40 @@ bool BaseAddressDumperClass::ValidateFNamePool(DWORD_PTR Address, DWORD_PTR& FNa
 	DWORD_PTR Address_Level_1 = NULL;
 
 	// Address 是否是一個 Pointer
-	if (MemMgr.MemReader.IsPointer(Address)) {
+	if (!MemMgr.MemReader.IsPointer(Address)) return false;
 
-		for (int i = 0; i <= 0x10; i += 4) {
-			//讀一層進去
-			//printf("[ Level 1 ] %p\n", Address + i);
-			if (MemMgr.MemReader.ReadMem(Address_Level_1, Address + i)) { // Address_Level_1 => NamePool 的第一層
-				//printf("[ Level 2 ] %p\n", Address_Level_1);
+	for (int i = 0; i <= 0x10; i += 4) {
+		//讀一層進去
+		//printf("[ Level 1 ] %p\n", Address + i);
+		
+		if (!MemMgr.MemReader.ReadMem(Address_Level_1, Address + i)) continue;
+		// Address_Level_1 => NamePool 的第一層
+		//printf("[ Level 2 ] %p\n", Address_Level_1);
 
-				for (int j = 0; j < 2; j++) {
-					// Address_Level_1 是否是一個 Pointer
-					if (MemMgr.MemReader.IsPointer(Address_Level_1)) {
-						for (int k = 0; k < 0x30; k += 2) {		//0x30 = 48		//24迴圈
-							char Buffer[5];
-							MemMgr.MemReader.ReadBytes(Address_Level_1 + k, (BYTE*)Buffer, 4);
-							Buffer[4] = '\0';
-							//printf("[ Level 3 Str ] %s\n", Buffer);
-							if (strcmp(Buffer, "None") == 0) {
-								//printf("[ Find NamePool !!!! ] %p\n", Address);
-								printf("[ FNamePool Entry ][ i ] %X \t [ Pointer Depth ][ j ] %X \t [ First Word Offset ][ k ] %X \n", i, j, k);
-								FNamePoolFind_Flag = true;
-								FNamePoolBaseAddress = Address;
-								FNamePoolFirstPoolOffest = i;
-								break;
-							}
-						}
-					}
-					else break;
-
-					//這邊表示是在上邊內層迴圈遞迴完後沒有找到 None 字串，因此再進去一層找(如果可以的話) => [[ Address_Level_1 ]]
-					if (!MemMgr.MemReader.ReadMem(Address_Level_1, Address_Level_1)) break;
+		for (int j = 0; j < 2; j++) {
+			// Address_Level_1 是否是一個 Pointer
+			if (!MemMgr.MemReader.IsPointer(Address_Level_1)) break;
+		
+			for (int k = 0; k < 0x30; k += 2) {		//0x30 = 48		//24迴圈
+				char Buffer[5];
+				MemMgr.MemReader.ReadBytes(Address_Level_1 + k, (BYTE*)Buffer, 4);
+				Buffer[4] = '\0';
+				//printf("[ Level 3 Str ] %s\n", Buffer);
+				if (strcmp(Buffer, "None") == 0) {
+					//printf("[ Find NamePool !!!! ] %p\n", Address);
+					printf("[ FNamePool Entry ][ i ] %X \t [ Pointer Depth ][ j ] %X \t [ First Word Offset ][ k ] %X \n", i, j, k);
+					FNamePoolFind_Flag = true;
+					FNamePoolBaseAddress = Address;
+					FNamePoolFirstPoolOffest = i;
+					break;
 				}
 			}
-			else continue;
-			if (FNamePoolFind_Flag) break;
+
+			//這邊表示是在上邊內層迴圈遞迴完後沒有找到 None 字串，因此再進去一層找(如果可以的話) => [[ Address_Level_1 ]]
+			if (!MemMgr.MemReader.ReadMem(Address_Level_1, Address_Level_1)) break;
 		}
+
+		if (FNamePoolFind_Flag) break;
 	}
 	return FNamePoolFind_Flag;
 }
@@ -172,44 +171,45 @@ bool BaseAddressDumperClass::ValidateGUObjectArray(DWORD_PTR Address, DWORD_PTR&
 	DWORD_PTR Address_Level_1 = NULL;
 
 	// Address 是否是一個 Pointer
-	if (MemMgr.MemReader.IsPointer(Address)) {
-		for (int i = -0x50; i <= 0x200; i += 0x4) {
-			if (MemMgr.MemReader.ReadMultiLevelPointer(Address + i, 4)) {
-				MemMgr.MemReader.ReadMem(Address_Level_0, Address + i);
+	if (!MemMgr.MemReader.IsPointer(Address)) return false;
 
-				for (int j = 0; j < 2; j++) {
-					// 找出 Array 中每個 Object 之間的 Offset (只有在 Step 剛好 10 次都落在 Object Entry 上，才會滿足第一個 if 條件)
-					for (int k = 0x4; k < 0x20; k += 0x4) {		//0x30 = 48		//24迴圈		// Step
-						for (int n = 0; n <= 10 * k; n += k) {									// 10 loop cnt
-							if (MemMgr.MemReader.ReadMem(Address_Level_1, Address_Level_0 + n)) {
+	for (int i = -0x50; i <= 0x200; i += 0x4) {
+		if (!MemMgr.MemReader.ReadMultiLevelPointer(Address + i, 4)) continue;
+		MemMgr.MemReader.ReadMem(Address_Level_0, Address + i);
 
-								if (
-									!MemMgr.MemReader.ReadMultiLevelPointer(Address_Level_1, 3) ||
-									ProcMgr.ModuleMgr.InMoudle(ProcessInfo::PID, MemMgr.MemReader.ReadMultiLevelPointer(Address_Level_1, 2)) == false ||
-									DumperUtils.CheckValue<int>(Address_Level_1, 0x50, n / k, 2) == NULL			// 預設 0x50 的偏差範圍 (n / k 表示現在成功 loop 到第幾個 Object Entry) //簡單來說 Array 的 Obj 內會標示該 Obj 是第幾個，該數字要和 (n / k) 相同
-									)
-									break;
+		for (int j = 0; j < 2; j++) {
+			// 找出 Array 中每個 Object 之間的 Offset 
+			// (Ex: k = 0x18， 在 n = 0 ，表示應該是第0個物件，位置為 0x0，因為是物件所以可以讀 3 層 Pointer，並且在 Moudle 的範圍中，且 n/k 表示第幾個物件(index)，在物件中會有 index 的編號，在 0x50 的範圍中)
+			// .... 以此類推，只要連續 offset k 的位置都是物件，則表示找到了 GUObjectArray，並且找到了 Object 的 Offset
+			for (int k = 0x4; k < 0x20; k += 0x4) {		//0x30 = 48		//24迴圈		// Step
+				for (int n = 0; n <= 10 * k; n += k) {									
+					if (!MemMgr.MemReader.ReadMem(Address_Level_1, Address_Level_0 + n)) continue; // 進入物件
 
-								if (n == (10 * k)) {		//表示迴圈完整的跑完一次
-									FindFlag = true;
-									printf("[ GUObjArr Entry ][ i ] %X \t [ Pointer Depth ][ j ] %X \t [ Array Group Offset ][ k ] %X \t [ Validation Cnt ][ n ] %X \n", i, j, k, n);
-									GUObjectArrayBaseAddress = Address + i;
-									GUObjectArrayElementSize = k;
-									break;
-								}
-							}
-						}
-						if (FindFlag) break;
+					if (
+						!MemMgr.MemReader.ReadMultiLevelPointer(Address_Level_1, 3) ||
+						ProcMgr.ModuleMgr.InMoudle(ProcessInfo::PID, MemMgr.MemReader.ReadMultiLevelPointer(Address_Level_1, 2)) == false ||
+						DumperUtils.CheckValue<int>(Address_Level_1, 0x50, n / k, 2) == NULL			// 預設 0x50 的偏差範圍 (n / k 表示現在成功 loop 到第幾個 Object Entry) //簡單來說 Array 的 Obj 內會標示該 Obj 是第幾個，該數字要和 (n / k) 相同
+						)
+						break;
+
+					if (n == (10 * k)) {		//表示迴圈完整的跑完一次
+						FindFlag = true;
+						printf("[ GUObjArr Entry ][ i ] %X \t [ Pointer Depth ][ j ] %X \t [ Array Group Offset ][ k ] %X \t [ Validation Cnt ][ n ] %X \n", i, j, k, n);
+						GUObjectArrayBaseAddress = Address + i;
+						GUObjectArrayElementSize = k;
+						break;
 					}
-					if (FindFlag) break;
-
-					//再進去一層找(如果可以的話) => [ Address_Leve0 ]
-					if (!MemMgr.MemReader.ReadMem(Address_Level_0, Address_Level_0)) break;
 				}
+				if (FindFlag) break;
 			}
 			if (FindFlag) break;
+
+			//沒找到就再進去一層找(如果可以的話) => [ Address_Leve0 ]
+			if (!MemMgr.MemReader.ReadMem(Address_Level_0, Address_Level_0)) break;
 		}
+		if (FindFlag) break;
 	}
+
 
 	return FindFlag;
 }
@@ -226,7 +226,6 @@ void BaseAddressDumperClass::GetGUObjectArray()
 	bool FindFlag = false;
 	DWORD_PTR GUObjectArrayBaseAddress = NULL;
 	size_t GUObjectArrayElementSize = 0;
-	DWORD_PTR tempPtr = NULL;
 	std::vector<BYTE> bScan;
 	std::vector<DWORD_PTR> ScanResult;
 	std::vector<DWORD_PTR> FindAddressResult;
