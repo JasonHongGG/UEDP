@@ -94,7 +94,7 @@ inline APIStateManager APIState;
 
 struct ObjectGraphStateManager
 {
-	MessageObject GetMostUperObjectVectorEvent = MessageObject();
+	MessageObject GetMostUperImportanceObjectVectorEvent = MessageObject();
 };
 inline ObjectGraphStateManager ObjectGraphState;
 

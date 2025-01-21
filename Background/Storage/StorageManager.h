@@ -49,7 +49,7 @@ public:
 	bool GetObjectDictByID(size_t ID, ObjectData& ObjData);
 	bool GetObjectDictByName(std::string Name, ObjectData& ObjData);
 	bool GetObjectDictByFullName(std::string FullName, ObjectData& ObjData);
-	void GetMostUperObjectVector(int keepCnt);
+	void GetMostUperImportanceObjectVector(int keepCnt);
 
 	std::map< std::string, std::map< std::string, std::map< std::string, std::pair<std::string, DWORD_PTR>>>>& GetPackage();
 	void SetPackage(DWORD_PTR Address, std::string PackageName, std::string Type, std::string ObjectName, std::string OuterObjectName);

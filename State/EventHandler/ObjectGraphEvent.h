@@ -2,11 +2,11 @@
 
 namespace EventHandler
 {
-    inline void GetMostUperObjectVector(int keepCnt) {
-        const ProcessState State = ObjectGraphState.GetMostUperObjectVectorEvent.State;
+    inline void GetMostUperImportanceObjectVector(int keepCnt) {
+        const ProcessState State = ObjectGraphState.GetMostUperImportanceObjectVectorEvent.State;
         if (IsEventAcceptable(State)) {
-            ObjectGraphState.GetMostUperObjectVectorEvent.Cnt = keepCnt;
-            ObjectGraphState.GetMostUperObjectVectorEvent.State = ProcessState::Start;
+            ObjectGraphState.GetMostUperImportanceObjectVectorEvent.Cnt = keepCnt;
+            ObjectGraphState.GetMostUperImportanceObjectVectorEvent.State = ProcessState::Start;
         }
     }
 }

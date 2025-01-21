@@ -250,6 +250,7 @@
     <ClInclude Include="GUI\Menu\MainConsole\APIPanel.h" />
     <ClInclude Include="GUI\Menu\MainConsole\Console.h" />
     <ClInclude Include="GUI\Menu\MainConsole\Inspector.h" />
+    <ClInclude Include="GUI\Menu\MainConsole\ObjectGraphTest.h" />
     <ClInclude Include="GUI\Menu\MainConsole\PackageViewer.h" />
     <ClInclude Include="GUI\Menu\MainConsole\SettingPanel.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ConfigPage.h" />
