@@ -20,6 +20,7 @@ struct ObjectData : BasicObjectData {
 
 	BasicObjectData SuperPtr; //當前繼承的 Class Object
 	std::vector<BasicObjectData> Uper; //有哪些 Object 會繼承於該 Class Object
+	size_t UperCnt = 0;
 
 	int16_t PropSize = 0;
 	std::vector<BasicObjectData> Property;

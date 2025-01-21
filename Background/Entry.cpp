@@ -16,6 +16,7 @@
 #include "Entry/InspectorEntry.h"
 #include "Entry/APIEntry.h"
 #include "Entry/LoadAndSaveSettingEntry.h"
+#include "Entry/ObjectGraphEntry.h"
 //#include "Console.h"
 //#include "../json/MyJson.h"
 #include "../Utils/Utils.h"
@@ -131,6 +132,7 @@ void BackgroundEntry::Entry()
 		PackageViewEntry::Entry();
 		InspectorEntry::Entry();
 		APIEntry::Entry();
+		ObjectGraphEntry::Entry();
 	}
 	APIEntry::FileEntry();
 	LoadAndSaveSettingEntry::Entry();

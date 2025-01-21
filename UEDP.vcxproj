@@ -171,6 +171,7 @@
     <ClCompile Include="GUI\Include\Toggle\imgui_toggle_presets.cpp" />
     <ClCompile Include="GUI\Include\Toggle\imgui_toggle_renderer.cpp" />
     <ClCompile Include="GUI\Menu.cpp" />
+    <ClCompile Include="GUI\Menu\MainConsole\ObjectGraph.h" />
     <ClCompile Include="GUI\Overlay.cpp" />
     <ClCompile Include="GUI\Overlay\D3DRender.cpp" />
     <ClCompile Include="GUI\Overlay\ImguiSetting.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Background\Entry\ConsoleEntry.h" />
     <ClInclude Include="Background\Entry\InspectorEntry.h" />
     <ClInclude Include="Background\Entry\LoadAndSaveSettingEntry.h" />
+    <ClInclude Include="Background\Entry\ObjectGraphEntry.h" />
     <ClInclude Include="Background\Entry\PackageViewEntry.h" />
     <ClInclude Include="Background\Entry\UtilsEntry.h" />
     <ClInclude Include="Background\Interface\ObjectInterface.h" />
@@ -243,6 +245,7 @@
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_presets.h" />
     <ClInclude Include="GUI\Include\Toggle\imgui_toggle_renderer.h" />
     <ClInclude Include="GUI\Interface\DumperConsoleInterface.h" />
+    <ClInclude Include="GUI\Interface\ObjectGraphInterface.h" />
     <ClInclude Include="GUI\Menu\MainConsole.h" />
     <ClInclude Include="GUI\Menu\MainConsole\APIPanel.h" />
     <ClInclude Include="GUI\Menu\MainConsole\Console.h" />
@@ -301,6 +304,7 @@
     <ClInclude Include="State\EventHandler\InspectorEvent.h" />
     <ClInclude Include="State\EventHandler\LoadAndSaveSettingEvent.h" />
     <ClInclude Include="State\EventHandler\MessageInterface.h" />
+    <ClInclude Include="State\EventHandler\ObjectGraphEvent.h" />
     <ClInclude Include="State\EventHandler\PackageViewerEvent.h" />
     <ClInclude Include="State\EventHandler\Utils.h" />
     <ClInclude Include="State\GlobalState.h" />

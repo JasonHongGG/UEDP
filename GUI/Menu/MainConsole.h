@@ -8,6 +8,7 @@
 #include "MainConsole/Inspector.h"
 #include "MainConsole/APIPanel.h"
 #include "MainConsole/SettingPanel.h"
+#include "MainConsole/ObjectGRaph.h"
 
 namespace MainConsole
 {
@@ -24,6 +25,7 @@ namespace MainConsole
         if (ImGui::MenuItem("Inspector")) PageID = DumperConsoleCurPage::Inspector;
         if (ImGui::MenuItem("API")) PageID = DumperConsoleCurPage::API;
         if (ImGui::MenuItem("Setting Pannel")) MainConsoleState.OpenSettingPanel = !MainConsoleState.OpenSettingPanel;
+        if (ImGui::MenuItem("Object Graph")) PageID = DumperConsoleCurPage::ObjectGraph;
         ImGui::EndMenuBar();
     }
 
@@ -40,8 +42,9 @@ namespace MainConsole
             Inspector::Render(PageID);
             SettingPanel::Render();
             APIPanel::Render(PageID);
+			ObjectGraph::Render(PageID);
 
-            //StateUpdate();
+            StateUpdate();
         }
         ImGui::End();
         ImGui::PopFont();

@@ -167,4 +167,8 @@ public:
     bool Empty() const {
         return value.empty();
     }
+
+	int Size() const {
+		return value.size();
+	}
 };

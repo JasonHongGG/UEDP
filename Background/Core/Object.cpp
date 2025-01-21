@@ -338,6 +338,8 @@ bool ObjectManager::TrySaveObject(DWORD_PTR Address, ObjectData& ObjData, size_t
 			// 用 Uper 去紀錄有哪些 Object 會使用到該 父類別(Super)
 			BasicObjectDataWapper(SuperObject, TempBasicObjectData);
 			RetObjectData.SuperPtr = TempBasicObjectData;		//RetObjectData 紀錄 SuperObject
+			SuperObject.UperCnt++;
+			StorageMgr.SetObjectDict(Super, SuperObject);
 		}
 	}
 

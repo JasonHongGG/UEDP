@@ -21,6 +21,7 @@ public:
 	size_t Size = 1;
 	size_t Offset = 0x0;
 	int Bit = -1;
+	int Cnt = 0;
 	int Index = 0;
 	int FNameID = 0;
 	bool IsInstance = false;

@@ -92,6 +92,12 @@ struct APIStateManager
 };
 inline APIStateManager APIState;
 
+struct ObjectGraphStateManager
+{
+	MessageObject GetMostUperObjectVectorEvent = MessageObject();
+};
+inline ObjectGraphStateManager ObjectGraphState;
+
 
 struct NotificationStateManager
 {

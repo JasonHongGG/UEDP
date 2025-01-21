@@ -11,13 +11,14 @@ bool StorageManager::SetObjectUper(DWORD_PTR Address) {
 			if (Obj.second.SuperPtr.Address == Address) {
 				BasicObjectData BasicObjData;
 				ObjectMgr.BasicObjectDataWapper(Obj.second, BasicObjData);
-				ObjectDict.Get(Address).Uper.push_back(BasicObjData);
+				ObjectData tempObject = ObjectDict.Get(Address);
+				tempObject.Uper.push_back(BasicObjData);
+				ObjectDict.Set(Address, tempObject);
 			}
 		}
 		return true;
 	}
 	else return false;
-
 }
 
 void StorageManager::SetObjectDict(DWORD_PTR Address, ObjectData& ObjData) 

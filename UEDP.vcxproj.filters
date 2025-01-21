@@ -138,6 +138,9 @@
     <ClCompile Include="Background\Core\AutoConfig.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Menu\MainConsole\ObjectGraph.h">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background\Entry.h">
@@ -531,6 +534,15 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Font\IconRegular.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="State\EventHandler\ObjectGraphEvent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Entry\ObjectGraphEntry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Interface\ObjectGraphInterface.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

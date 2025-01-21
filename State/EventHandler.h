@@ -11,6 +11,7 @@
 #include "EventHandler/PackageViewerEvent.h"
 #include "EventHandler/InspectorEvent.h"
 #include "EventHandler/APIEvent.h"
+#include "EventHandler/ObjectGraphEvent.h"
 
 
 

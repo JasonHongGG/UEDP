@@ -2,6 +2,8 @@
 #include <vector>
 #include <stack>
 #include "../Interface/DumperConsoleInterface.h"
+#include "../../GUI/Interface/ObjectGraphInterface.h"
+#include "../../Background/Interface/ObjectInterface.h"
 #include "../../Font/IconsFontAwesome6.h"
 #include "../../State/GlobalState.h"
 
@@ -10,7 +12,8 @@ enum class DumperConsoleCurPage
     Console = 0,
     PackageViewer = 1,
     Inspector = 2,
-    API = 3
+    API = 3,
+    ObjectGraph = 4
 };
 
 enum class ProcessClass {
@@ -261,3 +264,13 @@ public:
 private:
 };
 inline EditorMemoryManager EditorMemMgr = EditorMemoryManager();
+
+struct ObjectGraphConfig
+{
+    int KeepUperNodeNumber = 3;
+    int TreeLevel = 2;
+    std::vector<ObjectData> MostUperObjectVector;
+    std::vector<Node*> MainNodes;
+    std::vector<Node*> AllNodes;
+};
+inline ObjectGraphConfig ObjectGraphConf;
