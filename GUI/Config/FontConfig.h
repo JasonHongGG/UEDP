@@ -29,7 +29,7 @@ struct FontConfig
 	float ChineseFontSize = 16.f;
 
 	float BaseSize = 25.f;
-	float IconFontSize = BaseSize;
+	float IconFontSize = 16.f;
 	float BigIconFontSize = BaseSize * (float)1.5;
 	float NotifyFontSize = BaseSize * (float)1.2;
 	float NotifyContentFontSize = BaseSize;

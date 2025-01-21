@@ -70,7 +70,7 @@ void ImguiSetting::SetFont(bool IsReload)
 void ImguiSetting::FontWrapper(ImFont*& TarFont, float FontSize, bool IsIconFont, const char* FontPath, void* Font, int FontArrSize)
 {
 	ImGuiIO& io = ImGui::GetIO();
-	float IconFontSize = FontSize * 2.0f / 3.0f;
+	float IconFontSize = FontSize;
 	ImFontConfig IconFontConfig;
 	IconFontConfig.MergeMode = true;
 	IconFontConfig.PixelSnapH = true;
