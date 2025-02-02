@@ -101,7 +101,7 @@ void Inspector::DisplayInspectorObject(DumperObject& InspectorSuperObject, std::
 
 
         // =====================  Display  =====================
-        // Offset
+        // Offset1
         std::string BitStr = MemberObject.Bit != -1 ? ":" + std::to_string(MemberObject.Bit) : "";
         ImGui::SetCursorPosX(GUIUtils.CursorPosCalcu(InspectorConf.InspectorOffsetIndentation, Indentation, IndentAccum, true, true));
         int NavLineIndentSize = ImGui::GetCursorPos().x;
@@ -307,61 +307,61 @@ void Inspector::InspectorList()
         // Inspector List
         MyListBox("Inspector List", InspectorConf.InspectorListSelectIndex, InspectorConf.InspectorList, ImVec2(-FLT_MIN, -FLT_MIN - 30), InspectorConf.InspectorListFilterStr, ImGuiSelectableFlags_AllowItemOverlap)
             .SetSelectCallBack([&](int i) {
-            InspectorConf.DerivedList.SelectIndex = -1;
-            if (InspectorConf.InspectorList[i].Mode == InspectorConfig::InspectorListMode::Derived) {
-                InspectorConf.DerivedList.IsOpen = true;
-                InspectorConf.DerivedList.CurOpenName = InspectorConf.InspectorList[i].Name;
-                InspectorState.ObjectContentOpenEvent.Address = NULL;
-            }
-            else {
-                InspectorConfig::InspectorListObject& InspectorObject = InspectorConf.InspectorList[i];
-                InspectorConf.DerivedList.IsOpen = false;
-                EventHandler::OpenObjectContentPage(InspectorObject.Address, InspectorObject.Type, InspectorObject.Name, InspectorObject.EditorEnable, InspectorObject.IsInstance);
-            }
-                })
+                InspectorConf.DerivedList.SelectIndex = -1;
+                if (InspectorConf.InspectorList[i].Mode == InspectorConfig::InspectorListMode::Derived) {
+                    InspectorConf.DerivedList.IsOpen = true;
+                    InspectorConf.DerivedList.CurOpenName = InspectorConf.InspectorList[i].Name;
+                    InspectorState.ObjectContentOpenEvent.Address = NULL;
+                }
+                else {
+                    InspectorConfig::InspectorListObject& InspectorObject = InspectorConf.InspectorList[i];
+                    InspectorConf.DerivedList.IsOpen = false;
+                    EventHandler::OpenObjectContentPage(InspectorObject.Address, InspectorObject.Type, InspectorObject.Name, InspectorObject.EditorEnable, InspectorObject.IsInstance);
+                }
+            })
             .SetPostCallBack([&](int i) {
-                    // Delete Btn
-                    ImGui::SameLine();
-                    int BtnSize = 10;
-                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - BtnSize - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
-                    ImGui::PushFont(Font::IconText);
-                    Style::TransparentButtonStyleSwitch(true, Color::TextColor);
-                    Style::FramePaddingSwitch(true, 2);
-                    if (ImGui::Button(std::string(ICON_FA_XMARK "##" + InspectorConf.InspectorList[i].Name + "_ObjectInspectorList_DeleteBtn").c_str(), ImVec2(0, GUIUtils.GetFrameHeight())))
-                    {
-                        // 刪除前先把 map 鎖上
-                        GetInspectorObjectContentMapLock.lock();
+                // Delete Btn
+                ImGui::SameLine();
+                int BtnSize = 10;
+                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - BtnSize - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
+                ImGui::PushFont(Font::IconText);
+                Style::TransparentButtonStyleSwitch(true, Color::TextColor);
+                Style::FramePaddingSwitch(true, 2);
+                if (ImGui::Button(std::string(ICON_FA_XMARK "##" + InspectorConf.InspectorList[i].Name + "_ObjectInspectorList_DeleteBtn").c_str(), ImVec2(0, GUIUtils.GetFrameHeight())))
+                {
+                    // 刪除前先把 map 鎖上
+                    GetInspectorObjectContentMapLock.lock();
 
-                        //關閉 DerivedList
-                        InspectorConf.DerivedList.IsOpen = false;  //關閉 DerivedList Tab
+                    //關閉 DerivedList
+                    InspectorConf.DerivedList.IsOpen = false;  //關閉 DerivedList Tab
 
-                        if (InspectorConf.InspectorList[i].Mode == InspectorConfig::InspectorListMode::Derived) {
-                            // 刪除 DerivedList 對應的 InspectorObjectMap
-                            for (auto& Derived : InspectorConf.DerivedList.Map) {
-                                InspectorConf.InspectorObjectContentMap.erase(Derived.first);
-                            }
-                            //刪除 DerivedList
-                            InspectorConf.DerivedList.Map[InspectorConf.InspectorList[i].Name].clear();
+                    if (InspectorConf.InspectorList[i].Mode == InspectorConfig::InspectorListMode::Derived) {
+                        // 刪除 DerivedList 對應的 InspectorObjectMap
+                        for (auto& Derived : InspectorConf.DerivedList.Map) {
+                            InspectorConf.InspectorObjectContentMap.erase(Derived.first);
                         }
-                        else {
-                            // 刪除 ObjectInspectorList 對應的 InspectorObjectMap
-                            InspectorConf.InspectorObjectContentMap.erase(InspectorConf.InspectorList[i].Name);
-                        }
-
-                        //如果刪除的名子是當前打開的分頁，則關閉分頁
-                        if (InspectorConf.InspectorList[i].Name.find(InspectorState.ObjectContentOpenEvent.Name) != std::string::npos)
-                            InspectorState.ObjectContentOpenEvent.State = ProcessState::Idle;
-                        // 從 ObjectInspectorList 中刪除
-                        InspectorConf.InspectorList.erase(InspectorConf.InspectorList.begin() + i);
-
-                        GetInspectorObjectContentMapLock.unlock();
+                        //刪除 DerivedList
+                        InspectorConf.DerivedList.Map[InspectorConf.InspectorList[i].Name].clear();
                     }
-                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_None)) ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-                    Style::FramePaddingSwitch(false);
-                    Style::TransparentButtonStyleSwitch(false);
-                    ImGui::PopFont();
-                })
-                    .Show();
+                    else {
+                        // 刪除 ObjectInspectorList 對應的 InspectorObjectMap
+                        InspectorConf.InspectorObjectContentMap.erase(InspectorConf.InspectorList[i].Name);
+                    }
+
+                    //如果刪除的名子是當前打開的分頁，則關閉分頁
+                    if (InspectorConf.InspectorList[i].Name.find(InspectorState.ObjectContentOpenEvent.Name) != std::string::npos)
+                        InspectorState.ObjectContentOpenEvent.State = ProcessState::Idle;
+                    // 從 ObjectInspectorList 中刪除
+                    InspectorConf.InspectorList.erase(InspectorConf.InspectorList.begin() + i);
+
+                    GetInspectorObjectContentMapLock.unlock();
+                }
+                if (ImGui::IsItemHovered(ImGuiHoveredFlags_None)) ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+                Style::FramePaddingSwitch(false);
+                Style::TransparentButtonStyleSwitch(false);
+                ImGui::PopFont();
+            })
+            .Show();
 
 
                 // ========================= Search Bar =========================

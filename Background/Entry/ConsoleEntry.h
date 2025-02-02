@@ -125,8 +125,7 @@ bool ConsoleEntry::GetGUObjectAddress(std::string ProcName, std::string Mode, st
 
 void ConsoleEntry::GetFNameByID()
 {
-	//判斷輸入欄不為空
-	if (MainConsoleConf.FNameInfo.InputStr.empty()) {
+	if (!MainConsoleConf.FNameInfo.InputStr.empty()) {
 		long long int FNameID = std::stoull(MainConsoleConf.FNameInfo.InputStr, nullptr, 16);
 		std::string FName;
 		if (FNameParser.GetFNameStringByID<long long int>(FNameID, FName, true)) {

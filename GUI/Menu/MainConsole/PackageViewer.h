@@ -8,6 +8,7 @@
 #include "../../Config/StyleConfig.h"
 #include "../../Config/MainConsoleConfig.h"
 #include "../../MyGuiComponent.h"
+#include "../../MyGuiUtils.h"
 #include "../../../State/EventHandler.h"
 #include "../../Interface/DumperConsoleInterface.h"
 
@@ -303,6 +304,9 @@ void PackageViewer::ObjectContentRender()
                                     // Type
                                     // MemberList[i] Type 是不是也是一個物件，如果是則以按鈕顯示，使用者點擊後可開啟對應物件的分頁
                                     ImGui::SetCursorPosX(PackageViwerConf.ObjectTypeIndentation);
+                                    std::string BitStr = PackObject.Member[i].Bit != -1 ? ":" + std::to_string(PackObject.Member[i].Bit) : "";
+                                    ImGui::TextColored(Color::OffestColor, (Utils.HexToString(PackObject.Member[i].Offset) + BitStr).c_str());
+                                    ImGui::SameLine();
                                     if (PackObject.Member[i].Clickable) {
                                         ImGui::PushID(i);
                                         ClickableObjectBtn(PackObject.Member[i].Type, PackObject.Member[i].Address);

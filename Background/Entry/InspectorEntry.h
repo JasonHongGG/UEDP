@@ -267,7 +267,7 @@ void InspectorEntry::ObjectInstanceSearch()
 	if (InspectorState.ObjectInstanceSearchEvent.SearchStr.length() != 0) {
 		DWORD_PTR Address = std::stoull(InspectorState.ObjectInstanceSearchEvent.SearchStr, nullptr, 16);
 
-		// Condition Validation [(Optional) Output Error ]
+		// Condition Validation 
 		if (InspectorConf.ObjectInstanceSearchMode == InspectorConfig::SearchMode::Condition)
 			if (ConditionValidation(InspectorConf.ConditionSet)) return;		// 驗證失敗就取消查詢
 
@@ -286,6 +286,12 @@ void InspectorEntry::ObjectInstanceSearch()
 			InstanceAddress = ScanResult[i] - 0x10;	// Object Address - 0x10 = Instance Address
 			ResultAddress = InstanceAddress;
 
+			// 檢查是否有 Object Reference 是否存在
+			ObjectData TempObjData;
+			if (!StorageMgr.GetObjectDict(ResultAddress, TempObjData, true)) continue;
+			if (TempObjData.Name == "InvalidName" or TempObjData.Name == "None") continue;
+
+			// 檢查 Condition 是否通過
 			if (InspectorConf.ObjectInstanceSearchMode == InspectorConfig::SearchMode::Condition)
 				if (!ScanFilter(InspectorConf.ConditionSet, InstanceAddress)) continue; //任何一個條件沒過就直接丟棄結果
 

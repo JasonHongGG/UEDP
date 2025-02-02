@@ -167,6 +167,10 @@ void PackageViewEntry::CreatPackageObectTab()
 				TempBasicPackageObject.Address = MemberObj.Address;
 				TempBasicPackageObject.Type = MemberObj.Type;
 				TempBasicPackageObject.Name = MemberObj.Name;
+				TempBasicPackageObject.Offset = MemberObj.Offset;
+
+				if (MemberObj.Type.find("BoolProperty") != std::string::npos)
+					TempBasicPackageObject.Bit = Utils.FindRightMostSetBit((int)MemberObj.BitMask);
 
 				// SubType
 				UtilsEntry::ObjectSubTypeProc(MemberObj.Address, TempBasicPackageObject, true);
