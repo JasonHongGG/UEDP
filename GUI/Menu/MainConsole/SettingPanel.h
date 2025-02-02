@@ -14,6 +14,7 @@ namespace SettingPanel
 	{
         if (!MainConsoleState.OpenSettingPanel) return;
 
+		ImGui::SetNextWindowPos(MainConsoleConf.CurrentWindowPosition + ((MainConsoleConf.CurentWindowSize - ImVec2(PanelWindowWidth, PanelWindowHeight)) / 2), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowSize(ImVec2(PanelWindowWidth, PanelWindowHeight), ImGuiCond_FirstUseEver);
         ImGui::Begin("PannelSetting", &MainConsoleState.OpenSettingPanel, ImGuiWindowFlags_HorizontalScrollbar);      //設成 0 就會自動伸縮
         {
