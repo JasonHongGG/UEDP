@@ -113,24 +113,24 @@ void InspectorEntry::CreatObectNamePage()
 
 	ObjectData RetObjData;
 	ObjectData TempObjData;
-	DWORD_PTR Address_Level_1 = NULL, Address_Level_2 = NULL, TempAddress = NULL;
+	DWORD_PTR Address_Level_1 = NULL;
 
 	// 執行前先檢查是 Instance 還是 Object
 	DWORD_PTR EntryAddress = InspectorState.ObjectContentCreatEvent.Address;
 	if (StorageMgr.GetObjectDict(EntryAddress, TempObjData, true)) { // 成功取得物件
 		MessageObject& MsgObj = InspectorState.ObjectContentCreatEvent;
-		if (MsgObj.EditorEnable == true and
-			MsgObj.InstanceAddress != 0x0 and // 不是空的
+		if (MsgObj.InstanceAddress != 0x0 and // 不是空的
 			MsgObj.InstanceAddress != MsgObj.Address and // // 不是 openEvent
 			(MsgObj.Type.find("ObjectProperty") != std::string::npos or
 				MsgObj.Type.find("ClassProperty") != std::string::npos)
 			)
 			MemMgr.MemReader.ReadMem(EntryAddress, MsgObj.InstanceAddress + 0x10); //路口點偏移 0x10
 
-		else if ((TempObjData.FullName.find("/Game/") != std::string::npos or TempObjData.FullName.find("/Engine/") != std::string::npos) and							//是 Game 的物件
-			TempObjData.ClassPtr.Name.compare("BlueprintGeneratedClass") != 0 and						// Type 不為 Class 的 Root Object
-			TempObjData.ClassPtr.Name.compare("Class") != 0)
-			MemMgr.MemReader.ReadMem(EntryAddress, EntryAddress + 0x10); //路口點偏移 0x10
+		//else if (
+		//	(TempObjData.FullName.find("/Game/") != std::string::npos or TempObjData.FullName.find("/Engine/") != std::string::npos) and							//是 Game 的物件
+		//	TempObjData.ClassPtr.Name.compare("BlueprintGeneratedClass") != 0 and						// Type 不為 Class 的 Root Object
+		//	TempObjData.ClassPtr.Name.compare("Class") != 0)
+		//	MemMgr.MemReader.ReadMem(EntryAddress, EntryAddress + 0x10); //路口點偏移 0x10
 
 		else if (InspectorState.ObjectContentCreatEvent.IsInstance)
 			MemMgr.MemReader.ReadMem(EntryAddress, EntryAddress + 0x10);

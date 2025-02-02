@@ -3,10 +3,10 @@
 #include "../../MyGuiComponent/Operator.h"
 #include "../../../imgui/imgui.h"
 #include "../../Interface/ObjectGraphInterface.h"
+#include "../../Config/MainConsoleConfig.h"
+
 
 inline int ID_Cnt = 0;
-inline std::vector<Node*> MainNodes;
-inline std::vector<Node*> AllNodes;
 
 namespace ObjectGraph
 {
@@ -41,7 +41,7 @@ namespace ObjectGraph
 		for (int i = 0; i < level; i++)
 		{
 			Node* n = new Node();
-			AllNodes.push_back(n);
+			ObjectGraphConf.AllNodes.push_back(n);
 			n->ID = ID_Cnt++;
 			n->Name = "Node" + std::to_string(ID_Cnt - 1) + "_" + std::to_string(level);
 			n->Pos = GetRandomPosInCircle(root.Pos, root.Radius);
@@ -58,22 +58,19 @@ namespace ObjectGraph
 		initialFlag = true;
 
 		Node* FirstNode = new Node();
-		AllNodes.push_back(FirstNode);
+		ObjectGraphConf.AllNodes.push_back(FirstNode);
 		FirstNode->ID = ID_Cnt++;
 		FirstNode->Name = "FirstNode";
 		FirstNode->Pos = GetRandomPos();
 		FirstNode->Radius = 20.f;
 		GenerateTree(*FirstNode, 2, 20.f * 0.6);
-
-		MainNodes.push_back(FirstNode);
+		ObjectGraphConf.MainNodes.push_back(FirstNode);
 	}
 
-	inline void Test(std::function<void(std::vector<Node*>& MainNodes, std::vector<Node*>& AllNodes)> DrawNode, std::function<void(std::vector<Node*>& AllNodes)> SegmentIntersectionChecker)
+	inline void Test()
 	{
 		if (!initialFlag)
 			Initial();
 
-		DrawNode(MainNodes, AllNodes);
-		SegmentIntersectionChecker(AllNodes);
 	}
 }

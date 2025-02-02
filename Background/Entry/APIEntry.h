@@ -109,7 +109,7 @@ void APIEntry::AddObject()
 		// if already exist
 		ExistFlag = false;
 		for (int j = 0; j < Object->ObjectMap[InstanceAddress].Member.size(); j++) {
-			if (Object->ObjectMap[InstanceAddress].Member[j].ObjectAddress == TempObjectData.Address) {
+			if (Object->ObjectMap[InstanceAddress].Member[j].Address == TempObjectData.Address) {
 				// 程ボ把计浪琩 bitmask 琌ㄓ耞琌琌ヘ夹把计
 				if (i == (DepthPath.size() - 1) and Object->ObjectMap[InstanceAddress].Member[j].Bit != Utils.FindRightMostSetBit((int)TempObjectData.BitMask)) break;
 				ExistFlag = true;
@@ -123,7 +123,7 @@ void APIEntry::AddObject()
 			BasicObject.ID = TempObjectData.ID;
 			BasicObject.Offset = TempObjectData.Offset;
 			BasicObject.Address = DepthPath[i].first;
-			BasicObject.ObjectAddress = TempObjectData.Address;
+			BasicObject.InstanceAddress = TempObjectData.Address;
 			BasicObject.Bit = Utils.FindRightMostSetBit((int)TempObjectData.BitMask);
 			Object->ObjectMap[InstanceAddress].Member.push_back(BasicObject);
 		}
@@ -141,11 +141,11 @@ void APIEntry::Update(DumperItem& APIItem, DWORD_PTR OriginAddress, DWORD_PTR Ne
 		APIItem.ObjectMap[NewAddress] = it->second;	//穝糤
 		APIItem.ObjectMap.erase(it);	//埃侣
 
-		APIItem.ObjectMap[NewAddress].Address = NewAddress;
+		APIItem.ObjectMap[NewAddress].InstanceAddress = NewAddress;
 		for (BasicDumperObject& memberObj : APIItem.ObjectMap[NewAddress].Member) {
-			OriginAddress = memberObj.Address;
-			MemMgr.MemReader.ReadMem(memberObj.Address, NewAddress + memberObj.Offset);
-			Update(APIItem, OriginAddress, memberObj.Address);
+			OriginAddress = memberObj.InstanceAddress;
+			MemMgr.MemReader.ReadMem(memberObj.InstanceAddress, NewAddress + memberObj.Offset);
+			Update(APIItem, OriginAddress, memberObj.InstanceAddress);
 		}
 	}
 }

@@ -276,12 +276,12 @@ void JsonManager::ReadAPIFile()
 					TempAPIListObject.Type = objData["RefObjName"];
 					TempAPIListObject.FullName = objData["FullName"];
 					TempAPIListObject.Type = objData["Type"];
-					TempAPIListObject.Address = objData["Address"];
+					TempAPIListObject.InstanceAddress = objData["Address"];
 
 					for (auto& [objInfoKey, objInfo] : objData["ObjectMap"].items()) {
 						DumperObject TempDumperObject;
 						TempDumperObject.Name = objInfo["Name"];
-						TempDumperObject.Address = objInfo["Address"];
+						TempDumperObject.InstanceAddress = objInfo["Address"];
 						TempDumperObject.Offset = objInfo["Offset"];
 
 						for (auto& objMember : objInfo["Member"]) {
@@ -289,11 +289,11 @@ void JsonManager::ReadAPIFile()
 							TempBasicDumperObject.Name = objMember["Name"];
 							TempBasicDumperObject.Type = objMember["Type"];
 							TempBasicDumperObject.Offset = objMember["Offset"];
-							TempBasicDumperObject.Address = objMember["Address"];
+							TempBasicDumperObject.InstanceAddress = objMember["Address"];
 							TempBasicDumperObject.Bit = objMember["Bit"];
 							TempDumperObject.Member.push_back(TempBasicDumperObject);
 						}
-						TempAPIListObject.ObjectMap[TempDumperObject.Address] = TempDumperObject;
+						TempAPIListObject.ObjectMap[TempDumperObject.InstanceAddress] = TempDumperObject;
 					}
 					APIConf.APIItemList.push_back(TempAPIListObject);
 				}
@@ -318,14 +318,14 @@ void JsonManager::WriteAPIFile()
 		// 每個一小包的個別基本資訊
 		nlohmann::json ObjectPackage;
 		DumperItem TempAPIListObject = APIConf.APIItemList[i];
-		std::string keyStr = Utils.HexToString(TempAPIListObject.Address);
+		std::string keyStr = Utils.HexToString(TempAPIListObject.InstanceAddress);
 		ObjectPackage[keyStr] = nlohmann::json::object();
 		ObjectPackage[keyStr]["Name"] = TempAPIListObject.Name;
 		ObjectPackage[keyStr]["RefObjName"] = TempAPIListObject.Type;
 		ObjectPackage[keyStr]["FullName"] = TempAPIListObject.FullName;
 		ObjectPackage[keyStr]["Type"] = TempAPIListObject.Type;
 		ObjectPackage[keyStr]["ID"] = TempAPIListObject.ID;
-		ObjectPackage[keyStr]["Address"] = TempAPIListObject.Address;
+		ObjectPackage[keyStr]["Address"] = TempAPIListObject.InstanceAddress;
 		ObjectPackage[keyStr]["ObjectMap"] = nlohmann::json::object();
 
 		// 每個一小包的 ObjectMap
@@ -335,7 +335,7 @@ void JsonManager::WriteAPIFile()
 			// ObjectMap 的每一小項，包含自己本身的資訊，以及含有的 member
 			ObjectInfo[keyStr] = nlohmann::json::object();
 			ObjectInfo[keyStr]["Name"] = obj.Name;
-			ObjectInfo[keyStr]["Address"] = obj.Address;
+			ObjectInfo[keyStr]["Address"] = obj.InstanceAddress;
 			ObjectInfo[keyStr]["Offset"] = obj.Offset;
 			ObjectInfo[keyStr]["Member"] = nlohmann::json::array();
 
@@ -346,7 +346,7 @@ void JsonManager::WriteAPIFile()
 				ObjectMember["Name"] = TempBasicDumperObject.Name;
 				ObjectMember["Type"] = TempBasicDumperObject.Type;
 				ObjectMember["Offset"] = TempBasicDumperObject.Offset;
-				ObjectMember["Address"] = TempBasicDumperObject.Address;
+				ObjectMember["Address"] = TempBasicDumperObject.InstanceAddress;
 				ObjectMember["Bit"] = TempBasicDumperObject.Bit;
 				ObjectInfo[keyStr]["Member"].push_back(ObjectMember);
 			}

@@ -76,19 +76,14 @@ void PackageViewEntry::CreatPackageObectTab()
 
 	//基本資料
 	StorageMgr.GetObjectDict(PackageViwerState.ObjectContentCreatEvent.Address, RetObjData);
-	PackageObject.Address = RetObjData.Address;
-	PackageObject.Type = RetObjData.Type;
-	PackageObject.Name = RetObjData.Name;
-	PackageObject.FullName = RetObjData.FullName;
+	UtilsEntry::ObjectInfoWapper(PackageObject, RetObjData);
 
 	//Class 繼承的 Super List
 	std::vector<BasicDumperObject> TempSuperList;
 	Address_Level_1 = RetObjData.SuperPtr.Address;
 	while (true) {
 		if (StorageMgr.GetObjectDict(Address_Level_1, TempObjData)) {
-			TempBasicPackageObject.Address = TempObjData.Address;;
-			TempBasicPackageObject.Type = TempObjData.Type;
-			TempBasicPackageObject.Name = TempObjData.Name;;
+			UtilsEntry::ObjectInfoWapper(TempBasicPackageObject, TempObjData);
 			TempSuperList.push_back(TempBasicPackageObject);
 			Address_Level_1 = TempObjData.SuperPtr.Address;	//下一層 Super Class
 		}
@@ -110,7 +105,7 @@ void PackageViewEntry::CreatPackageObectTab()
 	else if (RetObjData.Type.find("StructProperty") != std::string::npos) {
 		// 確認是否有 Property， 有 Property 就取出 Object
 		if (!RetObjData.Property.empty()) {
-			PackageObject.ObjectAddress = RetObjData.Property[0].Address;
+			PackageObject.Address = RetObjData.Property[0].Address;
 			StorageMgr.GetObjectDict(RetObjData.Property[0].Address, RetObjData);
 		}
 		// 否則就取 TypeObject
@@ -120,17 +115,17 @@ void PackageViewEntry::CreatPackageObectTab()
 
 			// 如果 ScriptStruct 有 Member 則直接回傳該物件
 			if (TempObjData.MemberPtr.Address != NULL) {
-				PackageObject.ObjectAddress = TempObjData.Address;
+				PackageObject.Address = TempObjData.Address;
 				RetObjData = TempObjData;
 			}
 			// 如果 ScriptStruct 有 Property
 			else if (!TempObjData.Property.empty()) {
-				PackageObject.ObjectAddress = TempObjData.Property[0].Address;
+				PackageObject.Address = TempObjData.Property[0].Address;
 				StorageMgr.GetObjectDict(TempObjData.Property[0].Address, RetObjData);
 			}
 			// 如果 ScriptStruct 沒有 Property => 看 super
 			else {
-				PackageObject.ObjectAddress = TempObjData.SuperPtr.Address;
+				PackageObject.Address = TempObjData.SuperPtr.Address;
 				StorageMgr.GetObjectDict(TempObjData.SuperPtr.Address, RetObjData);
 			}
 		}
@@ -142,11 +137,11 @@ void PackageViewEntry::CreatPackageObectTab()
 		if (StorageMgr.GetObjectDict(Address_Level_1, TempObjData, true))
 			PackageObject.TypeObject = TempObjData.Type;
 
-		PackageObject.ObjectAddress = RetObjData.Property[0].Address;
+		PackageObject.Address = RetObjData.Property[0].Address;
 		StorageMgr.GetObjectDict(RetObjData.Property[0].Address, RetObjData);
 	}
 	else if (Utils.rStringToLower(RetObjData.Type).find("property") != std::string::npos) {
-		PackageObject.ObjectAddress = RetObjData.Property[0].Address;		//如果沒有預先儲存再 Property 表示不支援該型態
+		PackageObject.Address = RetObjData.Property[0].Address;		//如果沒有預先儲存再 Property 表示不支援該型態
 		StorageMgr.GetObjectDict(RetObjData.Property[0].Address, RetObjData);
 	}
 
@@ -164,10 +159,7 @@ void PackageViewEntry::CreatPackageObectTab()
 				}
 
 				BasicDumperObject TempBasicPackageObject;
-				TempBasicPackageObject.Address = MemberObj.Address;
-				TempBasicPackageObject.Type = MemberObj.Type;
-				TempBasicPackageObject.Name = MemberObj.Name;
-				TempBasicPackageObject.Offset = MemberObj.Offset;
+				UtilsEntry::ObjectInfoWapper(TempBasicPackageObject, MemberObj);
 
 				if (MemberObj.Type.find("BoolProperty") != std::string::npos)
 					TempBasicPackageObject.Bit = Utils.FindRightMostSetBit((int)MemberObj.BitMask);
@@ -204,9 +196,7 @@ void PackageViewEntry::CreatPackageObectTab()
 		ObjectData FunctClassObj;		// 其實就是 Outer
 		if (StorageMgr.GetObjectDict(RetObjData.Outer, FunctClassObj, true)) {
 			BasicDumperObject TempBasicObject;
-			TempBasicObject.Address = FunctClassObj.Address;
-			TempBasicObject.Type = FunctClassObj.Type;
-			TempBasicObject.Name = FunctClassObj.Name;
+			UtilsEntry::ObjectInfoWapper(TempBasicObject, FunctClassObj);
 			TempBasicObject.Clickable = true;	//是物件必定可點擊
 			PackageObject.Funct.Outer = TempBasicObject;
 		}
@@ -218,9 +208,7 @@ void PackageViewEntry::CreatPackageObectTab()
 			ObjectData ParaObj;
 			if (StorageMgr.GetObjectDict(Address_Level_1, ParaObj, true)) {
 				BasicDumperObject TempBasicParaObject;
-				TempBasicParaObject.Address = ParaObj.Address;
-				TempBasicParaObject.Type = ParaObj.Type;
-				TempBasicParaObject.Name = ParaObj.Name;
+				UtilsEntry::ObjectInfoWapper(TempBasicParaObject, ParaObj);
 
 				// SubType
 				UtilsEntry::ObjectSubTypeProc(ParaObj.Address, TempBasicParaObject, true);

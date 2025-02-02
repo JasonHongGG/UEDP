@@ -4,16 +4,11 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "../../Background/Interface/ObjectInterface.h"
 
-struct BasicDumperInfoObject
+struct BasicDumperInfoObject : BasicObjectData
 {
-	size_t ID = 0;
-	size_t  Offset = 0x0;
-	std::string Type = "";
-	std::string Name = "";
-	std::string FullName = "";
-	DWORD_PTR ObjectAddress = 0x0;
-	DWORD_PTR Address = 0x0;
+	DWORD_PTR InstanceAddress = 0x0;
 	size_t  Value = 0;
 	bool Clickable = false;
 };

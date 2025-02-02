@@ -197,7 +197,7 @@ void ConsoleEntry::AddDumperObject()
 			DumperItem.Type = RetObjData.Type;
 			DumperItem.Address = RetObjData.Address;
 			DumperItem.Value = RetObjData.Address;
-			DumperItem.ObjectAddress = RetObjData.Address;
+			DumperItem.InstanceAddress = RetObjData.Address;
 
 			//¥[¤J List
 			MainConsoleConf.DumperTable.push_back(DumperItem);

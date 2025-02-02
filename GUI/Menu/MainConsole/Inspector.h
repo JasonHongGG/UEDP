@@ -145,9 +145,9 @@ void Inspector::DisplayInspectorObject(DumperObject& InspectorSuperObject, std::
 
         // Object Address
         ImGui::SameLine();
-        ImGui::CopyBtn(MemberObject.Name, Utils.HexToString(MemberObject.ObjectAddress), GUIUtils.CursorPosCalcu(InspectorConf.InspectorObjectAddressIndentation, Indentation, IndentAccum, true), Style::TreeNodePadding);
+        ImGui::CopyBtn(MemberObject.Name, Utils.HexToString(MemberObject.Address), GUIUtils.CursorPosCalcu(InspectorConf.InspectorObjectAddressIndentation, Indentation, IndentAccum, true), Style::TreeNodePadding);
         ImGui::SameLine(0, 0);
-        ImGui::TextColored(Color::ObjectAddressColor, Utils.HexToString(MemberObject.ObjectAddress).c_str());
+        ImGui::TextColored(Color::ObjectAddressColor, Utils.HexToString(MemberObject.Address).c_str());
 
         if (EditorEnable)
         {
@@ -179,7 +179,7 @@ void Inspector::DisplayInspectorObject(DumperObject& InspectorSuperObject, std::
             {
                 // 不存在則獲取資料
                 if (InspectorConf.InspectorObjectContentMap.find(TargetObjectName) == InspectorConf.InspectorObjectContentMap.end())
-                    EventHandler::UpdateObjectContentPage(MemberObject.ObjectAddress, MemberObject.Type, TargetObjectName, EditorEnable, false, DisplayNextState.NextAddress, DisplayNextState.Size);
+                    EventHandler::UpdateObjectContentPage(MemberObject.Address, MemberObject.Type, TargetObjectName, EditorEnable, false, DisplayNextState.NextAddress, DisplayNextState.Size);
                 // 已存在則顯示Indentation
                 else {
                     ImGui::SetCursorPosX(InspectorConf.InspectorOffsetIndentation + Indentation + InspectorConf.InspectorTreeObjectNavLineOffset);
@@ -213,9 +213,9 @@ void Inspector::DisplayInspectorObjectEntry(std::vector<DumperObject>& Inspector
 
             // Object Address
             ImGui::SameLine();
-            ImGui::CopyBtn(InspectorObjectSuperList[i].Name, Utils.HexToString(InspectorObjectSuperList[i].ObjectAddress), GUIUtils.CursorPosCalcu(InspectorConf.InspectorObjectAddressIndentation, Indentation, IndentAccum, true), Style::TreeNodePadding);
+            ImGui::CopyBtn(InspectorObjectSuperList[i].Name, Utils.HexToString(InspectorObjectSuperList[i].Address), GUIUtils.CursorPosCalcu(InspectorConf.InspectorObjectAddressIndentation, Indentation, IndentAccum, true), Style::TreeNodePadding);
             ImGui::SameLine(0, 0);
-            ImGui::TextColored(Color::AddressColor, Utils.HexToString(InspectorObjectSuperList[i].ObjectAddress).c_str());
+            ImGui::TextColored(Color::AddressColor, Utils.HexToString(InspectorObjectSuperList[i].Address).c_str());
 
             if (EditorEnable)
             {

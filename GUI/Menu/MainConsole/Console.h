@@ -68,9 +68,7 @@ void Console::ObjectDataRender()
                     ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 18.0f);
                     ImGui::TableHeadersRow();
 
-
-                    if (MainConsoleConf.DumperTable[n].ObjectAddress)
-                        DisplayDumperObjectEntry(MainConsoleConf.DumperTable[n]);
+                    DisplayDumperObjectEntry(MainConsoleConf.DumperTable[n]);
 
                     ImGui::EndTable();
                 }

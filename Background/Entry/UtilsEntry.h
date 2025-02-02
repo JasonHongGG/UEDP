@@ -20,10 +20,7 @@ namespace UtilsEntry
 	inline DWORD_PTR PropertySelector(ObjectData& Object);
 
 
-	inline bool DumperObjectWapper(ObjectData& Object, BasicDumperObject& TempBasicDumperObject);
-
-
-	inline bool DumperObjectBasicWapper(BasicObjectData& BasicObject, BasicDumperObject& TempBasicDumperObject);
+	inline bool ObjectInfoWapper(BasicDumperInfoObject& ObjectA, BasicObjectData& ObjectB);
 
 
 	inline void InspectorAdditionalObjProc(ObjectData& Object, BasicDumperObject& TempBasicObject, int LoopIndex, size_t Offset);
@@ -120,35 +117,23 @@ DWORD_PTR UtilsEntry::PropertySelector(ObjectData& Object) {
 	return (Object.Property.size() >= 2) ? Object.Property[1].Address : Object.Property[0].Address;
 }
 
-bool UtilsEntry::DumperObjectWapper(ObjectData& Object, BasicDumperObject& TempBasicDumperObject)
-{
-	TempBasicDumperObject.Name = Object.Name;
-	TempBasicDumperObject.Type = Object.Type;
-	TempBasicDumperObject.Offset = Object.Offset;
-	TempBasicDumperObject.Address = Object.Address;
-	TempBasicDumperObject.Value = Object.Address;
-	TempBasicDumperObject.ObjectAddress = Object.Address;
-	TempBasicDumperObject.ID = Object.ID;
-	return true;
-}
 
-
-bool UtilsEntry::DumperObjectBasicWapper(BasicObjectData& BasicObject, BasicDumperObject& TempBasicDumperObject)
+bool UtilsEntry::ObjectInfoWapper(BasicDumperInfoObject& ObjectA, BasicObjectData& ObjectB)
 {
-	TempBasicDumperObject.Name = BasicObject.Name;
-	TempBasicDumperObject.Type = BasicObject.Type;
-	TempBasicDumperObject.Offset = BasicObject.Offset;
-	TempBasicDumperObject.Address = BasicObject.Address;
-	TempBasicDumperObject.Value = BasicObject.Address;
-	TempBasicDumperObject.ObjectAddress = BasicObject.Address;
-	TempBasicDumperObject.ID = BasicObject.ID;
+	ObjectA.Name = ObjectB.Name;
+	ObjectA.Type = ObjectB.Type;
+	ObjectA.Offset = ObjectB.Offset;
+	ObjectA.Address = ObjectB.Address;
+	ObjectA.Value = ObjectB.Address;
+	ObjectA.InstanceAddress = ObjectB.Address;
+	ObjectA.ID = ObjectB.ID;
 	return true;
 }
 
 void UtilsEntry::InspectorAdditionalObjProc(ObjectData& Object, BasicDumperObject& TempBasicObject, int LoopIndex, size_t Offset)
 {
 	// Warpper Basic Infomation
-	DumperObjectWapper(Object, TempBasicObject);
+	ObjectInfoWapper(TempBasicObject, Object);
 
 	// SubType
 	ObjectSubTypeProc(Object.Address, TempBasicObject);
@@ -220,7 +205,7 @@ void UtilsEntry::ObjectMemberProcessSelector(DWORD_PTR Address, std::vector<Basi
 		ObjectData ObjData;
 		BasicDumperObject BasicObject;
 		StorageMgr.GetObjectDict(Address, ObjData);
-		DumperObjectWapper(ObjData, BasicObject);
+		ObjectInfoWapper(BasicObject, ObjData);
 		MemberList.push_back(BasicObject);
 	}
 	else {
@@ -268,12 +253,12 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 	std::vector<BasicDumperObject> TempMemberList;
 
 	// Basic Data
-	TempObjectItem.ObjectAddress = RetObjData.Address;
+	TempObjectItem.Address = RetObjData.Address;
 	TempObjectItem.Type = RetObjData.Type;
 	TempObjectItem.Name = RetObjData.Name;
 	TempObjectItem.Offset = RetObjData.Offset;
-	TempObjectItem.Address = RetObjData.Address;		//待更改
-	TempObjectItem.Value = RetObjData.Address;			//待更改
+	TempObjectItem.InstanceAddress = RetObjData.Address;		
+	TempObjectItem.Value = RetObjData.Address;		
 	TempObjectItem.ID = RetObjData.ID;
 
 	// Member List 
@@ -332,7 +317,7 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 			}
 		}
 		else {
-			DumperObjectWapper(TempObjData, TempBasicObject);
+			ObjectInfoWapper(TempBasicObject, TempObjData);
 			TempMemberList.push_back(TempBasicObject);
 		}
 	}
@@ -349,7 +334,7 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 
 				// Bool
 				BasicDumperObject TempBasicObject;
-				DumperObjectWapper(MemberObj, TempBasicObject);
+				ObjectInfoWapper(TempBasicObject, MemberObj);
 				if (MemberObj.Type.find("BoolProperty") != std::string::npos)
 					TempBasicObject.Bit = Utils.FindRightMostSetBit((int)MemberObj.BitMask);
 

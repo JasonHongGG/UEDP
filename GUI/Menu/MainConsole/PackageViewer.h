@@ -251,7 +251,6 @@ void PackageViewer::ObjectContentRender()
                                 ImGui::CopyBtn("FunctionAddressOffset_" + PackObject.Name + "_" + PackObject.Type, Utils.HexToString(PackObject.Funct.Offset)); ImGui::SameLine(0, 0);
                                 ImGui::Text("0x%llX", PackObject.Funct.Offset); ImGui::SameLine();  ImGui::Text(")");
                             }
-                            PackObject.ObjectAddress == NULL ? ImGui::Text("Object Pointer: NULL") : ImGui::Text("Object Pointer: 0x%p", PackObject.ObjectAddress); ;
                             ImGui::Text("Type: %s", PackObject.Type.c_str());
                             ImGui::Text("Name: %s", PackObject.Name.c_str());
                             ImGui::Text("FullName: %s", PackObject.FullName.c_str());
