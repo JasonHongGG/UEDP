@@ -4,10 +4,11 @@
 #include <algorithm>
 #include "../../MyGuiComponent/Operator.h"
 #include "../../MyGuiComponent.h"
+#include "../../MyGuiUtils.h"
 #include "../../../imgui/imgui.h"
 #include "../../Config/MainConsoleConfig.h"
 #include "../../../State/EventHandler.h"
-#include "../../../Background/Storage/StorageManager.h"	//TODO 要刪除
+#include "../../../Background/Storage/StorageManager.h"	
 #include "../../Interface/ObjectGraphInterface.h"
 #include "ObjectGraphTest.h"
 
@@ -18,10 +19,10 @@ namespace ObjectGraph {
     inline Node* FocusNode = nullptr;
     inline Node* DragNode = nullptr;
     inline float ExpectDistance = 150.f;
-    inline float RepulsiveForce = 0.3f;
+    inline float RepulsiveForce = 0.1f;
     inline float DampingFactor = 0.9f; // 用於減速模擬
     inline float AttractionForce = 0.6f;
-    inline float AvoidOverlappingSpaceRatios = 1.f;
+    inline float AvoidOverlappingSpaceRatios = 2.f;
     inline int GetMostUperImportanceObjectVectorNumber = 10;
 
 
@@ -68,12 +69,12 @@ namespace ObjectGraph {
         for (Node* connectedNode : node->To) {
             if (SourceNode == connectedNode) continue;
 			if (Distance(SourceNode, connectedNode) <= ExpectDistance) continue;
-            PropagateForces(node, connectedNode, propagatedForce, attenuation * 1.1f);
+            PropagateForces(node, connectedNode, propagatedForce, 1.5f);
         }
         for (Node* connectedNode : node->From) {
             if (SourceNode == connectedNode) continue;
             if (Distance(SourceNode, connectedNode) <= ExpectDistance) continue;
-            PropagateForces(node, connectedNode, propagatedForce, attenuation * 1.1f);
+            PropagateForces(node, connectedNode, propagatedForce, 1.5f);
         }
     }
 
@@ -90,11 +91,11 @@ namespace ObjectGraph {
         if (!node || !centerNode || node == centerNode) return;
 
         ImVec2 delta = centerNode->Pos - node->Pos;
-        float distance = sqrt(delta.x * delta.x + delta.y * delta.y);
+        float diff = sqrt(delta.x * delta.x + delta.y * delta.y);
 
         // Attraction towards center node
-        if (distance > ExpectDistance) {
-            ImVec2 attraction = (delta / distance) * AttractionForce;
+        if (diff > ExpectDistance) {
+            ImVec2 attraction = (delta / diff) * AttractionForce;
             node->Velocity = node->Velocity + attraction;
         }
     }
@@ -150,10 +151,10 @@ namespace ObjectGraph {
 
         ImVec2 windowPos = ImGui::GetWindowPos();
         ImVec2 pos = windowPos + node->Pos;
-
         ImDrawList* drawList = ImGui::GetWindowDrawList();
+		float NameLenght = GUIUtils.GetStringWidth(node->Name);
         drawList->AddCircleFilled(pos, node->Radius, isFocus ? IM_COL32(255, 100, 100, 255) : IM_COL32(255, 255, 255, 255));
-        drawList->AddText(pos - ImVec2(node->Radius / 2, node->Radius / 2), IM_COL32(0, 0, 0, 255), node->Name.c_str());
+        drawList->AddText(pos - ImVec2(NameLenght / 2, -node->Radius), IM_COL32(255, 255, 255, 255), node->Name.c_str());
         if (ShowOverlappingRange) drawList->AddCircle(pos, node->Radius * AvoidOverlappingSpaceRatios, ImColor(0.f, 0.f, 1.f, 1.f));
         if (ShowExpectDistance) drawList->AddCircle(pos, ExpectDistance, ImColor(1.f, 0.f, 0.f, 1.f));
 
@@ -218,7 +219,7 @@ namespace ObjectGraph {
         ImGui::SliderFloat("Avoid Overlapping Space Ratios ", &AvoidOverlappingSpaceRatios, 1.f, 20.f);
         ImGui::SameLine();
         ImGui::Checkbox("##ShowOverlappingRange", &ShowOverlappingRange);
-        ImGui::SliderFloat("Repulsive Force", &RepulsiveForce, 0.1f, 10.f);
+        ImGui::SliderFloat("Repulsive Force", &RepulsiveForce, 0.01f, 2.f);
         ImGui::SliderFloat("Attraction Force", &AttractionForce, 0.1f, 10.f);
         
         Test();
