@@ -253,13 +253,7 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 	std::vector<BasicDumperObject> TempMemberList;
 
 	// Basic Data
-	TempObjectItem.Address = RetObjData.Address;
-	TempObjectItem.Type = RetObjData.Type;
-	TempObjectItem.Name = RetObjData.Name;
-	TempObjectItem.Offset = RetObjData.Offset;
-	TempObjectItem.InstanceAddress = RetObjData.Address;		
-	TempObjectItem.Value = RetObjData.Address;		
-	TempObjectItem.ID = RetObjData.ID;
+	ObjectInfoWapper(TempBasicObject, RetObjData);
 
 	// Member List 
 	// ObjectProperty¡BClassProperty ªºª¬ªp

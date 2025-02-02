@@ -148,34 +148,9 @@ void PackageViewEntry::CreatPackageObectTab()
 	// Member List 
 	if (RetObjData.Type.find("Function") == std::string::npos)
 	{
-		std::vector<BasicDumperObject> TempMemberList;
-		Address_Level_1 = RetObjData.MemberPtr.Address;
-		while (true) {
-			ObjectData MemberObj;
-			if (StorageMgr.GetObjectDict(Address_Level_1, MemberObj, true)) {
-				// 基本檢查 (如果不符合就跳過該 Member)
-				if (MemberObj.Offset < 0) {	
-					MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember); continue;
-				}
-
-				BasicDumperObject TempBasicPackageObject;
-				UtilsEntry::ObjectInfoWapper(TempBasicPackageObject, MemberObj);
-
-				if (MemberObj.Type.find("BoolProperty") != std::string::npos)
-					TempBasicPackageObject.Bit = Utils.FindRightMostSetBit((int)MemberObj.BitMask);
-
-				// SubType
-				UtilsEntry::ObjectSubTypeProc(MemberObj.Address, TempBasicPackageObject, true);
-
-				if (TempBasicPackageObject.Type.find("Property") == std::string::npos and UtilsEntry::IsObjectNameInPackage(TempBasicPackageObject.Type, TempAddress)) TempBasicPackageObject.Clickable = true;
-				TempMemberList.push_back(TempBasicPackageObject);
-
-				//下一個 Member
-				MemMgr.MemReader.ReadMem(Address_Level_1, MemberObj.Address + UEOffset.NextMember);
-			}
-			else break;
-		}
-		PackageObject.Member = TempMemberList;
+		DumperObject TempObjectItem;
+		UtilsEntry::ObjectMemberListProc(ProcessClass::C_PackageViewer, RetObjData, TempObjectItem);
+		PackageObject.Member = TempObjectItem.Member;
 	}
 
 
