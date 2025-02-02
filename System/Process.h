@@ -8,11 +8,11 @@
 class Process
 {
 public:
-    enum ProcessState {
+    enum State {
         Running = 0,
         Stop = 1
     };
-    inline static ProcessState ProcState = ProcessState::Running;
+    inline static State ProcState = State::Running;
 
 
     // Parameter

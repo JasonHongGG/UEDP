@@ -89,7 +89,7 @@ void BackgroundEntry::InitialProcess()
 void BackgroundEntry::CloseProcess()
 {
 	CloseHandle(ProcessInfo::hProcess);
-	Process::ProcState = Process::ProcessState::Stop;
+	Process::ProcState = Process::State::Stop;
 }
 
 

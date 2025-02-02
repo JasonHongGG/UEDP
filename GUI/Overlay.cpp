@@ -51,7 +51,7 @@ void Overlay::Setup()
 		ImguiSettingMgr.Init(WindowMgr.window, D3DRenderMgr.Device, D3DRenderMgr.DeviceContext);
 		RenderLoop(WindowMgr.window, D3DRenderMgr.Device, D3DRenderMgr.DeviceContext, D3DRenderMgr.loadedSwapChain);
 	}
-	ImguiSettingMgr.Clear();
+	//ImguiSettingMgr.Clear(); //不是在 while 中途退出，所以不用清除
 	D3DRenderMgr.CleanupDeviceD3D();
 	WindowMgr.DestroyWindowInstance();
 	return;
@@ -59,7 +59,7 @@ void Overlay::Setup()
 
 void Overlay::RenderLoop(HWND window, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, IDXGISwapChain* loadedSwapChain) 
 {
-	while (Process::ProcState == Process::ProcessState::Running) {
+	while (Process::ProcState == Process::State::Running) {
 		// ==================  System Msg Process  ==================
 		SystemMsgProc();
 
@@ -160,7 +160,7 @@ void Overlay::SystemMsgProc()
 		DispatchMessage(&msg);								//DispatchMessage	用於將消息分派給窗口程序的消息處理函數（Window Procedure）
 
 		if (msg.message == WM_QUIT) { MainMenuState.CloseProcess = ProcessState::Start; break; }
-		if (!Process::ProcState == Process::ProcessState::Stop) break;
+		if (Process::ProcState == Process::State::Stop) break;
 	}
 	// fileDropMgr.uninitialize(window);	// 不需要收動，自動就被刪了，除非訊息接收是用 GetMessage(&msg, nullptr, 0, 0)
 }

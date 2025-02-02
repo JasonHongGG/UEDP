@@ -13,7 +13,7 @@ public:
 	void SetUp()
 	{
 		 //Busy Box (use sleep to realse cpu)
-		while (Process::ProcState == Process::ProcessState::Running) {
+		while (Process::ProcState == Process::State::Running) {
 			Entry();
 			Sleep(10);
 		}
