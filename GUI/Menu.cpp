@@ -4,8 +4,10 @@
 #include "Config/NotificationConfig.h"
 #include "Config/LogoConfig.h"
 #include "../State/GUIState.h"
+#include "../State/EventHandler.h"
 #include "Menu/MainMenu.h"
 #include "Menu/MainConsole.h"
+
 
 
 void Menu::MenuEntry() 
@@ -45,6 +47,8 @@ void Menu::Initial() {
 void Menu::GetLogo() {
 	bool ret = ImageLoader.LoadTextureFromFile(D3DRenderMgr.Device, (LogConf.LogoPathStr).c_str(), LogConf.LogoTextureVec, &LogConf.LogoWidth, &LogConf.LogoHeight, &LogConf.LogoFrame);
 	LogConf.LogoProportion = (float)LogConf.LogoWidth / (float)LogConf.LogoHeight;
+	if (!ret)
+		EventHandler::NotifyEvent(NotificationConfig::NotiyType::Success, "Logo", "Fail To Load");
 }
 
 void Menu::SetStyle() {

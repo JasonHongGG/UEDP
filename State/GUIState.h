@@ -4,10 +4,13 @@
 #include "../imgui/imgui.h"
 #include "GlobalState.h"
 #include "EventHandler/MessageInterface.h"
+#include "../GUI/Config//MainMenuConfig.h"
 
 struct MainMenuStateManager
 {
+	MainMenuCurPage LastPageID = MainMenuCurPage::Main;
 	ImVec2 CurrentMenuPosision = { 0, 0 };
+	ImVec2 CurrentSideBarPosision = { 0, 0 };
 	ImVec2 LastMenuPosision = { 0, 0 };
 	bool FocusOnMainMenu = false;
 	bool FocusOnSideBar = false;

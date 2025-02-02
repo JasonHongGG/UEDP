@@ -5,14 +5,15 @@
 
 enum class MainMenuCurPage
 {
-	Main = 0,
-	Image = 1,
-	Tool = 2,
-	FX = 3,
-	MenuConfigSL = 4,
-	MainConfig = 5,
-	DumperConsole = 6,
-	Quit = 7,
+	None = 0,
+	Main,
+	Image,
+	Tool,
+	FX,
+	MenuConfigSL,
+	MainConfig,
+	DumperConsole,
+	Quit,
 };
 
 enum class MainConfigTabType

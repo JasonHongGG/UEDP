@@ -4,7 +4,7 @@
 namespace Const
 {
 	// Logo
-	inline const std::string LogoPathStr = "./logo/main.png--";
+	inline const std::string LogoPathStr = "./logo/main.png";
 
 	// Process Info
 	inline const std::wstring ProcessName = L"EnderMagnoliaSteamEA-Win64-Shipping.exe";

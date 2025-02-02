@@ -77,8 +77,12 @@ void SideBar::MenuSideBarComponent(std::string Name, MainMenuCurPage Type, ImVec
 			MainConsoleState.OpenDumperConsole = !MainConsoleState.OpenDumperConsole;
 		else if (Type == MainMenuCurPage::Quit)
 			MainMenuState.CloseProcess = ProcessState::Start;
-		else
-			*PageID = Type;
+		else {
+			MainMenuState.LastPageID = *PageID;
+			if (*PageID == Type) *PageID = MainMenuCurPage::None;
+			else *PageID = Type;
+		}
+			
 	}
 	if (ImGui::IsItemHovered())
 		ButtonShadow(true, Color::LightBlue, CursorPos, ButtonSize, StyleMgr->FramePadding.x);
@@ -100,6 +104,9 @@ void SideBar::StateUpdate()
 		if (!MainMenuState.FocusOnMainMenu)
 			MainMenuState.ShowMainMenuWhenFocusSideBar = true;
 	}
+
+	// Update Window Position
+	MainMenuState.CurrentSideBarPosision = ImGui::GetWindowPos();
 }
 
 void SideBar::FocusUpdate()
@@ -118,6 +125,7 @@ void SideBar::FocusUpdate()
 
 void SideBar::PositionUpdate()
 {
+	ImGui::SetNextWindowSize(ImVec2(90, 0), ImGuiCond_FirstUseEver);
 	if (MainMenuState.CurrentMenuPosision != MainMenuState.LastMenuPosision) {
 		ImGui::SetNextWindowPos({ (MainMenuState.CurrentMenuPosision.x - 105/*padding*/), MainMenuState.CurrentMenuPosision.y });
 		MainMenuState.LastMenuPosision = MainMenuState.CurrentMenuPosision;

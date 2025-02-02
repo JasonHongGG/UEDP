@@ -28,6 +28,7 @@ namespace MainMenu
 	void MainMenuRender();
 	void SideBarRender();
 
+	void PositionUpdate();
 	void FocusUpdate();
 	void StateUpdate();
 
@@ -42,10 +43,11 @@ namespace MainMenu
 
 void MainMenu::MainMenuRender()
 {
+	if (PageID == MainMenuCurPage::None) return;
+	
+	PositionUpdate();
 	FocusUpdate();
 	ImGui::PushFont(Font::NormalText);
-	ImGui::SetNextWindowSize({ Width,Height }, ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowPos({ (ProcMgr.WindowMgr.UserWindowWidth - Width) / 2, (ProcMgr.WindowMgr.UserWindowHeight - Height) / 2 }, ImGuiCond_FirstUseEver);
 	ImGui::Begin("Jason Hong", NULL, ImGuiWindowFlags_NoTitleBar);	// | ImGuiWindowFlags_NoBackground  ImGuiWindowFlags_NoTitleBar  ImGuiWindowFlags_MenuBar
 	{
 		MainPage::Render(PageID);
@@ -65,10 +67,9 @@ void MainMenu::SideBarRender()
 {
 	SideBar::PositionUpdate();
 	SideBar::FocusUpdate();
-	ImGui::SetNextWindowSize(ImVec2(90, 0), ImGuiCond_FirstUseEver);
 	ImGui::PushFont(Font::NormalText);
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, Color::Black);
-	ImGui::Begin("MenuSideBar", NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoFocusOnAppearing | DockingMgr.GetDockingDisableFlag());
+	ImGui::Begin("MenuSideBar", NULL, ImGuiWindowFlags_NoDecoration | (PageID != MainMenuCurPage::None ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoFocusOnAppearing | DockingMgr.GetDockingDisableFlag());
 	{
 		SideBar::Render(PageID);
 		SideBar::StateUpdate();
@@ -76,6 +77,16 @@ void MainMenu::SideBarRender()
 	ImGui::End();
 	ImGui::PopStyleColor();
 	ImGui::PopFont();
+}
+
+void MainMenu::PositionUpdate()
+{
+	ImGui::SetNextWindowSize({ Width,Height }, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos({ (ProcMgr.WindowMgr.UserWindowWidth - Width) / 2, (ProcMgr.WindowMgr.UserWindowHeight - Height) / 2 }, ImGuiCond_FirstUseEver);
+	if (MainMenuState.LastPageID == MainMenuCurPage::None) {
+		MainMenuState.LastPageID = PageID;
+		ImGui::SetNextWindowPos({ MainMenuState.CurrentSideBarPosision.x + 105 , MainMenuState.CurrentSideBarPosision.y }, ImGuiCond_Always);
+	}
 }
 
 void MainMenu::FocusUpdate()
