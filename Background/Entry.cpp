@@ -82,6 +82,11 @@ void BackgroundEntry::InitialProcess()
 
 
 	// ==========  Test Area  ==========
+	/*DWORD_PTR Address = MemMgr.RegionEnumerator.MemoryAlloc(ProcessInfo::hProcess);
+	printf("[ Alloc Address ] %p\n", (void*)Address);
+	system("pause");
+
+	MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, Address);*/
 
 
 }

@@ -6,7 +6,6 @@
 #include "Parser.h"
 #include "../Interface/ObjectInterface.h"
 #include "../../System/Memory.h"
-#include "../../Utils/Include/BeaEngine.h"
 #include "../../Utils/Utils.h"
 
 class ObjectManager

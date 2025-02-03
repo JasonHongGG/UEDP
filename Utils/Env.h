@@ -12,6 +12,7 @@ namespace Const
 
 	inline bool PrintAssemblyCode = false;
 	inline bool PrintDumpInfo = false;
+	inline std::string DisassemblerMode = "BeaEngine"; // Capstone | BeaEngine 
 
 	// Parsing Option
 	inline size_t MaxObjectArray = 30;

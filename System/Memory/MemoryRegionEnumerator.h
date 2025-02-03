@@ -22,6 +22,24 @@ public:
 
     void WriteMemoryRegionsToFile(const std::vector<MEMORY_BASIC_INFORMATION>& regions, const std::string& filename);
 
+    DWORD_PTR MemoryAlloc(HANDLE procHanlder, DWORD_PTR Address = NULL, size_t size = 4096, size_t type = MEM_COMMIT | MEM_RESERVE, size_t protect = PAGE_EXECUTE_READWRITE)
+    {
+        LPVOID pMemory = VirtualAllocEx(
+                            procHanlder, // 當前進程
+                            (LPVOID)Address,                // 讓系統選擇地址
+                            size,                // 內存大小
+                            type, // 分配並提交
+                            protect       // 可讀寫
+                        );
+
+        return (DWORD_PTR)pMemory;
+    }
+
+	void MemoryFree(HANDLE procHanlder, DWORD_PTR Address)
+	{
+		VirtualFreeEx(procHanlder, LPVOID(Address), 0, MEM_RELEASE);
+	}
+
 private:
     void PrintContent(bool prologue = false, MEMORY_BASIC_INFORMATION mbi = MEMORY_BASIC_INFORMATION());
 };

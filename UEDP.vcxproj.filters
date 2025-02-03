@@ -158,7 +158,7 @@
     <ClInclude Include="Utils\Utils.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\Include\BeaEngine.h">
+    <ClInclude Include="Utils\Include\Disassembler\BeaEngine.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Utils\Include\BS_thread_pool.hpp">
@@ -549,6 +549,15 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Menu\MainConsole\ObjectGraph.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Include\Disassembler\CapStone.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Include\Disassembler\IDisassembler.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Include\Disassembler\DisassemblerFactory.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "BaseAddressDumper.h"
-#include "../../Utils/Include/BeaEngine.h"
+#include "../../Utils/Include/Disassembler/DisassemblerFactory.h"
 #include "../../Utils/Utils.h"
 
 std::vector<DWORD_PTR> BaseAddressDumperClass::FindAddress(DWORD_PTR Address)
@@ -23,8 +23,8 @@ std::vector<DWORD_PTR> BaseAddressDumperClass::FindAddress(DWORD_PTR Address)
 	std::vector<DWORD_PTR> ResultAddress;
 	std::vector<std::string> Opcodes;
 	std::vector<std::string> Tokens;
-	Opcodes = Disassembler.BeaEngine(Address, 0x50);							// 預設大小就是 0x50 的 Offset 偏差範圍內
-	if (Const::PrintAssemblyCode) Disassembler.Print(Opcodes);					// 印出組合語言的搜尋結果
+	Opcodes = Disassembler::Instance().Disassemble(Address, 0x50);			// 預設大小就是 0x50 的 Offset 偏差範圍內
+	if (Const::PrintAssemblyCode) Disassembler::Instance().Print(Opcodes);			// 印出組合語言的搜尋結果
 	for (std::string Opcode : Opcodes) {
 		Tokens.clear();
 		Tokens = Utils.GetTokens(Opcode);

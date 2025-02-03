@@ -88,7 +88,7 @@ uint64_t EnumProcessMemoryRegions::GetMostNearSpaceByAddress(std::vector<MEMORY_
     uint64_t BestDiff;
     uint64_t HeadDistance = 0;
     uint64_t TailDistance = 0;
-    uint64_t CompDistance;
+    uint64_t CompDistance = 0;
     bool HeadClosestFlag = false;
     for (auto mbi : regions)
     {
@@ -114,7 +114,7 @@ uint64_t EnumProcessMemoryRegions::GetMostNearSpaceByAddress(std::vector<MEMORY_
     //return BestMbi;
     printf("[Best MBI] [Address] %p [Size] %llX [Type] %lX [State] %lX\n", (void*)BestMbi.BaseAddress, BestMbi.RegionSize, BestMbi.Type, BestMbi.State);
 
-    uint64_t RecommendAllocateAddress;
+    uint64_t RecommendAllocateAddress = 0;
     if (BestMbi.BaseAddress != NULL) { //至少有找到一個
         if (HeadClosestFlag) {
             RecommendAllocateAddress = (uint64_t)BestMbi.BaseAddress;                                     //緊貼著，剛剛好的空間
