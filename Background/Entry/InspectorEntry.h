@@ -119,7 +119,8 @@ void InspectorEntry::CreatObectNamePage()
 	DWORD_PTR EntryAddress = InspectorState.ObjectContentCreatEvent.Address;
 	if (StorageMgr.GetObjectDict(EntryAddress, TempObjData, true)) { // 成功取得物件
 		MessageObject& MsgObj = InspectorState.ObjectContentCreatEvent;
-		if (MsgObj.InstanceAddress != 0x0 and // 不是空的
+		if (MsgObj.EditorEnable and // 開啟 Editor
+			MsgObj.InstanceAddress != 0x0 and // 不是空的
 			MsgObj.InstanceAddress != MsgObj.Address and // // 不是 openEvent
 			(MsgObj.Type.find("ObjectProperty") != std::string::npos or
 				MsgObj.Type.find("ClassProperty") != std::string::npos)

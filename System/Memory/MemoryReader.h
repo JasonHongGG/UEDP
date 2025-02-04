@@ -9,9 +9,23 @@ public:
     template <class T>
     bool ReadMem(T& target, DWORD_PTR baseAddress, size_t size = -1);
 
-    bool ReadBytes(DWORD_PTR baseAddress, BYTE* buffer, size_t size);
+    int ReadBytes(DWORD_PTR baseAddress, BYTE* buffer, size_t size);
 
     DWORD_PTR ReadMultiLevelPointer(DWORD_PTR baseAddress, size_t Level);
+
+    std::vector<DWORD_PTR> ReadPointerArray(DWORD_PTR baseAddress, size_t n)
+    {
+		std::vector<DWORD_PTR> result;
+		for (int i = 0; i < n; i++) {
+			DWORD_PTR temp;
+			ReadMem(temp, baseAddress + i * ProcessInfo::ProcOffestAdd);
+			result.push_back(temp);
+		}
+
+        return result;
+    }
+
+    bool ReadString(DWORD_PTR baseAddress, BYTE* buffer, int strMaxLen = 50);
 
     bool IsPointer(DWORD_PTR address);
 

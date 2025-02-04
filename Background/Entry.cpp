@@ -17,10 +17,9 @@
 #include "Entry/APIEntry.h"
 #include "Entry/LoadAndSaveSettingEntry.h"
 #include "Entry/ObjectGraphEntry.h"
-//#include "Console.h"
-//#include "../json/MyJson.h"
 #include "../Utils/Utils.h"
 #include "../Utils/Env.h"
+#include "Unity/UnityManager.h"
 
 
 
@@ -82,13 +81,15 @@ void BackgroundEntry::InitialProcess()
 
 
 	// ==========  Test Area  ==========
-	/*DWORD_PTR Address = MemMgr.RegionEnumerator.MemoryAlloc(ProcessInfo::hProcess);
-	printf("[ Alloc Address ] %p\n", (void*)Address);
-	system("pause");
+	HMODULE Address = ProcMgr.ModuleMgr.GetModule(ProcessInfo::PID, L"mono.dll");
+	printf("[ Module Address ] %p\n", (void*)Address);
+	Address = ProcMgr.ModuleMgr.GetModule(ProcessInfo::PID, L"mono-2.0-bdwgc.dll");
+	printf("[ Module Address ] %p\n", (void*)Address);
+	DWORD_PTR FunctionAddress = ProcMgr.ModuleMgr.GetFunctionAddress(ProcessInfo::hProcess, Address, "g_free");
+	printf("[ Function Address ] %p\n", (void*)FunctionAddress);
 
-	MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, Address);*/
-
-
+	MonoMgr.Init();
+	MonoMgr.Test();
 }
 
 void BackgroundEntry::CloseProcess()

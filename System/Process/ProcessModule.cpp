@@ -1,4 +1,6 @@
 #include "ProcessModule.h"
+#include "ProcessInfo.h" //<= GetModule Need
+#include "../../Utils/Utils.h" //<= GetModule Need
 
 HMODULE ProcessModule::hMainMoudle = 0;
 
@@ -13,7 +15,8 @@ HMODULE ProcessModule::GetModule(size_t PID, const wchar_t* name)
         do {
             if (!_wcsicmp(moduleEntry.szModule, name)) {
                 CloseHandle(hSnapshot);
-                ProcessModule::hMainMoudle = moduleEntry.hModule;
+                if(Utils.UTF8ToUnicode(ProcessInfo::ProcessName.c_str()).find(name) != std::wstring::npos)
+                    ProcessModule::hMainMoudle = moduleEntry.hModule;
                 return moduleEntry.hModule;
             }
         } while (Module32NextW(hSnapshot, &moduleEntry));
@@ -116,4 +119,65 @@ bool ProcessModule::InMoudle(size_t PID, DWORD_PTR Address)
 
     CloseHandle(hSnapshot);
     return false;
+}
+
+DWORD_PTR ProcessModule::GetFunctionAddress(HANDLE hProcess, HMODULE hModule, const char* funcName) {
+    BYTE peHeader[0x400];  // 用於存儲 PE Header
+    SIZE_T bytesRead;
+
+    // 讀取 PE Header
+    if (!ReadProcessMemory(hProcess, hModule, peHeader, sizeof(peHeader), &bytesRead)) {
+        std::cerr << "無法讀取 PE Header!" << std::endl;
+        return 0;
+    }
+
+    // 取得 PE 結構
+    IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)peHeader;
+    IMAGE_NT_HEADERS* ntHeaders = (IMAGE_NT_HEADERS*)(peHeader + dosHeader->e_lfanew);
+    IMAGE_OPTIONAL_HEADER* optionalHeader = &ntHeaders->OptionalHeader;
+    IMAGE_DATA_DIRECTORY* exportDirectoryData = &optionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT];
+
+    // 計算 Export Table 在記憶體內的地址
+    DWORD exportTableRVA = exportDirectoryData->VirtualAddress;
+    IMAGE_EXPORT_DIRECTORY exportTable;
+
+    if (!ReadProcessMemory(hProcess, (BYTE*)hModule + exportTableRVA, &exportTable, sizeof(exportTable), &bytesRead)) {
+        std::cerr << "無法讀取 Export Table!" << std::endl;
+        return 0;
+    }
+
+    // 讀取函數名稱和地址表
+    DWORD* nameTableRVA = new DWORD[exportTable.NumberOfNames];
+    DWORD* funcAddrTableRVA = new DWORD[exportTable.NumberOfFunctions];
+    WORD* nameOrdinalTableRVA = new WORD[exportTable.NumberOfNames];
+
+    ReadProcessMemory(hProcess, (BYTE*)hModule + exportTable.AddressOfNames, nameTableRVA, exportTable.NumberOfNames * sizeof(DWORD), &bytesRead);
+    ReadProcessMemory(hProcess, (BYTE*)hModule + exportTable.AddressOfFunctions, funcAddrTableRVA, exportTable.NumberOfFunctions * sizeof(DWORD), &bytesRead);
+    ReadProcessMemory(hProcess, (BYTE*)hModule + exportTable.AddressOfNameOrdinals, nameOrdinalTableRVA, exportTable.NumberOfNames * sizeof(WORD), &bytesRead);
+
+    // 遍歷函數名稱，查找 `getMyFunction`
+    DWORD functionRVA = 0;
+    for (DWORD i = 0; i < exportTable.NumberOfNames; i++) {
+        char funcNameBuffer[256];
+
+        ReadProcessMemory(hProcess, (BYTE*)hModule + nameTableRVA[i], funcNameBuffer, sizeof(funcNameBuffer), &bytesRead);
+        if (strcmp(funcName, funcNameBuffer) == 0) {
+            functionRVA = funcAddrTableRVA[nameOrdinalTableRVA[i]];
+            break;
+        }
+    }
+
+    // 清理記憶體
+    delete[] nameTableRVA;
+    delete[] funcAddrTableRVA;
+    delete[] nameOrdinalTableRVA;
+
+    if (functionRVA == 0) {
+        std::cerr << "找不到函數: " << funcName << std::endl;
+        return 0;
+    }
+
+    // 計算 `getMyFunction` 的絕對地址
+    DWORD_PTR functionAddress = (DWORD_PTR)hModule + functionRVA;
+    return functionAddress;
 }

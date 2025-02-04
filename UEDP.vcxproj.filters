@@ -560,5 +560,23 @@
     <ClInclude Include="Utils\Include\Disassembler\DisassemblerFactory.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="Background\Unity\UnityFunction.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Unity\UnityConst.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Unity\UnityManager.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Unity\UnityUtils.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Unity\UnityImage.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Background\Unity\MonoClass.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

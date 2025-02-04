@@ -5,21 +5,20 @@
 class MemoryWriter {
 public:
     template <class T>
-    void WriteMem(DWORD_PTR baseAddress, T data);
+    bool WriteMem(DWORD_PTR baseAddress, T data);
 
     template <class T>
     void WriteProtectedMem(DWORD_PTR baseAddress, T data);
 
-    template <class T> // 也可用 template <typename T> 是相同的
-    void WriteBytes(DWORD baseAddress, T data, size_t size);
+    bool WriteBytes(DWORD_PTR baseAddress, BYTE* data, size_t size);
 private:
 };
 
 
 template <class T>
-void MemoryWriter::WriteMem(DWORD_PTR baseAddress, T data)
+bool MemoryWriter::WriteMem(DWORD_PTR baseAddress, T data)
 {
-    WriteProcessMemory(ProcessInfo::hProcess, (LPBYTE*)baseAddress, &data, sizeof(data), NULL);
+    return WriteProcessMemory(ProcessInfo::hProcess, (LPBYTE*)baseAddress, &data, sizeof(data), NULL);
 }
 
 template <class T>
@@ -31,11 +30,4 @@ void MemoryWriter::WriteProtectedMem(DWORD_PTR baseAddress, T data)
     VirtualProtectEx(ProcessInfo::hProcess, (LPVOID)baseAddress, sizeof(data), OldProtect, nullptr);
 }
 
-template <class T>
-void MemoryWriter::WriteBytes(DWORD baseAddress, T data, size_t size)
-{
-    DWORD OldProtect;
-    VirtualProtectEx(ProcessInfo::hProcess, (LPVOID)baseAddress, size, PAGE_READWRITE, &OldProtect);
-    WriteProcessMemory(ProcessInfo::hProcess, (LPVOID)baseAddress, data, size, 0);
-    VirtualProtectEx(ProcessInfo::hProcess, (LPVOID)baseAddress, size, OldProtect, nullptr);
-}
+

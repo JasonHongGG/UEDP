@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <TlHelp32.h>
 #include <tchar.h>
+#include <iostream>
+#include "../Process.h"
 
 class EnumProcessMemoryRegions
 {
@@ -22,7 +24,7 @@ public:
 
     void WriteMemoryRegionsToFile(const std::vector<MEMORY_BASIC_INFORMATION>& regions, const std::string& filename);
 
-    DWORD_PTR MemoryAlloc(HANDLE procHanlder, DWORD_PTR Address = NULL, size_t size = 4096, size_t type = MEM_COMMIT | MEM_RESERVE, size_t protect = PAGE_EXECUTE_READWRITE)
+    DWORD_PTR MemoryAlloc(HANDLE procHanlder, DWORD_PTR Address = NULL, size_t size = 4096, DWORD type = MEM_COMMIT | MEM_RESERVE, DWORD protect = PAGE_EXECUTE_READWRITE)
     {
         LPVOID pMemory = VirtualAllocEx(
                             procHanlder, // 當前進程
@@ -39,6 +41,24 @@ public:
 	{
 		VirtualFreeEx(procHanlder, LPVOID(Address), 0, MEM_RELEASE);
 	}
+
+    void CreateRemoteThreadAndExcute(HANDLE hProc, DWORD_PTR ExecuteMemoryAddress)
+    {
+        DWORD OldProtect;
+        VirtualProtectEx(ProcessInfo::hProcess, (LPVOID)ExecuteMemoryAddress, 4096, PAGE_EXECUTE_READWRITE, &OldProtect);
+        HANDLE hThread = CreateRemoteThread(hProc,  NULL, 0, (LPTHREAD_START_ROUTINE)ExecuteMemoryAddress,NULL, 0, NULL );
+        WaitForSingleObject(hThread, INFINITE);
+        CloseHandle(hThread);
+    }
+
+    void CheckMemoryProtect(DWORD_PTR address)
+    {
+        MEMORY_BASIC_INFORMATION mbi;
+        if (VirtualQueryEx(ProcessInfo::hProcess, (LPCVOID)address, &mbi, sizeof(mbi))) {
+            std::cout << "Memory State: " << mbi.State << std::endl;
+            std::cout << "Memory Protect: " << mbi.Protect << std::endl;
+        }
+    }
 
 private:
     void PrintContent(bool prologue = false, MEMORY_BASIC_INFORMATION mbi = MEMORY_BASIC_INFORMATION());

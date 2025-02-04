@@ -249,11 +249,10 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 {
 	DWORD_PTR Address_Level_1 = NULL;
 	ObjectData TempObjData;
-	BasicDumperObject TempBasicObject;
 	std::vector<BasicDumperObject> TempMemberList;
 
 	// Basic Data
-	ObjectInfoWapper(TempBasicObject, RetObjData);
+	ObjectInfoWapper(TempObjectItem, RetObjData);
 
 	// Member List 
 	// ObjectProperty、ClassProperty 的狀況
@@ -286,11 +285,10 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 	}
 	// Map 狀況
 	else if (RetObjData.Type.find("MapProperty") != std::string::npos) {
+		BasicDumperObject TempBasicObject;
 		if (ProcessClass == ProcessClass::C_Inspector) {
 			size_t AccmulateOffset = 0x0;
 			for (int i = 0; i < InspectorState.ObjectContentCreatEvent.Size; i++) {
-				BasicDumperObject TempBasicObject;
-
 				// Key
 				if (StorageMgr.GetObjectDict(RetObjData.Property[0].Address, TempObjData)) {
 					if (TempObjData.Type.find("EnumProperty") == std::string::npos and StorageMgr.GetObjectDict(TempObjData.Property[0].Address, TempObjData)) {} // 主要是 Map 的 Key 可能是其他 Struct (Key 是因為要直接取出 Type Name 所以才要先做，Value 則不需要)
