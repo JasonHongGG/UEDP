@@ -93,11 +93,11 @@ bool UtilsSet::IsHex(const std::string& str) {
     return true;
 }
 
-std::vector<std::string> UtilsSet::GetTokens(const std::string& input) {
+std::vector<std::string> UtilsSet::GetTokens(const std::string& input, char delimiter) {
     std::vector<std::string> tokens;
     std::istringstream iss(input);
     std::string token;
-    while (std::getline(iss, token, ' ')) {
+    while (std::getline(iss, token, delimiter)) {
         tokens.push_back(token);
     }
 

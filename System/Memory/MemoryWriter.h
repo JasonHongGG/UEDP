@@ -11,9 +11,19 @@ public:
     void WriteProtectedMem(DWORD_PTR baseAddress, T data);
 
     bool WriteBytes(DWORD_PTR baseAddress, BYTE* data, size_t size);
+
+    template <class T>
+    void WriteArray(DWORD_PTR baseAddress, const std::vector<T>& data);
 private:
 };
 
+template <class T>
+void MemoryWriter::WriteArray(DWORD_PTR baseAddress, const std::vector<T>& data)
+{
+    for (size_t i = 0; i < data.size(); i++) {
+        WriteMem(baseAddress + i * sizeof(T), data[i]);
+    }
+}
 
 template <class T>
 bool MemoryWriter::WriteMem(DWORD_PTR baseAddress, T data)

@@ -56,7 +56,7 @@ public:
 		int AssemblyCnt = 0;
 		FunctSet->FunctPtrSet["mono_assembly_foreach"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, CallBackAddress, UserDataAddress);
 		MemMgr.MemReader.ReadMem<int>(AssemblyCnt, UserDataAddress);
-		std::vector<DWORD_PTR> AssemblyList = MemMgr.MemReader.ReadPointerArray(UserDataAddress + ProcessInfo::ProcOffestAdd, AssemblyCnt);
+		std::vector<DWORD_PTR> AssemblyList = MemMgr.MemReader.ReadArray<DWORD_PTR>(UserDataAddress + ProcessInfo::ProcOffestAdd, AssemblyCnt);
 
 		// Create Assembly Image
 		std::vector<MonoAssemblyImage> AssemblyImageList;
@@ -78,7 +78,6 @@ public:
 			DWORD_PTR ImageAddress = FunctSet->FunctPtrSet["mono_assembly_get_image"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, AssemblyImage.Handle);
 			ImageAddress &= 0xFFFFFFFFFFFF; // 12 bytes
 			std::string Name = FunctSet->FunctPtrSet["mono_image_get_name"]->Call<std::string>(CALL_TYPE_CDECL, *ThreadFunctionList, ImageAddress);
-			std::cout << Name << std::endl;
 
 			if (ImageName == Name)
 				return new MonoImage(AssemblyImage, Name, ImageAddress);

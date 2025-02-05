@@ -40,6 +40,7 @@ inline std::map<std::string, ValueTypeEnum> FieldTypeNameMap = {
 	{"System.Double", TYPE_DOUBLE},
 	{"System.String", TYPE_CHAR_P},
 	{"System.Decimal", TYPE_VOID_P},
+    {"System.Pointer", TYPE_VOID_P},
 };
 
 inline std::vector<std::string> mono_native_func_name = {
@@ -179,3 +180,9 @@ inline int FIELD_ATTRIBUTE_RT_SPECIAL_NAME = 0x0400;
 inline int FIELD_ATTRIBUTE_HAS_FIELD_MARSHAL = 0x1000;
 inline int FIELD_ATTRIBUTE_HAS_DEFAULT = 0x8000;
 inline int FIELD_ATTRIBUTE_HAS_FIELD_RVA = 0x0100;
+
+
+inline int METHOD_ATTRIBUTE_STATIC = 0x0010;
+inline int METHOD_ATTRIBUTE_FINAL = 0x0020;
+inline int METHOD_ATTRIBUTE_VIRTUAL = 0x0040;
+inline int METHOD_ATTRIBUTE_HIDE_BY_SIG = 0x0080;

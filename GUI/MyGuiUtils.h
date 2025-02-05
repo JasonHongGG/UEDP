@@ -4,7 +4,9 @@
 #include "../imgui/imgui_internal.h"
 #include "../System/Memory.h"
 #include "Config/ToggleConfig.h"
+#include "Config/ColorConfig.h"
 #include "../State/EventHandler.h"
+#include "MyGuiComponent.h"
 
 class GUIUtilsClass
 {
@@ -33,7 +35,7 @@ public:
 };
 inline GUIUtilsClass GUIUtils = GUIUtilsClass();
 
-bool GUIUtilsClass::IsExpandType(std::string Type)
+inline bool GUIUtilsClass::IsExpandType(std::string Type)
 {
     if (Type.find("StructProperty") != std::string::npos or
         Type.find("ScriptStruct") != std::string::npos or
@@ -46,7 +48,7 @@ bool GUIUtilsClass::IsExpandType(std::string Type)
     else return false;
 }
 
-void GUIUtilsClass::GetDisplayNextState(BasicDumperObject& MemberObject, DWORD_PTR Address, int CurOffset, float Indentation, bool EditorEnable)
+inline void GUIUtilsClass::GetDisplayNextState(BasicDumperObject& MemberObject, DWORD_PTR Address, int CurOffset, float Indentation, bool EditorEnable)
 {
     if (MemberObject.Type.find("ObjectProperty") != std::string::npos or MemberObject.Type == "Class") {
         DisplayNextState.ShowHeader = true;
@@ -75,7 +77,7 @@ void GUIUtilsClass::GetDisplayNextState(BasicDumperObject& MemberObject, DWORD_P
     }
 }
 
-void GUIUtilsClass::DrawTreeNavLine(int State, float IndentSize)
+inline void GUIUtilsClass::DrawTreeNavLine(int State, float IndentSize)
 {
     // 開關
     if (InspectorConf.InspectorTreeNavLine == false) return;
@@ -115,7 +117,7 @@ void GUIUtilsClass::DrawTreeNavLine(int State, float IndentSize)
     }
 }
 
-float GUIUtilsClass::CursorPosCalcu(float ObjectIndentation, float Indentation, float IndentAccum, bool IsGroupHeaderEle, bool IsIndentationNecessary, float SetIndentation)
+inline float GUIUtilsClass::CursorPosCalcu(float ObjectIndentation, float Indentation, float IndentAccum, bool IsGroupHeaderEle, bool IsIndentationNecessary, float SetIndentation)
 {
     // ObjectIndentation :  當前物件的 Indentation 
     // Indentation : 目前為止，到上一回合已經累積的 Indentation
@@ -134,7 +136,7 @@ float GUIUtilsClass::CursorPosCalcu(float ObjectIndentation, float Indentation, 
         return UseObjectIndentation + CurrentIndentation;   //考慮到縮排、縮排是否考慮字串長度取決於 IndentationAccumulate、 是某使用 ObjectIndentation 取決於 UseObjectIndentation 
 }
 
-void GUIUtilsClass::GetObjectName(BasicDumperObject& MemberObject, std::string& TargetObjectName, bool EditorEnable)
+inline void GUIUtilsClass::GetObjectName(BasicDumperObject& MemberObject, std::string& TargetObjectName, bool EditorEnable)
 {
     if (MemberObject.Type.find("StructProperty") != std::string::npos or
         MemberObject.Type.find("ObjectProperty") != std::string::npos or
@@ -160,7 +162,7 @@ void GUIUtilsClass::GetObjectName(BasicDumperObject& MemberObject, std::string& 
         MemberObject.SubType[0].Name;
 }
 
-float GUIUtilsClass::GetFrameHeight()
+inline float GUIUtilsClass::GetFrameHeight()
 {
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
@@ -168,7 +170,7 @@ float GUIUtilsClass::GetFrameHeight()
     return FrameHeight;
 }
 
-float GUIUtilsClass::GetFontHeight()
+inline float GUIUtilsClass::GetFontHeight()
 {
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
@@ -176,7 +178,7 @@ float GUIUtilsClass::GetFontHeight()
     return FontHeight;
 }
 
-float GUIUtilsClass::GetStringWidth(std::string Str)
+inline float GUIUtilsClass::GetStringWidth(std::string Str)
 {
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
@@ -184,7 +186,7 @@ float GUIUtilsClass::GetStringWidth(std::string Str)
     return StringWidth;
 }
 
-void GUIUtilsClass::CEItemExport(std::string Name, std::string Type, DWORD_PTR Offset) {
+inline void GUIUtilsClass::CEItemExport(std::string Name, std::string Type, DWORD_PTR Offset) {
     std::string CheatEngineItemFormat =
         "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
         "<CheatTable>"
@@ -204,7 +206,7 @@ void GUIUtilsClass::CEItemExport(std::string Name, std::string Type, DWORD_PTR O
 }
 
 template<typename T>
-bool GUIUtilsClass::ValueRenderComponent(std::string UniqueLabel, std::string Type, DWORD_PTR BaseAddress, DWORD_PTR MemberAddress)
+inline bool GUIUtilsClass::ValueRenderComponent(std::string UniqueLabel, std::string Type, DWORD_PTR BaseAddress, DWORD_PTR MemberAddress)
 {
     T Value = 0;
     if (!MemMgr.MemReader.ReadMem<T>(Value, MemberAddress)) return false;
@@ -239,7 +241,7 @@ bool GUIUtilsClass::ValueRenderComponent(std::string UniqueLabel, std::string Ty
     return true;
 }
 
-bool GUIUtilsClass::ValueRender(std::string UniqueLabel, DWORD_PTR BaseAddress, DWORD_PTR Address, BasicDumperObject& MemberObject)
+inline bool GUIUtilsClass::ValueRender(std::string UniqueLabel, DWORD_PTR BaseAddress, DWORD_PTR Address, BasicDumperObject& MemberObject)
 {
     // Input Para
     std::string Name = MemberObject.Name;

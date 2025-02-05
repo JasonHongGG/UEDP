@@ -8,7 +8,8 @@
 #include "MonoImage.h"
 #include "MonoClass.h"
 
-
+#include "../../imgui/imgui.h"
+#include "../../GUI/MyGuiUtils.h"
 class MonoManager
 {
 	MonoNativeFuncSet FunctSet;
@@ -77,6 +78,7 @@ public:
 		RootDomainAddress = (DWORD_PTR)FunctSet.FunctPtrSet["mono_get_root_domain"]->Call<DWORD_PTR>(CALL_TYPE_CDECL);
 	}
 
+	bool Initialized = false;
 	void Init()
 	{
 		HMODULE hModule = ProcMgr.ModuleMgr.GetModule(ProcessInfo::PID, L"KERNEL32.dll");
@@ -93,21 +95,108 @@ public:
 
 		ImageAPI = new MonoImageAPI(&FunctSet, &ThreadFunctionList);
 		ClassAPI = new MonoClassAPI(ImageAPI, &FunctSet, &ThreadFunctionList);
+		
 	}
 
-
+	DWORD_PTR CurrentPlagerInstance = 0x0;
+	DWORD_PTR BotListInstance = 0x0;
+	MonoClass* UnityEngineComponentClass;
+	MonoClass* UnityEngineTransformClass;
+	MonoClass* UnityEngineCameraClass;
+	MonoMethod* GetTransformMethod;
+	MonoMethod* GetPositionMethod;
+	MonoMethod* WorldToScreenPointMethod;
 	void Test()
 	{
-		MonoClass* Class = ClassAPI->FindClassInImageByName("Assembly-CSharp", "BotHandler");
-		if (Class) {
-			std::cout << "Class Found" << std::endl;
-			MonoField* temp = Class->FindField("instance");
-			DWORD_PTR nsan = temp->GetValue();
-			printf("0x%llx\n", nsan);
+		
+		// Bot
+		MonoClass* BotHandlerClass = ClassAPI->FindClassInImageByName("Assembly-CSharp", "BotHandler");
+		BotHandlerClass->Instance = BotHandlerClass->FindField("instance")->GetValue<DWORD_PTR>();
+		BotListInstance = BotHandlerClass->FindField("bots")->GetValue<DWORD_PTR>();
+		printf("BotListInstance 0x%llx\n", BotListInstance);
+
+		// Player
+		MonoClass* PlayerHandlerClass = ClassAPI->FindClassInImageByName("Assembly-CSharp", "PlayerHandler");
+		PlayerHandlerClass->Instance = PlayerHandlerClass->FindField("instance")->GetValue<DWORD_PTR>();
+		DWORD_PTR PlayerListInstance = PlayerHandlerClass->FindField("players")->GetValue<DWORD_PTR>();
+		DWORD_PTR PlayerListBaseAddress = 0x0;
+		MemMgr.MemReader.ReadMem<DWORD_PTR>(PlayerListBaseAddress, PlayerListInstance + 0x10);
+		int PlayerListSize = 0;
+		MemMgr.MemReader.ReadMem<int>(PlayerListSize, PlayerListInstance + 0x18);
+		std::vector<DWORD_PTR> PlayerList = MemMgr.MemReader.ReadArray<DWORD_PTR>(PlayerListBaseAddress + 0x20, PlayerListSize);
+		CurrentPlagerInstance = PlayerList[0];
+
+		// Transform Method
+		UnityEngineComponentClass = ClassAPI->FindClassInImageByName("UnityEngine.CoreModule", "UnityEngine.Component");
+		GetTransformMethod = UnityEngineComponentClass->FindMethod("get_transform");
+		UnityEngineTransformClass = ClassAPI->FindClassInImageByName("UnityEngine.CoreModule", "UnityEngine.Transform");
+		GetPositionMethod = UnityEngineTransformClass->FindMethod("get_position_Injected");
+		UnityEngineCameraClass = ClassAPI->FindClassInImageByName("UnityEngine.CoreModule", "UnityEngine.Camera");
+		UnityEngineCameraClass->Instance = UnityEngineCameraClass->FindMethod("get_main")->Call< DWORD_PTR >();
+		WorldToScreenPointMethod = UnityEngineCameraClass->FindMethod("WorldToScreenPoint_Injected");
+
+		
+
+		printf("BotListInstance 0x%llx\n", BotListInstance);
+		Initialized = true;
+	}
+
+	void TestLoop(HWND window)
+	{
+		if (!Initialized) return;
+		// Player
+		GetTransformMethod->Class->Instance = CurrentPlagerInstance;
+		GetPositionMethod->Class->Instance = GetTransformMethod->Call<DWORD_PTR>();
+		DWORD_PTR AllocMemoryAddress = MemMgr.RegionEnumerator.MemoryAlloc(ProcessInfo::hProcess);
+		GetPositionMethod->Call<float>(AllocMemoryAddress);
+		std::vector<float> PlayerWorldPos = MemMgr.MemReader.ReadArray<float>(AllocMemoryAddress, 3);
+		MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, AllocMemoryAddress);
+		if (PlayerWorldPos[0] == 0) return;
+
+
+
+		// Bot List
+		DWORD_PTR BotListBaseAddress = 0x0;
+		MemMgr.MemReader.ReadMem<DWORD_PTR>(BotListBaseAddress, BotListInstance + 0x10);
+		int BotListSize = 0;
+		MemMgr.MemReader.ReadMem<int>(BotListSize, BotListInstance + 0x18);
+		std::vector<DWORD_PTR> BotList = MemMgr.MemReader.ReadArray<DWORD_PTR>(BotListBaseAddress + 0x20, BotListSize);
+		if (BotList.size() <= 1) return;
+
+		std::vector<std::vector<float>> BotWorldPos;
+		std::vector<std::vector<float>> BotScreenPos;
+		for (int i = 0; i < BotList.size(); i++) {
+			// World Pos
+			GetTransformMethod->Class->Instance = BotList[i];
+			GetPositionMethod->Class->Instance = GetTransformMethod->Call<DWORD_PTR>();
+			DWORD_PTR AllocMemoryAddress = MemMgr.RegionEnumerator.MemoryAlloc(ProcessInfo::hProcess);
+			GetPositionMethod->Call<float>(AllocMemoryAddress);
+			std::vector<float> WorldPos = MemMgr.MemReader.ReadArray<float>(AllocMemoryAddress, 3);
+			MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, AllocMemoryAddress);
+			BotWorldPos.push_back(WorldPos);
+
+			//Screen Pos
+			AllocMemoryAddress = MemMgr.RegionEnumerator.MemoryAlloc(ProcessInfo::hProcess);
+			MemMgr.MemWriter.WriteArray<float>(AllocMemoryAddress, WorldPos);
+			WorldToScreenPointMethod->Call<float>(AllocMemoryAddress, 2, AllocMemoryAddress + 0x100);
+			std::vector<float> ScreenPos = MemMgr.MemReader.ReadArray<float>(AllocMemoryAddress + 0x100, 3);
+			MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, AllocMemoryAddress);
+			BotScreenPos.push_back(ScreenPos);
+
+			// Draw
+			RECT windowRect;
+			GetWindowRect(window, &windowRect);
+			float windowWidth = float(windowRect.right - windowRect.left);
+			float windowHeight = float(windowRect.bottom - windowRect.top);
+			ImDrawList* drawList = ImGui::GetBackgroundDrawList();
+			drawList->AddCircle(ImVec2(windowRect.left + ScreenPos[0], windowRect.bottom - ScreenPos[1]), 10, IM_COL32(255, 0, 0, 255));
+
+			// Distance
+			float distance = sqrt(pow(PlayerWorldPos[0] - WorldPos[0], 2) + pow(PlayerWorldPos[1] - WorldPos[1], 2) + pow(PlayerWorldPos[2] - WorldPos[2], 2));
+			std::string distanceStr = std::to_string(distance);
+			drawList->AddText(ImVec2(windowRect.left + ScreenPos[0] - GUIUtils.GetStringWidth(distanceStr) / 2, windowRect.top + ScreenPos[1] + 10), IM_COL32(255, 255, 255, 255), distanceStr.c_str());
 		}
-		else {
-			std::cout << "Class Not Found" << std::endl;
-		}
+		Sleep(10);
 	}
 };
 

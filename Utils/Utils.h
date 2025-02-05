@@ -44,7 +44,7 @@ public:
 
     bool IsHex(const std::string& str);
 
-    std::vector<std::string> GetTokens(const std::string& input);
+    std::vector<std::string> GetTokens(const std::string& input, char delimiter = ' ');
 
     std::string FindSubStr(std::string input);
 

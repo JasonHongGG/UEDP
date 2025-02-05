@@ -17,6 +17,8 @@
 #include "../font/IconRegular.h"
 #include "../font/TahomaFont.h"
 
+#include "../Background/Unity/MonoManager.h"
+
 LRESULT Overlay::Wndproc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) //windows msg 傳遞給 ImGui
 		return true;
@@ -81,6 +83,8 @@ void Overlay::RenderLoop(HWND window, ID3D11Device* Device, ID3D11DeviceContext*
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
+
+		MonoMgr.TestLoop(window);
 
 		//ImGui::ShowDemoWindow();
 		if (menuToggle) {

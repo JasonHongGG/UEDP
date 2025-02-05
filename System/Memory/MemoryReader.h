@@ -13,17 +13,8 @@ public:
 
     DWORD_PTR ReadMultiLevelPointer(DWORD_PTR baseAddress, size_t Level);
 
-    std::vector<DWORD_PTR> ReadPointerArray(DWORD_PTR baseAddress, size_t n)
-    {
-		std::vector<DWORD_PTR> result;
-		for (int i = 0; i < n; i++) {
-			DWORD_PTR temp;
-			ReadMem(temp, baseAddress + i * ProcessInfo::ProcOffestAdd);
-			result.push_back(temp);
-		}
-
-        return result;
-    }
+	template <class T>
+    std::vector<T> ReadArray(DWORD_PTR baseAddress, size_t n);
 
     bool ReadString(DWORD_PTR baseAddress, BYTE* buffer, int strMaxLen = 50);
 
@@ -33,6 +24,19 @@ public:
     bool IsEqual(DWORD_PTR address, T value);
 private:
 };
+
+template <class T>
+std::vector<T> MemoryReader::ReadArray(DWORD_PTR baseAddress, size_t n)
+{
+    std::vector<T> result;
+    for (int i = 0; i < n; i++) {
+        T temp;
+        ReadMem(temp, baseAddress + i * sizeof(T));
+        result.push_back(temp);
+    }
+
+    return result;
+}
 
 template <class T>
 bool MemoryReader::ReadMem(T& target, DWORD_PTR baseAddress, size_t size) 

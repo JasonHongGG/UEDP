@@ -60,7 +60,7 @@ public:
 		std::vector<DWORD_PTR> argList = { static_cast<DWORD_PTR>(args)... };
 
 		std::vector<int> property = mono_native_func_property[Name];
-		int ArgsCnt = property[0];
+		int ArgsCnt = argList.size();
 		ValueTypeEnum ReturnType = (ValueTypeEnum)property[1];
 
 		DWORD_PTR AllocMemoryAddress = MemMgr.RegionEnumerator.MemoryAlloc(ProcessInfo::hProcess);

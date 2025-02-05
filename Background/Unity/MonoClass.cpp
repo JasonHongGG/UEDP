@@ -1,4 +1,45 @@
 #include "MonoClass.h"
+#include "../../Utils/Utils.h"
+
+DWORD_PTR MonoMethod::GetAddress()
+{
+	if (!FunctionAdress)
+		FunctionAdress = Class->ClassAPI->CompileMethod(this);
+	return FunctionAdress;
+}
+
+std::string MonoMethod::GetSignature()
+{
+	if (Signature.empty())
+		Signature = Class->ClassAPI->GetMethodSignature(this);
+	return Signature;
+}
+
+std::string MonoMethod::GetReturnTypeName()
+{
+	std::string sig = GetSignature();
+	size_t pos = sig.find(' ');
+	if (pos != std::string::npos) {
+		return sig.substr(0, pos);
+	}
+	return sig;
+}
+
+int MonoMethod::GetFlags()
+{
+	if (!Flags)
+		Flags = Class->ClassAPI->FunctSet->FunctPtrSet["mono_method_get_flags"]->Call<int>(CALL_TYPE_CDECL, *Class->ClassAPI->ThreadFunctionList, Handle);
+	return Flags;
+}
+
+bool MonoMethod::IsStatic(MonoMethod* Method)
+{
+	if (!Method) return false;
+	return (Method->GetFlags() & METHOD_ATTRIBUTE_STATIC) != 0;
+}
+
+
+
 
 
 
@@ -20,25 +61,40 @@ std::string MonoField::GetTypeName()
 {
 	if (TypeName.empty())
 		TypeName = Class->ClassAPI->FunctSet->FunctPtrSet["mono_type_get_name"]->Call<std::string>(CALL_TYPE_CDECL, *Class->ClassAPI->ThreadFunctionList, GetTypeAddress());
+	
 	return TypeName;
 }
 
 DWORD_PTR MonoField::GetAddress()
 {
-	if (!Address)
+	if (IsStatic(this))
 		Address = Class->ClassAPI->FunctSet->FunctPtrSet["get_static_field_address"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *Class->ClassAPI->ThreadFunctionList, Handle);
+	else
+		Address = GetInstance() + GetOffset();
 	return Address;
 }
 
-DWORD_PTR MonoField::GetValue()
+DWORD_PTR MonoField::GetInstance()
 {
-	if (Class->ClassAPI->IsStatic(this))
-		return Class->ClassAPI->GetStaticFieldValue<DWORD_PTR>(Class, this, GetTypeName());
-	else
-		return MonoUtils.ReadValue<DWORD_PTR>(FieldTypeNameMap[GetTypeName()], GetAddress());
+	if (!Class->Instance) {
+		printf("Current Class Has Not Instance");
+		return 0x0;
+	}
+	return Class->Instance;
 }
 
+int MonoField::GetOffset()
+{
+	if (!Offset)
+		Offset = Class->ClassAPI->FunctSet->FunctPtrSet["mono_field_get_offset"]->Call<int>(CALL_TYPE_CDECL, *Class->ClassAPI->ThreadFunctionList, Handle);
+	return Offset;
+}
 
+bool MonoField::IsStatic(MonoField* Field)
+{
+	if (!Field) return false;
+	return (Field->GetFlags() & (FIELD_ATTRIBUTE_STATIC | FIELD_ATTRIBUTE_HAS_FIELD_RVA)) != 0;
+}
 
 
 
@@ -49,7 +105,10 @@ DWORD_PTR MonoField::GetValue()
 
 MonoField* MonoClass::FindField(std::string FieldName)
 {
-	return ClassAPI->FindFieldInClassByName(this, FieldName);
+	MonoField* FieldObject =  ClassAPI->FindFieldInClassByName(this, FieldName);
+	if (FieldObject)
+		return FieldObject;
+	return nullptr;
 }
 
 DWORD_PTR MonoClass::GetVtable()
@@ -59,7 +118,13 @@ DWORD_PTR MonoClass::GetVtable()
 	return VTable;
 }
 
-
+MonoMethod* MonoClass::FindMethod(std::string MethodName, int ParaCnt)
+{
+	MonoMethod* MethodObject = ClassAPI->FindMethodInClass(this, MethodName, ParaCnt);
+	if (MethodObject)
+		return MethodObject;
+	return nullptr;
+}
 
 
 
@@ -120,20 +185,79 @@ DWORD_PTR MonoClassAPI::GetStaticFieldAddress(MonoClass* Class, MonoField* Field
 	return 0x0;
 }
 
-template <typename T>
-T MonoClassAPI::GetStaticFieldValue(MonoClass* Class, MonoField* Field, std::string TypeName)
+MonoMethod* MonoClassAPI::FindMethodInClass(MonoClass* Class, std::string MethodName, int ParaCnt)
 {
-	DWORD_PTR Address = GetStaticFieldAddress(Class, Field);
-	if (Address)
-		if (FieldTypeNameMap.find(TypeName) != FieldTypeNameMap.end())
-			return MonoUtils.ReadValue<T>(FieldTypeNameMap[TypeName], Address);
-		else
-			return MonoUtils.ReadValue<DWORD_PTR>(TYPE_VOID_P, Address);
-	return T();
+	CString MethodNameObject(MethodName);
+	DWORD_PTR MethodAddress = FunctSet->FunctPtrSet["mono_class_get_method_from_name"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Class->Handle, MethodNameObject.Address, ParaCnt);
+	MethodAddress &= 0xFFFFFFFFFFFF;
+	return new MonoMethod(Class, MethodAddress, MethodName);
 }
 
-bool MonoClassAPI::IsStatic(MonoField* Field)
+std::string MonoClassAPI::GetMethodSignature(MonoMethod* Method)
 {
-	if (!Field) return false;
-	return (Field->GetFlags() & (FIELD_ATTRIBUTE_STATIC | FIELD_ATTRIBUTE_HAS_FIELD_RVA)) != 0;
+	DWORD_PTR MethodSigAddress = FunctSet->FunctPtrSet["mono_method_signature"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Method->Handle);
+	std::string ParamDesc = FunctSet->FunctPtrSet["mono_signature_get_desc"]->Call<std::string>(CALL_TYPE_CDECL, *ThreadFunctionList, MethodSigAddress, 1); // Param Type
+	int ParamCnt = FunctSet->FunctPtrSet["mono_signature_get_param_count"]->Call<int>(CALL_TYPE_CDECL, *ThreadFunctionList, MethodSigAddress);
+	Method->ParamCnt = ParamCnt;
+
+	// Get Param Names
+	std::vector<std::string> ParamNames;
+	if (ParamCnt)
+	{
+		std::vector<DWORD_PTR> temp(ParamCnt, 0);
+		CArray NamesPtrArray(temp);
+		FunctSet->FunctPtrSet["mono_method_get_param_names"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Method->Handle, NamesPtrArray.Address);
+		NamesPtrArray.ReadResult();
+		for (int i = 0; i < ParamCnt; i++) {
+			BYTE ParamNameBytes[60];
+			MemMgr.MemReader.ReadString(NamesPtrArray.Elements[i], ParamNameBytes);
+			std::string ParamName(reinterpret_cast<char*>(ParamNameBytes));
+			ParamNames.push_back(ParamName);
+		}
+			
+	}
+
+	// Get Return Type
+	DWORD_PTR ReturnTypeAddress = FunctSet->FunctPtrSet["mono_signature_get_return_type"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, MethodSigAddress);
+	std::string	ReturnType = FunctSet->FunctPtrSet["mono_type_get_name"]->Call<std::string>(CALL_TYPE_CDECL, *ThreadFunctionList, ReturnTypeAddress);
+
+	// Get Param Info
+	std::string ParaInfo = "";
+	if (ParamCnt > 0 || !ParamDesc.empty()) {
+		std::vector<std::string> ParamTypeVector = Utils.GetTokens(ParamDesc, ',');
+
+		if (ParamCnt == static_cast<int>(ParamTypeVector.size())) {
+			std::ostringstream oss;
+			for (int i = 0; i < ParamCnt; ++i) {
+				if (i > 0) oss << ", ";
+				oss << ParamTypeVector[i] << " " << ParamNames[i];
+			}
+			ParaInfo = oss.str();
+		}
+		else {
+			ParaInfo = "<parse error>";
+		}
+	}
+
+	return ReturnType + " (" + ParaInfo + ")";
+}
+
+DWORD_PTR MonoClassAPI::CompileMethod(MonoMethod* Method)
+{
+
+	DWORD_PTR ClassAddress = FunctSet->FunctPtrSet["mono_method_get_class"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Method->Handle);
+	if (!ClassAddress) return 0;
+
+
+	bool IsGenericExist = FunctSet->FunctPtrSet.find("mono_class_is_generic") != FunctSet->FunctPtrSet.end() and FunctSet->FunctPtrSet["mono_class_is_generic"]->FunctionAddress != 0;
+	if (
+			(
+				IsGenericExist and
+				FunctSet->FunctPtrSet["mono_class_is_generic"]->Call<int>(CALL_TYPE_CDECL, *ThreadFunctionList, ClassAddress) == 0
+			) or
+			!IsGenericExist
+		) {
+		return FunctSet->FunctPtrSet["mono_compile_method"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Method->Handle);
+	}
+	return 0;
 }

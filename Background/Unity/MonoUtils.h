@@ -41,10 +41,10 @@ public:
 			break;
 		case TYPE_CHAR_P: {
 			if constexpr (std::is_same<T, std::string>::value) {
-				BYTE Buffer[60];
+				BYTE Buffer[512];
 				DWORD_PTR StrAddress;
 				MemMgr.MemReader.ReadMem(StrAddress, Address);
-				MemMgr.MemReader.ReadString(StrAddress, Buffer);
+				MemMgr.MemReader.ReadString(StrAddress, Buffer, 500);
 				result = std::string(reinterpret_cast<char*>(Buffer));
 			}
 			break;
@@ -78,5 +78,43 @@ public:
 	~CString()
 	{
 		MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, Address);
+	}
+};
+
+template <typename T>
+class CArray
+{
+public:
+	DWORD_PTR Address = 0x0;
+	int ElemSize = 0;
+	int ElemCount = 0;
+	std::vector<T> Elements;
+	CArray(std::vector<T>& elements = std::vector<T>(), DWORD_PTR address = 0x0) : Elements(elements), Address(address)
+	{
+		ElemCount = Elements.size();
+		ElemSize = sizeof(T);
+
+		if (address > 0)
+			Address = address;
+		else
+			Address = MemMgr.RegionEnumerator.MemoryAlloc(ProcessInfo::hProcess, 0, (ElemCount * ElemSize) + 1);
+
+		for (int i = 0; i < Elements.size(); i++) {
+			MemMgr.MemWriter.WriteMem(Address + (i * ElemSize), Elements[i]);
+		}
+	};
+	~CArray()
+	{
+		MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, Address);
+	};
+
+	void ReadResult()
+	{
+		Elements.clear();
+		for (int i = 0; i < ElemCount; i++) {
+			T temp;
+			MemMgr.MemReader.ReadMem(temp, Address + (i * ElemSize));
+			Elements.push_back(temp);
+		}
 	}
 };
