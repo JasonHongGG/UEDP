@@ -60,6 +60,12 @@ public:
         }
     }
 
+	void SetExecutable(DWORD_PTR address, size_t size = 4096)
+	{
+		DWORD OldProtect;
+		VirtualProtectEx(ProcessInfo::hProcess, (LPVOID)address, size, PAGE_EXECUTE_READWRITE, &OldProtect);
+	}
+
 private:
     void PrintContent(bool prologue = false, MEMORY_BASIC_INFORMATION mbi = MEMORY_BASIC_INFORMATION());
 };

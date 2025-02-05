@@ -1,9 +1,10 @@
 #pragma once
 #include <vector>
 #include <Windows.h>
-#include "UnityConst.h"
+#include "MonoConst.h"
+#include "../../System/Memory.h"
 
-class UnityUtilsSet
+class MonoUtilsSet
 {
 public:
 	void PatchAddress(std::vector<BYTE>& Code, std::vector<int> Offsets, std::vector<DWORD_PTR> Addresses) {
@@ -60,4 +61,22 @@ public:
 		return result;
 	}
 };
-inline UnityUtilsSet UnityUtils = UnityUtilsSet();
+inline MonoUtilsSet MonoUtils = MonoUtilsSet();
+
+
+class CString
+{
+public:
+	DWORD_PTR Address = 0x0;
+	std::string Value = "";
+	CString(std::string value) : Value(value)
+	{
+		Address = MemMgr.RegionEnumerator.MemoryAlloc(ProcessInfo::hProcess, 0, Value.size() + 1);
+		MemMgr.MemWriter.WriteBytes(Address, reinterpret_cast<BYTE*>(Value.data()), Value.size());
+	};
+
+	~CString()
+	{
+		MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, Address);
+	}
+};

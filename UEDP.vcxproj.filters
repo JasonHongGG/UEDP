@@ -141,6 +141,9 @@
     <ClCompile Include="GUI\Menu\MainConsole\ObjectGraphBak.h">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Background\Unity\MonoClass.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background\Entry.h">
@@ -560,19 +563,19 @@
     <ClInclude Include="Utils\Include\Disassembler\DisassemblerFactory.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Background\Unity\UnityFunction.h">
+    <ClInclude Include="Background\Unity\MonoFunction.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Background\Unity\UnityConst.h">
+    <ClInclude Include="Background\Unity\MonoConst.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Background\Unity\UnityManager.h">
+    <ClInclude Include="Background\Unity\MonoManager.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Background\Unity\UnityUtils.h">
+    <ClInclude Include="Background\Unity\MonoUtils.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Background\Unity\UnityImage.h">
+    <ClInclude Include="Background\Unity\MonoImage.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Background\Unity\MonoClass.h">

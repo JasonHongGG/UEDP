@@ -3,11 +3,11 @@
 #include <vector>
 #include <string>
 
-int CALL_TYPE_DEF = 0;
-int CALL_TYPE_CDECL = 1;
-int CALL_TYPE_STDCALL = 2;
-int CALL_TYPE_THISCALL = 3;
-int CALL_TYPE_FASTCALL = 4;
+inline int CALL_TYPE_DEF = 0;
+inline int CALL_TYPE_CDECL = 1;
+inline int CALL_TYPE_STDCALL = 2;
+inline int CALL_TYPE_THISCALL = 3;
+inline int CALL_TYPE_FASTCALL = 4;
 
 enum ValueTypeEnum {
     TYPE_VOID,
@@ -26,7 +26,23 @@ enum ValueTypeEnum {
     TYPE_CHAR_P,
 };
 
-std::vector<std::string> mono_native_func_name = {
+inline std::map<std::string, ValueTypeEnum> FieldTypeNameMap = {
+	{"System.Boolean", TYPE_BOOL},
+	{"System.SByte", TYPE_CHAR},
+	{"System.Byte", TYPE_UCHAR},
+	{"System.Int16", TYPE_INT16},
+	{"System.UInt16", TYPE_UINT16},
+	{"System.Int32", TYPE_INT32},
+	{"System.UInt32", TYPE_UINT32},
+	{"System.Int64", TYPE_INT64},
+	{"System.UInt64", TYPE_UINT64},
+	{"System.Single", TYPE_FLOAT},
+	{"System.Double", TYPE_DOUBLE},
+	{"System.String", TYPE_CHAR_P},
+	{"System.Decimal", TYPE_VOID_P},
+};
+
+inline std::vector<std::string> mono_native_func_name = {
     "g_free", "mono_free", "mono_get_root_domain", "mono_thread_attach", "mono_thread_detach",
     "mono_thread_cleanup", "mono_object_get_class", "mono_domain_foreach", "mono_domain_set",
     "mono_domain_get", "mono_assembly_foreach", "mono_assembly_get_image", "mono_image_get_assembly",
@@ -51,7 +67,7 @@ std::vector<std::string> mono_native_func_name = {
     "mono_class_get_field_from_name", "mono_method_get_flags", "mono_type_get_class", "mono_class_get_flags"
 };
 
-std::map<std::string, std::vector<int>> mono_native_func_property = {
+inline std::map<std::string, std::vector<int>> mono_native_func_property = {
     {"g_free", {1, TYPE_VOID}},
     {"mono_free" , {1, TYPE_VOID}},
     {"mono_get_root_domain" , {0, TYPE_VOID_P}},
@@ -143,3 +159,23 @@ std::map<std::string, std::vector<int>> mono_native_func_property = {
     {"mono_method_get_flags" , {2, TYPE_UINT32}},
     {"mono_type_get_class" , {1, TYPE_VOID_P}},
 };
+
+inline int FIELD_ATTRIBUTE_FIELD_ACCESS_MASK = 0x0007;
+inline int FIELD_ATTRIBUTE_COMPILER_CONTROLLED = 0x0000;
+inline int FIELD_ATTRIBUTE_PRIVATE = 0x0001;
+inline int FIELD_ATTRIBUTE_FAM_AND_ASSEM = 0x0002;
+inline int FIELD_ATTRIBUTE_ASSEMBLY = 0x0003;
+inline int FIELD_ATTRIBUTE_FAMILY = 0x0004;
+inline int FIELD_ATTRIBUTE_FAM_OR_ASSEM = 0x0005;
+inline int FIELD_ATTRIBUTE_PUBLIC = 0x0006;
+inline int FIELD_ATTRIBUTE_STATIC = 0x0010;
+inline int FIELD_ATTRIBUTE_INIT_ONLY = 0x0020;
+inline int FIELD_ATTRIBUTE_LITERAL = 0x0040;
+inline int FIELD_ATTRIBUTE_NOT_SERIALIZED = 0x0080;
+inline int FIELD_ATTRIBUTE_SPECIAL_NAME = 0x0200;
+inline int FIELD_ATTRIBUTE_PINVOKE_IMPL = 0x2000;
+inline int FIELD_ATTRIBUTE_RESERVED_MASK = 0x9500;
+inline int FIELD_ATTRIBUTE_RT_SPECIAL_NAME = 0x0400;
+inline int FIELD_ATTRIBUTE_HAS_FIELD_MARSHAL = 0x1000;
+inline int FIELD_ATTRIBUTE_HAS_DEFAULT = 0x8000;
+inline int FIELD_ATTRIBUTE_HAS_FIELD_RVA = 0x0100;

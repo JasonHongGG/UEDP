@@ -6,8 +6,8 @@
 #include <Windows.h>
 #include <tuple>
 #include <variant>
-#include "UnityConst.h"
-#include "UnityUtils.h"
+#include "MonoConst.h"
+#include "MonoUtils.h"
 #include "../../System/Memory.h"
 #include "../../System/Process.h"
 
@@ -83,7 +83,7 @@ public:
 				0x49, 0xBC, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,     // mov r12, ThreadAddress
 				0x49, 0x89, 0x04, 0x24,                                         // mov qword ptr [r12], rax
 			};
-			UnityUtils.PatchAddress(TempCode, { 2, 12, 24 }, {
+			MonoUtils.PatchAddress(TempCode, { 2, 12, 24 }, {
 				RootDomainAddress,		// 蠢传 rcx
 				AttachAddress,			// 蠢传 rdx
 				ThreadAddress,			// 蠢传 r12
@@ -99,7 +99,7 @@ public:
 				TempCode = { 0x48, (BYTE)(regs[i] == "rcx" ? 0xB9 : 0xBA), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }; // mov rcx | rdx, 0x7ffd83c60430
 			else
 				TempCode = { 0x49, (BYTE)(regs[i] == "r8" ? 0xB8 : 0xB9), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }; // mov r8 | r9, 0x7ffd83c60430
-			UnityUtils.PatchAddress(TempCode, { 2 }, { argList[i]});
+			MonoUtils.PatchAddress(TempCode, { 2 }, { argList[i]});
 			Code.insert(Code.end(), TempCode.begin(), TempCode.end());
 		}
 		for (size_t i = 4; i < argList.size(); ++i) {
@@ -107,7 +107,7 @@ public:
 				0x48, 0xB8, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,  // mov rax, 0x210a4762d20
 				0x48, 0x89, 0x44, 0x24, (BYTE)(0x20 + (i - 4) * 8),			 // mov qword ptr [rsp+0x20], rax
 			};
-			UnityUtils.PatchAddress(TempCode, { 2 }, { argList[i]});
+			MonoUtils.PatchAddress(TempCode, { 2 }, { argList[i]});
 			Code.insert(Code.end(), TempCode.begin(), TempCode.end());
 		}
 
@@ -118,7 +118,7 @@ public:
 			0x49, 0xBC, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,     // mov r12, ReturnAddress
 			0x49, 0x89, 0x04, 0x24,                                         // mov qword ptr [r12], rax                             
 		};
-		UnityUtils.PatchAddress(TempCode, { 2, 14 }, {
+		MonoUtils.PatchAddress(TempCode, { 2, 14 }, {
 			FunctionAddress,		// 蠢传 rax
 			ReturnAddress,			// 蠢传 r12
 		});
@@ -133,7 +133,7 @@ public:
 				0x48, 0xB8, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,     // mov rax, DetachAddress
 				0xFF, 0xD0,                                                     // call rax
 			};
-			UnityUtils.PatchAddress(TempCode, { 2, 16 }, {
+			MonoUtils.PatchAddress(TempCode, { 2, 16 }, {
 				ThreadAddress,		// 蠢传 r12
 				DetachAddress,		// 蠢传 rax
 			});
@@ -150,7 +150,7 @@ public:
 		MemMgr.RegionEnumerator.CreateRemoteThreadAndExcute(ProcessInfo::hProcess, AllocMemoryAddress);
 		
 		// Read Result
-		T result = UnityUtils.ReadValue<T>(ReturnType, ReturnAddress);
+		T result = MonoUtils.ReadValue<T>(ReturnType, ReturnAddress);
 		
 
 		MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, AllocMemoryAddress);
@@ -169,10 +169,10 @@ public:
 		}
 	}
 
-	static bool NativeFunctionExist(MonoNativeFuncSet FunctSet, std::string FunctionName)
+	static bool NativeFunctionExist(MonoNativeFuncSet* FunctSet, std::string FunctionName)
 	{
-		if (FunctSet.FunctPtrSet.find(FunctionName) != FunctSet.FunctPtrSet.end())
-			if (FunctSet.FunctPtrSet[FunctionName]->FunctionAddress != 0x0)
+		if (FunctSet->FunctPtrSet.find(FunctionName) != FunctSet->FunctPtrSet.end())
+			if (FunctSet->FunctPtrSet[FunctionName]->FunctionAddress != 0x0)
 				return true;
 		return false;
 	}
