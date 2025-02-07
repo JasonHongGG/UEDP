@@ -83,15 +83,32 @@ void Overlay::RenderLoop(HWND window, ID3D11Device* Device, ID3D11DeviceContext*
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
+		//ImGui::ShowDemoWindow();
 
 		MonoMgr.TestLoop(window);
+		ImGui::Begin("Mono");
+		{
+			if (ImGui::Button("Heal")) {
+				MonoMgr.HealFeature();
+			}
+			if (ImGui::Button("TackDamage")) {
+				MonoMgr.TakeDamageFeature();
+			}
+			if (ImGui::Button("Collision")) {
+				MonoMgr.CollisionFeature();
+			}
+			if (ImGui::Button("Gravity")) {
+				MonoMgr.GravityFeature();
+			}
+		}
+		ImGui::End();
 
-		//ImGui::ShowDemoWindow();
 		if (menuToggle) {
 			Menu::MenuEntry();
 			WindowTransparentUpdate(WindowMgr.window);
 		}
 		else {
+			WindowState::WindowTransparent = false;
 			showTopState = true;
 			SetWindowLong(window, GWL_EXSTYLE, WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED | WS_EX_TOOLWINDOW);	// WS_EX_TOOLWINDOW 會使在鍵盤上按下 alt+tab 時，找不到該視窗的選項
 		}

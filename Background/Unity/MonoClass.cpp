@@ -121,47 +121,60 @@ DWORD_PTR MonoClass::GetVtable()
 MonoMethod* MonoClass::FindMethod(std::string MethodName, int ParaCnt)
 {
 	MonoMethod* MethodObject = ClassAPI->FindMethodInClass(this, MethodName, ParaCnt);
-	if (MethodObject)
-		return MethodObject;
-	return nullptr;
+	return MethodObject;
 }
 
 
 
 
 
+MonoClass* MonoClassAPI::GetClassByImage(MonoImage* Image, std::string ClassName)
+{
+	// String Preprocess
+	std::string ClassNamespace = "";
+	size_t dot = ClassName.rfind('.');
+	if (dot != std::string::npos) {
+		ClassNamespace = ClassName.substr(0, dot);
+		ClassName = ClassName.substr(dot + 1);
+	}
 
+	std::ranges::replace(ClassName, '+', '/'); // 將 '+' 替換為 '/'
+
+	// Get Class
+	CString ClassNameObject(ClassName);
+	CString ClassNamespaceObject(ClassNamespace);
+	DWORD_PTR ClassAddress = 0x0;
+	if (MonoNativeFuncSet::NativeFunctionExist(FunctSet, "mono_class_from_name_case"))
+		ClassAddress = FunctSet->FunctPtrSet["mono_class_from_name_case"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Image->Handle, ClassNamespaceObject.Address, ClassNameObject.Address);
+	if (!ClassAddress)
+		ClassAddress = FunctSet->FunctPtrSet["mono_class_from_name"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Image->Handle, ClassNamespaceObject.Address, ClassNameObject.Address);
+	ClassAddress &= 0xFFFFFFFFFFFF; // 12 bytes
+
+	if (ClassAddress)
+		return new MonoClass(this, Image, ClassAddress, ClassNameObject.Value, ClassNamespaceObject.Value);
+	else
+		return nullptr;
+}
 
 MonoClass* MonoClassAPI::FindClassInImageByName(std::string ImageName, std::string ClassName)
 {
 	MonoImage* Image = ImageAPI->FindImageByName(ImageName);
-	if (Image) {
-		// String Preprocess
-		std::string ClassNamespace = "";
-		size_t dot = ClassName.rfind('.');
-		if (dot != std::string::npos) {
-			ClassNamespace = ClassName.substr(0, dot);
-			ClassName = ClassName.substr(dot + 1);
-		}
-
-		std::ranges::replace(ClassName, '+', '/'); // 將 '+' 替換為 '/'
-
-		// Get Class
-		CString ClassNameObject(ClassName);
-		CString ClassNamespaceObject(ClassNamespace);
-		DWORD_PTR ClassAddress = 0x0;
-		if (MonoNativeFuncSet::NativeFunctionExist(FunctSet, "mono_class_from_name_case"))
-			ClassAddress = FunctSet->FunctPtrSet["mono_class_from_name_case"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Image->Handle, ClassNamespaceObject.Address, ClassNameObject.Address);
-		if (!ClassAddress)
-			ClassAddress = FunctSet->FunctPtrSet["mono_class_from_name"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Image->Handle, ClassNamespaceObject.Address, ClassNameObject.Address);
-		ClassAddress &= 0xFFFFFFFFFFFF; // 12 bytes
-
-		if (ClassAddress)
-			return new MonoClass(this, Image, ClassAddress, ClassNameObject.Value, ClassNamespaceObject.Value);
-		else
-			return nullptr;
-	}
+	if (Image)
+		GetClassByImage(Image, ClassName);
 	return nullptr;
+}
+
+std::vector<MonoClass*> MonoClassAPI::FindClassesInImageByName(std::string ImageName, std::vector<std::string> ClassNames)
+{
+	MonoImage* Image = ImageAPI->FindImageByName(ImageName);
+	std::vector<MonoClass*> ResultClasses;
+	if (Image)
+		for (int i = 0; i < ClassNames.size(); i++) {
+			std::string ClassName = ClassNames[i];
+			if (ClassName.empty()) continue;
+			ResultClasses.push_back(GetClassByImage(Image, ClassName));
+		}
+	return ResultClasses;
 }
 
 MonoField* MonoClassAPI::FindFieldInClassByName(MonoClass* Class, std::string FieldName)

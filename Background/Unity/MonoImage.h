@@ -84,4 +84,21 @@ public:
 		}
 		return nullptr;
 	}
+
+	std::vector<MonoImage*> FindImagesByName(std::vector<std::string> ImageNames)
+	{
+		std::vector<MonoImage*> ResultImages;
+		std::vector<MonoAssemblyImage> Assemblies = EnumAssemblies();
+		for (MonoAssemblyImage& AssemblyImage : Assemblies) {
+			DWORD_PTR ImageAddress = FunctSet->FunctPtrSet["mono_assembly_get_image"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, AssemblyImage.Handle);
+			ImageAddress &= 0xFFFFFFFFFFFF; // 12 bytes
+			std::string Name = FunctSet->FunctPtrSet["mono_image_get_name"]->Call<std::string>(CALL_TYPE_CDECL, *ThreadFunctionList, ImageAddress);
+
+			for (int i = 0; i < ImageNames.size(); i++) {
+				if (ImageNames[i] == Name)
+					ResultImages.push_back(new MonoImage(AssemblyImage, Name, ImageAddress));
+			}
+		}
+		return ResultImages;
+	}
 };

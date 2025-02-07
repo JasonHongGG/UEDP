@@ -58,6 +58,9 @@ public:
 		DWORD_PTR AttachAddress = ThreadFunctionList[1];
 		DWORD_PTR DetachAddress = ThreadFunctionList[2];
 		std::vector<DWORD_PTR> argList = { static_cast<DWORD_PTR>(args)... };
+		std::vector<size_t> argSizeList = { sizeof(args) ... };
+		std::vector<bool> isFloatOrDouble = { std::is_floating_point_v<Args>... };
+			
 
 		std::vector<int> property = mono_native_func_property[Name];
 		int ArgsCnt = argList.size();
@@ -92,16 +95,35 @@ public:
 		}
 
 		// Prepare Arguments
+		int RegisterCnt = 0;
 		size_t registerArgsCount = min(argList.size(), (size_t)4);
-		std::vector<std::string> regs = { "rcx", "rdx", "r8", "r9" };
+		std::vector<BYTE> integerRegsByte = { 0xB9, 0xBA, 0xB8, 0xB9 };	//  "rcx", "rdx", "r8", "r9"
+		std::vector<BYTE> integer32bitsRegsByte = { 0xC1, 0xC2, 0xC0, 0xC1 };
+		std::vector<BYTE> floatRegsByte = { 0xC0, 0xC8, 0xD0, 0xD8 }; // xmm0, xmm1, xmm2, xmm3
 		for (size_t i = 0; i < registerArgsCount; i++) {
-			if (i <= 1)
-				TempCode = { 0x48, (BYTE)(regs[i] == "rcx" ? 0xB9 : 0xBA), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }; // mov rcx | rdx, 0x7ffd83c60430
-			else
-				TempCode = { 0x49, (BYTE)(regs[i] == "r8" ? 0xB8 : 0xB9), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }; // mov r8 | r9, 0x7ffd83c60430
-			MonoUtils.PatchAddress(TempCode, { 2 }, { argList[i]});
-			Code.insert(Code.end(), TempCode.begin(), TempCode.end());
+			if (isFloatOrDouble[i]) {
+				TempCode = { 0x48, 0xB8, 0xFF, 0xFF, 0xFF, 0xFF, 0x90, 0x90, 0x90, 0x90 };
+				if (argSizeList[i] <= 4)
+					MonoUtils.PatchParameter(TempCode, 2, (float)argList[i], argSizeList[i], 0xC0);
+				else 
+					MonoUtils.PatchParameter(TempCode, 2, (double)argList[i], argSizeList[i], 0xC8);
+				Code.insert(Code.end(), TempCode.begin(), TempCode.end());
+
+				if (argSizeList[i] <= 4) 
+					TempCode = { 0x66, 0x0F, 0x6E, (BYTE)floatRegsByte[RegisterCnt]};
+				else 
+					TempCode = { 0x66, 0x48, 0x0F, 0x6E, (BYTE)floatRegsByte[RegisterCnt] };
+				Code.insert(Code.end(), TempCode.begin(), TempCode.end());
+				RegisterCnt++;
+			}
+			else {
+				TempCode = { ((RegisterCnt <= 1) ? (BYTE)0x48 : (BYTE)0x49), (BYTE)integerRegsByte[RegisterCnt], 0xFF, 0xFF, 0xFF, 0xFF, 0x90, 0x90, 0x90, 0x90 }; // mov rcx | rdx, 0x7ffd83c60430
+				MonoUtils.PatchParameter(TempCode, 2, argList[i], argSizeList[i], (BYTE)integer32bitsRegsByte[RegisterCnt]);
+				Code.insert(Code.end(), TempCode.begin(), TempCode.end());
+				RegisterCnt++;
+			}
 		}
+
 		for (size_t i = 4; i < argList.size(); ++i) {
 			TempCode = { 
 				0x48, 0xB8, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,  // mov rax, 0x210a4762d20

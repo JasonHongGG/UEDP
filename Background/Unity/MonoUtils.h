@@ -7,6 +7,25 @@
 class MonoUtilsSet
 {
 public:
+	template <typename T>
+	std::vector<uint8_t> ConvertToByteCode(const T& value) {
+		std::vector<uint8_t> bytes(sizeof(T));
+		std::memcpy(bytes.data(), &value, sizeof(T)); // 直接將內存複製到 vector
+		return bytes;
+	}
+
+	template <typename T>
+	void PatchParameter(std::vector<BYTE>& Code, int Offset, T parameter, size_t parameterSize, BYTE replaceByteIfBelow4Bytes) {
+
+		if (parameterSize <= 4) {
+			Code[1] = 0xC7;
+			Code[2] = replaceByteIfBelow4Bytes;
+			Offset++;
+		}
+			
+		std::memcpy(&Code[Offset], &parameter, parameterSize);
+	}
+
 	void PatchAddress(std::vector<BYTE>& Code, std::vector<int> Offsets, std::vector<DWORD_PTR> Addresses) {
 		for (int i = 0; i < Offsets.size(); i++) {
 			int Offset = Offsets[i];

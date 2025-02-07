@@ -106,17 +106,24 @@ public:
 	MonoMethod* GetTransformMethod;
 	MonoMethod* GetPositionMethod;
 	MonoMethod* WorldToScreenPointMethod;
+
+	MonoClass* PlayerClass;
+	MonoMethod* HealMethod;
+	MonoMethod* TakeDamageMethod;
+	MonoMethod* ToggleCollisionForSecondsMethod;
+	MonoMethod* ClampGravityMethod;
 	void Test()
 	{
-		
+		std::vector<MonoClass*> MonoClassVector = ClassAPI->FindClassesInImageByName("Assembly-CSharp", { "BotHandler", "PlayerHandler", "Player" });
+
 		// Bot
-		MonoClass* BotHandlerClass = ClassAPI->FindClassInImageByName("Assembly-CSharp", "BotHandler");
+		MonoClass* BotHandlerClass = MonoClassVector[0];
 		BotHandlerClass->Instance = BotHandlerClass->FindField("instance")->GetValue<DWORD_PTR>();
 		BotListInstance = BotHandlerClass->FindField("bots")->GetValue<DWORD_PTR>();
 		printf("BotListInstance 0x%llx\n", BotListInstance);
 
 		// Player
-		MonoClass* PlayerHandlerClass = ClassAPI->FindClassInImageByName("Assembly-CSharp", "PlayerHandler");
+		MonoClass* PlayerHandlerClass = MonoClassVector[1];
 		PlayerHandlerClass->Instance = PlayerHandlerClass->FindField("instance")->GetValue<DWORD_PTR>();
 		DWORD_PTR PlayerListInstance = PlayerHandlerClass->FindField("players")->GetValue<DWORD_PTR>();
 		DWORD_PTR PlayerListBaseAddress = 0x0;
@@ -126,12 +133,20 @@ public:
 		std::vector<DWORD_PTR> PlayerList = MemMgr.MemReader.ReadArray<DWORD_PTR>(PlayerListBaseAddress + 0x20, PlayerListSize);
 		CurrentPlagerInstance = PlayerList[0];
 
+		PlayerClass = MonoClassVector[2];
+		HealMethod = PlayerClass->FindMethod("CallHeal");
+		TakeDamageMethod = PlayerClass->FindMethod("TakeDamage");
+		ToggleCollisionForSecondsMethod = PlayerClass->FindMethod("ToggleCollisionForSeconds");
+		ClampGravityMethod = PlayerClass->FindMethod("ClampGravity");
+		
+
 		// Transform Method
-		UnityEngineComponentClass = ClassAPI->FindClassInImageByName("UnityEngine.CoreModule", "UnityEngine.Component");
+		MonoClassVector = ClassAPI->FindClassesInImageByName("Assembly-CSharp", { "UnityEngine.Component", "UnityEngine.Transform", "UnityEngine.Camera" });
+		UnityEngineComponentClass = MonoClassVector[0];
 		GetTransformMethod = UnityEngineComponentClass->FindMethod("get_transform");
-		UnityEngineTransformClass = ClassAPI->FindClassInImageByName("UnityEngine.CoreModule", "UnityEngine.Transform");
+		UnityEngineTransformClass = MonoClassVector[1];
 		GetPositionMethod = UnityEngineTransformClass->FindMethod("get_position_Injected");
-		UnityEngineCameraClass = ClassAPI->FindClassInImageByName("UnityEngine.CoreModule", "UnityEngine.Camera");
+		UnityEngineCameraClass = MonoClassVector[2];
 		UnityEngineCameraClass->Instance = UnityEngineCameraClass->FindMethod("get_main")->Call< DWORD_PTR >();
 		WorldToScreenPointMethod = UnityEngineCameraClass->FindMethod("WorldToScreenPoint_Injected");
 
@@ -139,10 +154,13 @@ public:
 
 		printf("BotListInstance 0x%llx\n", BotListInstance);
 		Initialized = true;
+		printf("Complete 0x%llx\n", BotListInstance);
+
 	}
 
 	void TestLoop(HWND window)
 	{
+		/*return;*/
 		if (!Initialized) return;
 		// Player
 		GetTransformMethod->Class->Instance = CurrentPlagerInstance;
@@ -194,9 +212,33 @@ public:
 			// Distance
 			float distance = sqrt(pow(PlayerWorldPos[0] - WorldPos[0], 2) + pow(PlayerWorldPos[1] - WorldPos[1], 2) + pow(PlayerWorldPos[2] - WorldPos[2], 2));
 			std::string distanceStr = std::to_string(distance);
-			drawList->AddText(ImVec2(windowRect.left + ScreenPos[0] - GUIUtils.GetStringWidth(distanceStr) / 2, windowRect.top + ScreenPos[1] + 10), IM_COL32(255, 255, 255, 255), distanceStr.c_str());
+			drawList->AddText(ImVec2(windowRect.left + ScreenPos[0] - GUIUtils.GetStringWidth(distanceStr) / 2, windowRect.bottom - ScreenPos[1] + 10), IM_COL32(255, 255, 255, 255), distanceStr.c_str());
 		}
 		Sleep(10);
+	}
+
+	void HealFeature()
+	{
+		HealMethod->Class->Instance = CurrentPlagerInstance;
+		HealMethod->Call<float>((float)20);
+	}
+
+	void TakeDamageFeature()
+	{
+		TakeDamageMethod->Class->Instance = CurrentPlagerInstance;
+		TakeDamageMethod->Call<float>((float)10);
+	}
+
+	void CollisionFeature()
+	{
+		ToggleCollisionForSecondsMethod->Class->Instance = CurrentPlagerInstance;
+		ToggleCollisionForSecondsMethod->Call<float>((float)5000);
+	}
+
+	void GravityFeature()
+	{
+		ClampGravityMethod->Class->Instance = CurrentPlagerInstance;
+		ClampGravityMethod->Call<float>((float)5000);
 	}
 };
 

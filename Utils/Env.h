@@ -7,8 +7,11 @@ namespace Const
 	inline const std::string LogoPathStr = "./logo/main.png";
 
 	// Process Info
-	inline const std::wstring ProcessName = L"EnderMagnoliaSteamEA-Win64-Shipping.exe";
-	inline const std::wstring WindowName = L"EnderMagnolia  ";
+	/*inline const std::wstring ProcessName = L"EnderMagnoliaSteamEA-Win64-Shipping.exe";
+	inline const std::wstring WindowName = L"EnderMagnolia  ";*/
+
+	inline const std::wstring ProcessName = L"Content Warning.exe";
+	inline const std::wstring WindowName = L"Content Warning";
 
 	inline bool PrintAssemblyCode = false;
 	inline bool PrintDumpInfo = false;
