@@ -118,6 +118,8 @@ public:
 
 	std::vector<MonoClass*> FindClassesInImageByName(std::string ImageName, std::vector<std::string> ClassNames);
 
+	std::map<std::string, std::vector<MonoClass*>> FindClassesInImageByNames(std::map<std::string, std::vector<std::string>> Data);
+
 	MonoField* FindFieldInClassByName(MonoClass* Class, std::string FieldName);
 
 	DWORD_PTR GetStaticFieldAddress(MonoClass* Class, MonoField* Field);

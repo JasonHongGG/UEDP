@@ -106,9 +106,7 @@ bool MonoField::IsStatic(MonoField* Field)
 MonoField* MonoClass::FindField(std::string FieldName)
 {
 	MonoField* FieldObject =  ClassAPI->FindFieldInClassByName(this, FieldName);
-	if (FieldObject)
-		return FieldObject;
-	return nullptr;
+	return FieldObject;
 }
 
 DWORD_PTR MonoClass::GetVtable()
@@ -171,10 +169,28 @@ std::vector<MonoClass*> MonoClassAPI::FindClassesInImageByName(std::string Image
 	if (Image)
 		for (int i = 0; i < ClassNames.size(); i++) {
 			std::string ClassName = ClassNames[i];
-			if (ClassName.empty()) continue;
 			ResultClasses.push_back(GetClassByImage(Image, ClassName));
 		}
 	return ResultClasses;
+}
+
+std::map<std::string, std::vector<MonoClass*>> MonoClassAPI::FindClassesInImageByNames(std::map<std::string, std::vector<std::string>> Data)
+{
+	std::map<std::string, std::vector<MonoClass*>> ResultClasses;
+	std::vector<std::string > ImageNames;
+	for (auto it = Data.begin(); it != Data.end(); ++it) {
+		ImageNames.push_back(it->first);
+	}
+	std::vector<MonoImage*> ImageVector = ImageAPI->FindImagesByName(ImageNames);
+	for (int i = 0; i < ImageVector.size(); i++) {
+		MonoImage* CurImage = ImageVector[i];
+		for (int j = 0; j < Data[CurImage->Name].size(); j++) {
+			ResultClasses[CurImage->Name].push_back(GetClassByImage(CurImage, Data[CurImage->Name][j]));
+		}
+	}
+	return ResultClasses;
+
+
 }
 
 MonoField* MonoClassAPI::FindFieldInClassByName(MonoClass* Class, std::string FieldName)

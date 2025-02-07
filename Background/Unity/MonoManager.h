@@ -114,16 +114,19 @@ public:
 	MonoMethod* ClampGravityMethod;
 	void Test()
 	{
-		std::vector<MonoClass*> MonoClassVector = ClassAPI->FindClassesInImageByName("Assembly-CSharp", { "BotHandler", "PlayerHandler", "Player" });
+		std::map<std::string, std::vector<MonoClass*>> MonoClassMap = ClassAPI->FindClassesInImageByNames({
+			{"Assembly-CSharp", {"BotHandler", "PlayerHandler", "Player"}},
+			{"UnityEngine.CoreModule", {"UnityEngine.Component", "UnityEngine.Transform", "UnityEngine.Camera"}}
+		});
 
 		// Bot
-		MonoClass* BotHandlerClass = MonoClassVector[0];
+		MonoClass* BotHandlerClass = MonoClassMap["Assembly-CSharp"][0];
 		BotHandlerClass->Instance = BotHandlerClass->FindField("instance")->GetValue<DWORD_PTR>();
 		BotListInstance = BotHandlerClass->FindField("bots")->GetValue<DWORD_PTR>();
 		printf("BotListInstance 0x%llx\n", BotListInstance);
 
 		// Player
-		MonoClass* PlayerHandlerClass = MonoClassVector[1];
+		MonoClass* PlayerHandlerClass = MonoClassMap["Assembly-CSharp"][1];
 		PlayerHandlerClass->Instance = PlayerHandlerClass->FindField("instance")->GetValue<DWORD_PTR>();
 		DWORD_PTR PlayerListInstance = PlayerHandlerClass->FindField("players")->GetValue<DWORD_PTR>();
 		DWORD_PTR PlayerListBaseAddress = 0x0;
@@ -133,7 +136,7 @@ public:
 		std::vector<DWORD_PTR> PlayerList = MemMgr.MemReader.ReadArray<DWORD_PTR>(PlayerListBaseAddress + 0x20, PlayerListSize);
 		CurrentPlagerInstance = PlayerList[0];
 
-		PlayerClass = MonoClassVector[2];
+		PlayerClass = MonoClassMap["Assembly-CSharp"][2];
 		HealMethod = PlayerClass->FindMethod("CallHeal");
 		TakeDamageMethod = PlayerClass->FindMethod("TakeDamage");
 		ToggleCollisionForSecondsMethod = PlayerClass->FindMethod("ToggleCollisionForSeconds");
@@ -141,12 +144,11 @@ public:
 		
 
 		// Transform Method
-		MonoClassVector = ClassAPI->FindClassesInImageByName("Assembly-CSharp", { "UnityEngine.Component", "UnityEngine.Transform", "UnityEngine.Camera" });
-		UnityEngineComponentClass = MonoClassVector[0];
+		UnityEngineComponentClass = MonoClassMap["UnityEngine.CoreModule"][0];
 		GetTransformMethod = UnityEngineComponentClass->FindMethod("get_transform");
-		UnityEngineTransformClass = MonoClassVector[1];
+		UnityEngineTransformClass = MonoClassMap["UnityEngine.CoreModule"][1];
 		GetPositionMethod = UnityEngineTransformClass->FindMethod("get_position_Injected");
-		UnityEngineCameraClass = MonoClassVector[2];
+		UnityEngineCameraClass = MonoClassMap["UnityEngine.CoreModule"][2];
 		UnityEngineCameraClass->Instance = UnityEngineCameraClass->FindMethod("get_main")->Call< DWORD_PTR >();
 		WorldToScreenPointMethod = UnityEngineCameraClass->FindMethod("WorldToScreenPoint_Injected");
 
