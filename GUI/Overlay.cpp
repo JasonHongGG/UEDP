@@ -85,24 +85,6 @@ void Overlay::RenderLoop(HWND window, ID3D11Device* Device, ID3D11DeviceContext*
 		ImGui::NewFrame();
 		//ImGui::ShowDemoWindow();
 
-		MonoMgr.TestLoop(window);
-		ImGui::Begin("Mono");
-		{
-			if (ImGui::Button("Heal")) {
-				MonoMgr.HealFeature();
-			}
-			if (ImGui::Button("TackDamage")) {
-				MonoMgr.TakeDamageFeature();
-			}
-			if (ImGui::Button("Collision")) {
-				MonoMgr.CollisionFeature();
-			}
-			if (ImGui::Button("Gravity")) {
-				MonoMgr.GravityFeature();
-			}
-		}
-		ImGui::End();
-
 		if (menuToggle) {
 			Menu::MenuEntry();
 			WindowTransparentUpdate(WindowMgr.window);

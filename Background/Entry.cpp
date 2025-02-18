@@ -88,8 +88,8 @@ void BackgroundEntry::InitialProcess()
 	DWORD_PTR FunctionAddress = ProcMgr.ModuleMgr.GetFunctionAddress(ProcessInfo::hProcess, Address, "g_free");
 	printf("[ Function Address ] %p\n", (void*)FunctionAddress);
 
-	MonoMgr.Init();
-	MonoMgr.Test();
+	/*MonoMgr.Init();
+	MonoMgr.Test();*/
 }
 
 void BackgroundEntry::CloseProcess()

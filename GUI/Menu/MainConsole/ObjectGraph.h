@@ -69,12 +69,12 @@ namespace ObjectGraph {
         for (Node* connectedNode : node->To) {
             if (SourceNode == connectedNode) continue;
 			if (Distance(SourceNode, connectedNode) <= ExpectDistance) continue;
-            PropagateForces(node, connectedNode, propagatedForce, 1.5f);
+            PropagateForces(node, connectedNode, propagatedForce, attenuation);
         }
         for (Node* connectedNode : node->From) {
             if (SourceNode == connectedNode) continue;
             if (Distance(SourceNode, connectedNode) <= ExpectDistance) continue;
-            PropagateForces(node, connectedNode, propagatedForce, 1.5f);
+            PropagateForces(node, connectedNode, propagatedForce, attenuation);
         }
     }
 
@@ -88,7 +88,7 @@ namespace ObjectGraph {
 
     inline void ApplyAttractionForce(Node* node, Node* centerNode)
     {
-        if (!node || !centerNode || node == centerNode) return;
+        if (!node || !centerNode || node == centerNode || node == DragNode) return;
 
         ImVec2 delta = centerNode->Pos - node->Pos;
         float diff = sqrt(delta.x * delta.x + delta.y * delta.y);
