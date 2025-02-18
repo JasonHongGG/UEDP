@@ -14,11 +14,11 @@ C++ / Assembly Language / Window API / Multithreading / x64DBG / IDA / DirectX /
 
 1. 主頁面
 
-![本地圖片](Image/1.png)
+![本地圖片](https://github.com/JasonHongGG/UEDP/blob/main/Image/1.PNG)
 
 2. 開啟 Process
 
-![本地圖片](Image/2.png)
+![本地圖片](https://github.com/JasonHongGG/UEDP/blob/main/Image/2.PNG)
 
 3. 解析物件
 
@@ -29,14 +29,14 @@ C++ / Assembly Language / Window API / Multithreading / x64DBG / IDA / DirectX /
 - 點擊 Run 開始解析
 - 等待所有解析執行完畢
 
-![本地圖片](Image/3.png)
+![本地圖片](https://github.com/JasonHongGG/UEDP/blob/main/Image/3.PNG)
 
 4. 開啟 Console
 
 - 點擊 Side Bar 的螢幕圖示開啟 Console
 - 可在右側的兩個紅框內分別查詢 FName 以及 Object 資訊
 
-![本地圖片](Image/4.png)
+![本地圖片](https://github.com/JasonHongGG/UEDP/blob/main/Image/4.PNG)
 
 5. Package Viewer
 
@@ -44,7 +44,7 @@ C++ / Assembly Language / Window API / Multithreading / x64DBG / IDA / DirectX /
 - 可利用紅框區塊的搜尋功能快速找尋物件
 - EX: 這邊示範找尋 BP_Player_C 的 Class 物件
 
-![本地圖片](Image/5.png)
+![本地圖片](https://github.com/JasonHongGG/UEDP/blob/main/Image/5.PNG)
 
 6. Inspector
 
@@ -53,14 +53,14 @@ C++ / Assembly Language / Window API / Multithreading / x64DBG / IDA / DirectX /
 - 可利用紅框區塊的搜尋功能根據 Object Address 快速找到對應的 Instance Address
 - Ex: 利用 BP_Player_C 的 Object Address 找到當前 Process 中的 Instance，在右側 Panel 就可監控相關數據
 
-![本地圖片](Image/6.png)
+![本地圖片](https://github.com/JasonHongGG/UEDP/blob/main/Image/6.PNG)
 
 7. Setting
 
 - 因為所有東西皆為物件，所以提供須多客製化的設定
 - (注意! 這邊只控制 console 的設定，不影響 main panel(最開始執行解析的 panel))
 
-## ![本地圖片](Image/7.png)
+## ![本地圖片](https://github.com/JasonHongGG/UEDP/blob/main/Image/7.PNG)
 
 ### 未來規劃
 
