@@ -12,7 +12,7 @@
 
 namespace UtilsEntry
 {
-	inline bool IsObjectNameInPackage(std::string TargetObjectName, DWORD_PTR& Address);
+	inline bool IsObjectNameInPackage(std::string TargetObjectName, DWORD_PTR* Address);
 
 	inline size_t CalcuTypeOffset(std::string Type);
 
@@ -46,7 +46,7 @@ namespace UtilsEntry
 }
 
 
-bool UtilsEntry::IsObjectNameInPackage(std::string TargetObjectName, DWORD_PTR& Address) {
+bool UtilsEntry::IsObjectNameInPackage(std::string TargetObjectName, DWORD_PTR* Address = nullptr) {
 	bool found = false;
 
 	// 在多層 map 中尋找特定的 ObjectName
@@ -56,7 +56,7 @@ bool UtilsEntry::IsObjectNameInPackage(std::string TargetObjectName, DWORD_PTR& 
 				std::string ObjectName = ObjectEntry.second.first;
 				if (ObjectName == TargetObjectName) {
 					found = true;
-					Address = ObjectEntry.second.second;
+					if(Address) *Address = ObjectEntry.second.second;
 					break; // 若找到目標 ObjectName，則結束迴圈
 				}
 			}
@@ -149,7 +149,6 @@ void UtilsEntry::InspectorAdditionalObjProc(ObjectData& Object, BasicDumperObjec
 bool UtilsEntry::ObjectSubTypeProc(DWORD_PTR Address, BasicDumperObject& TempBasicObject, bool CheckClickable)
 {
 	// 主要是 Array 底下可能是其他 Struct
-	DWORD_PTR TempAddress;
 	ObjectData TempObjData;
 	ObjectData SubTypeObjData;
 	BasicDumperInfoObject TempSubTypeObject;
@@ -160,7 +159,7 @@ bool UtilsEntry::ObjectSubTypeProc(DWORD_PTR Address, BasicDumperObject& TempBas
 			TempSubTypeObject.Name = TempObjData.Name;
 			TempSubTypeObject.Type = TempObjData.Type;
 			TempSubTypeObject.Address = TempObjData.Address;
-			TempSubTypeObject.Clickable = (CheckClickable ? IsObjectNameInPackage(TempObjData.Name, TempAddress) : false);
+			TempSubTypeObject.Clickable = (CheckClickable ? IsObjectNameInPackage(TempObjData.Name) : false);
 			TempBasicObject.SubType.push_back(TempSubTypeObject);
 		}
 	}
@@ -339,7 +338,11 @@ ProcessState UtilsEntry::ObjectMemberListProc(ProcessClass ProcessClass, ObjectD
 				}
 
 				// SubType
-				ObjectSubTypeProc(MemberObj.Address, TempBasicObject);
+				ObjectSubTypeProc(MemberObj.Address, TempBasicObject, true);
+
+				// Member Clickable
+				if (TempBasicObject.Type.find("Property") == std::string::npos and UtilsEntry::IsObjectNameInPackage(TempBasicObject.Type)) 
+					TempBasicObject.Clickable = true;
 
 				// Enum
 				if (Preview and MemberObj.Type.find("EnumProperty") != std::string::npos)

@@ -66,7 +66,7 @@ void PackageViewEntry::CreatPackageObectTab()
 	BasicDumperObject TempBasicPackageObject;
 	BasicDumperObject	TempSubTypeObject;
 
-	DWORD_PTR Address_Level_1 = NULL, TempAddress = NULL;
+	DWORD_PTR Address_Level_1 = NULL;
 
 	// 檢查是否已存在
 	for (int i = 0; i < PackageViwerConf.ObjectContentTabNameList.size(); i++) {
@@ -190,7 +190,7 @@ void PackageViewEntry::CreatPackageObectTab()
 
 				// Type Is Click ?
 				if (TempBasicParaObject.Type.find("Property") == std::string::npos and
-					UtilsEntry::IsObjectNameInPackage(TempBasicParaObject.Type, TempAddress))
+					UtilsEntry::IsObjectNameInPackage(TempBasicParaObject.Type))
 					TempBasicParaObject.Clickable = true;
 
 				// Save

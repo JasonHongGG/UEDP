@@ -194,7 +194,8 @@ bool InspectorEntry::ScanFilter(std::vector < InspectorConfig::ConditionObject >
 
 	bool IgnoreFlag = false;
 
-	for (int j = 0; j < ConditionSet.size(); j++) {		// Condition
+	// Condition
+	for (int j = 0; j < ConditionSet.size(); j++) {		
 		ValueType Type = ConditionSet[j].Type;
 		bool PointerEnable = ConditionSet[j].PointerEnable;
 		std::string OffsetStr(ConditionSet[j].Offset);
@@ -296,7 +297,7 @@ void InspectorEntry::ObjectInstanceSearch()
 			if (InspectorConf.ObjectInstanceSearchMode == InspectorConfig::SearchMode::Condition)
 				if (!ScanFilter(InspectorConf.ConditionSet, InstanceAddress)) continue; //任何一個條件沒過就直接丟棄結果
 
-			InspectorConf.ObjectInstanceSearchMap[Utils.HexToString(ResultAddress)] = ResultAddress;
+			InspectorConf.ObjectInstanceSearchMap[Utils.HexToString(ResultAddress) + " | " + TempObjData.Name] = ResultAddress;
 		}
 		GetObjectInstanceSearchLock.unlock();
 	}
