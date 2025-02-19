@@ -78,13 +78,6 @@ void BackgroundEntry::InitialProcess()
 
 
 	// ==========  Test Area  ==========
-	HMODULE Address = ProcMgr.ModuleMgr.GetModule(ProcessInfo::PID, L"mono.dll");
-	printf("[ Module Address ] %p\n", (void*)Address);
-	Address = ProcMgr.ModuleMgr.GetModule(ProcessInfo::PID, L"mono-2.0-bdwgc.dll");
-	printf("[ Module Address ] %p\n", (void*)Address);
-	DWORD_PTR FunctionAddress = ProcMgr.ModuleMgr.GetFunctionAddress(ProcessInfo::hProcess, Address, "g_free");
-	printf("[ Function Address ] %p\n", (void*)FunctionAddress);
-
 	MonoMgr.Init();
 	MonoMgr.GetObjectData();
 }

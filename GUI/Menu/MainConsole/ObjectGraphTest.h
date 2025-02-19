@@ -11,11 +11,8 @@ inline int ID_Cnt = 0;
 namespace ObjectGraph
 {
 	inline bool initialFlag = false;
-
-	inline float Distance(ImVec2 diff)
-	{
-		return sqrt(diff.x * diff.x + diff.y * diff.y);
-	}
+	inline int MaxLevel = 3;
+	inline int MaxTree = 1;
 
 	inline ImVec2 GetRandomPos()
 	{
@@ -36,7 +33,7 @@ namespace ObjectGraph
 
 	inline void GenerateTree(Node& root, int level, int radius)
 	{
-		if (level > 3) return;
+		if (level > MaxLevel) return;
 
 		for (int i = 0; i < level; i++)
 		{
@@ -58,19 +55,30 @@ namespace ObjectGraph
 		initialFlag = true;
 
 		Node* FirstNode = new Node();
-		ObjectGraphConf.AllNodes.push_back(FirstNode);
 		FirstNode->ID = ID_Cnt++;
 		FirstNode->Name = "FirstNode";
 		FirstNode->Pos = GetRandomPos();
 		FirstNode->Radius = 20.f;
-		GenerateTree(*FirstNode, 2, 20.f * 0.6);
+		ObjectGraphConf.AllNodes.push_back(FirstNode);
 		ObjectGraphConf.MainNodes.push_back(FirstNode);
+		GenerateTree(*FirstNode, 2, 20.f * 0.6);
+		
 	}
 
 	inline void Test()
 	{
 		if (!initialFlag)
-			Initial();
+			for(int i = 0; i < MaxTree; i++)
+				Initial();
+
+		int values[3] = {
+			MaxLevel,
+			MaxTree,
+		};
+		if (ImGui::SliderInt3("MaxLevel | MaxTree", values, 1, 10)) {
+			MaxLevel = static_cast<int>(values[0]);
+			MaxTree = static_cast<int>(values[1]);
+		}
 
 	}
 }

@@ -78,31 +78,31 @@ void StorageManager::SetPackage(DWORD_PTR Address, std::string PackageName, std:
 }
 
 void StorageManager::Reset() {
-	UEVersion.Set(0);
-	GWorldBaseAddress.Set(0);
-	FNamePoolBaseAddress.Set(0);
-	FNamePoolFirstPoolOffest.Set(0);
-	FNamePoolFirstStringOffest.Set(0);
-	FNamePoolSize.Set(0);
-	FNamePoolParseExecutedFlag.Set(false);
-	FNamePoolParseProgressBarValue.Set(0);
-	FNamePoolParseProgressBarTotalValue.Set(0);
-	FNamePoolFindStringFlag.Set(false);
+	UEVersion.UnIsInitialized();
+	GWorldBaseAddress.UnIsInitialized();
+	FNamePoolBaseAddress.UnIsInitialized();
+	FNamePoolFirstPoolOffest.UnIsInitialized();
+	FNamePoolFirstStringOffest.UnIsInitialized();
+	FNamePoolSize.UnIsInitialized();
+	FNamePoolParseExecutedFlag.UnIsInitialized();
+	FNamePoolParseProgressBarValue.UnIsInitialized();
+	FNamePoolParseProgressBarTotalValue.UnIsInitialized();
+	FNamePoolFindStringFlag.UnIsInitialized();
 	FNamePoolDict.Clear();
-	GUObjectArrayBaseAddress.Set(0);
-	GUObjectArrayElementSize.Set(0);
-	GUObjectArrayFindObjectAddressByFullName.Set(0);
-	GUObjectArrayParseIndex.Set(0);
-	GUObjectArrayParseProgressBarValue.Set(0);
-	GUObjectArrayParseProgressBarTotalValue.Set(0);
-	GUObjectArrayTotalObjectCounter.Set(0);
+	GUObjectArrayBaseAddress.UnIsInitialized();
+	GUObjectArrayElementSize.UnIsInitialized();
+	GUObjectArrayFindObjectAddressByFullName.UnIsInitialized();
+	GUObjectArrayParseIndex.UnIsInitialized();
+	GUObjectArrayParseProgressBarValue.UnIsInitialized();
+	GUObjectArrayParseProgressBarTotalValue.UnIsInitialized();
+	GUObjectArrayTotalObjectCounter.UnIsInitialized();
 	ObjectDict.Clear();
 	ObjectDictByAddress.Clear();
 	ObjectDictByID.Clear();
 	ObjectDictByName.Clear();
 	ObjectDictByFullName.Clear();
 	ObjectTypeList.Clear();
-	ObjectGraphUperProgressBarValue.Set(0);
-	ObjectGraphUperProgressBarTotalValue.Set(0);
+	ObjectGraphUperProgressBarValue.UnIsInitialized();
+	ObjectGraphUperProgressBarTotalValue.UnIsInitialized();
 	Package.clear();
 }

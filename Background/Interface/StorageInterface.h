@@ -164,6 +164,10 @@ public:
         return isInitialized;
     }
 
+    void UnIsInitialized() {
+        isInitialized = false;
+    }
+
     bool Empty() const {
         return value.empty();
     }

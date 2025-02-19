@@ -24,10 +24,16 @@ namespace ObjectGraph {
     inline float AttractionForce = 0.6f;
     inline float AvoidOverlappingSpaceRatios = 2.f;
     inline int GetMostUperImportanceObjectVectorNumber = 10;
+    inline float Attenuation = 0.2f;
 
 
-    inline float Length(ImVec2& v) {
-        return std::sqrt(v.x * v.x + v.y * v.y);
+    inline float DotProduct(ImVec2& vA, ImVec2& vB)
+    {
+		return vA.x * vB.x + vA.y * vB.y;
+    }
+
+    inline float Length(ImVec2 v) {
+        return std::sqrt(DotProduct(v, v));
     }
 
 	inline float Distance(Node* nodeA, Node* nodeB)
@@ -55,7 +61,14 @@ namespace ObjectGraph {
         return componentA + componentB;
     }
 
-    inline void PropagateForces(Node* SourceNode, Node* node, ImVec2 force, float attenuation = 0.2f) {
+    inline ImVec2 Projection(ImVec2& vA, ImVec2& vB)
+    {
+		// A projection on B
+        return DotProduct(vA, vB) / Length(vB) * vB;
+    }
+
+    inline void PropagateForces(Node* SourceNode, Node* node, ImVec2 force, float attenuation = Attenuation)
+    {
         if (!node || attenuation < 0.1f) return; // 終止傳遞的條件
 
         // 增加力量到節點
@@ -100,7 +113,8 @@ namespace ObjectGraph {
         }
     }
 
-    inline void ApplyRepulsiveForces(Node* node) {
+    inline void ApplyRepulsiveForces(Node* node) 
+    {
         if (!node) return;
 
         // Repulsive forces between nodes
@@ -125,8 +139,9 @@ namespace ObjectGraph {
         // Apply damping to slow down motion over time
         node->Velocity = node->Velocity * DampingFactor;
 
-        // Update position
-        node->Pos = node->Pos + node->Velocity;
+        // Update 
+        if(node->Velocity < ImVec2(1000, 1000))
+            node->Pos = node->Pos + node->Velocity;
 
         PositionCorrection(node);
     }
@@ -145,6 +160,23 @@ namespace ObjectGraph {
         }
         ImGui::PopID();
     }
+
+    inline void LayoutCheck(Node* node) 
+    {
+		if (!node) return;
+		if (node->From.empty() or node->To.empty()) return;
+
+        ImVec2 parentVector = node->From[0]->Pos - node->Pos;
+        ImVec2 childVector;
+        for (int i = 0; i < node->To.size(); i++) {
+			childVector = node->To[i]->Pos - node->Pos;
+
+			// 同方向且距離大於父節點
+            if (DotProduct(childVector, parentVector) > 0 and Length(Projection(childVector, parentVector)) > Length(parentVector)) {
+                node->To[i]->Velocity += (-parentVector) * Attenuation * Attenuation;
+            }
+        }
+	}
 
     inline void RenderNode(Node* node, bool isFocus) {
         if (!node) return;
@@ -173,6 +205,7 @@ namespace ObjectGraph {
                 ApplyAttractionForce(node, node->From[0]);
             ApplyRepulsiveForces(node);
             PositionUpdate(node);
+            LayoutCheck(node);
             RenderNode(node, node == FocusNode);
 
             // Draw connections
@@ -193,6 +226,7 @@ namespace ObjectGraph {
             ObjectGraphConf.MostUperObjectVector.clear();
             ObjectGraphConf.AllNodes.clear();
             ObjectGraphConf.MainNodes.clear();
+			ObjectGraph::initialFlag = false;
         }
         ImGui::SameLine();
         if (ImGui::Button("Get Most Importance Object"))

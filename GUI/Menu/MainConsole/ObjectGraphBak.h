@@ -19,6 +19,11 @@ namespace ObjectGraph
 	inline float RepulsiveForce = 1.f;
 	inline int GetMostUperImportanceObjectVectorNumber = 10;
 
+	inline float Distance(ImVec2 diff)
+	{
+		return sqrt(diff.x * diff.x + diff.y * diff.y);
+	}
+
 	inline bool IsIntersect(ImVec2 A, ImVec2 B, ImVec2 C, ImVec2 D) {
 		auto Cross = [](ImVec2 O, ImVec2 P, ImVec2 Q) {
 			return (P.x - O.x) * (Q.y - O.y) - (P.y - O.y) * (Q.x - O.x);

@@ -24,7 +24,7 @@ class MonoManager
 	MonoImageAPI* ImageAPI;
 	MonoClassAPI* ClassAPI;
 public:
-	bool Enable = true;
+	bool Enable = false;
 public:
 
 	DWORD_PTR FindMonoApiAddress(DWORD_PTR AllocMemoryAddress, std::string FunctionName)
