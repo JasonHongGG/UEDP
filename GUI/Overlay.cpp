@@ -17,7 +17,7 @@
 #include "../font/IconRegular.h"
 #include "../font/TahomaFont.h"
 
-#include "../Background/Unity/MonoManager.h"
+#include "Menu/MonoPanel.h"
 
 LRESULT Overlay::Wndproc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) //windows msg 傳遞給 ImGui
@@ -85,6 +85,7 @@ void Overlay::RenderLoop(HWND window, ID3D11Device* Device, ID3D11DeviceContext*
 		ImGui::NewFrame();
 		//ImGui::ShowDemoWindow();
 
+		MonoPanel::Render(window);
 		if (menuToggle) {
 			Menu::MenuEntry();
 			WindowTransparentUpdate(WindowMgr.window);

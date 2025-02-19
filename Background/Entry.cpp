@@ -19,18 +19,15 @@
 #include "Entry/ObjectGraphEntry.h"
 #include "../Utils/Utils.h"
 #include "../Utils/Env.h"
-#include "Unity/MonoManager.h"
+#include "Mono/MonoManager.h"
 
 
 
 
 void BackgroundEntry::InitialProcess()
 {
-	// initial
-	//StorageMgr.SetUEVersion(0);
-	//StorageMgr.SetGWorld(0);
-	//StorageMgr.SetGUObjectArray(0);
-	//StorageMgr.SetFNamePool(0);
+	// ==========  Reset  ==========
+	StorageMgr.Reset();
 
 	// ==========  Initial String Parameter  ==========
 	std::wstring WindowName;
@@ -88,8 +85,8 @@ void BackgroundEntry::InitialProcess()
 	DWORD_PTR FunctionAddress = ProcMgr.ModuleMgr.GetFunctionAddress(ProcessInfo::hProcess, Address, "g_free");
 	printf("[ Function Address ] %p\n", (void*)FunctionAddress);
 
-	/*MonoMgr.Init();
-	MonoMgr.Test();*/
+	MonoMgr.Init();
+	MonoMgr.GetObjectData();
 }
 
 void BackgroundEntry::CloseProcess()

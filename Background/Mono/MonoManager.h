@@ -12,6 +12,7 @@
 #include "../../GUI/MyGuiUtils.h"
 class MonoManager
 {
+	bool Initialized = false;
 	MonoNativeFuncSet FunctSet;
 	HANDLE hMonoModule = NULL;
 	DWORD_PTR GetProcAddressFunctionAddress = 0x0;
@@ -22,6 +23,8 @@ class MonoManager
 
 	MonoImageAPI* ImageAPI;
 	MonoClassAPI* ClassAPI;
+public:
+	bool Enable = true;
 public:
 
 	DWORD_PTR FindMonoApiAddress(DWORD_PTR AllocMemoryAddress, std::string FunctionName)
@@ -61,7 +64,6 @@ public:
 		return FunctionAddress;
 	}
 
-
 	void BuildMonoFunctSet()
 	{
 		FunctSet = MonoNativeFuncSet();
@@ -78,9 +80,10 @@ public:
 		RootDomainAddress = (DWORD_PTR)FunctSet.FunctPtrSet["mono_get_root_domain"]->Call<DWORD_PTR>(CALL_TYPE_CDECL);
 	}
 
-	bool Initialized = false;
 	void Init()
 	{
+		if (!Enable) return;
+
 		HMODULE hModule = ProcMgr.ModuleMgr.GetModule(ProcessInfo::PID, L"KERNEL32.dll");
 		GetProcAddressFunctionAddress = ProcMgr.ModuleMgr.GetFunctionAddress(ProcessInfo::hProcess, hModule, "GetProcAddress");
 
@@ -95,7 +98,6 @@ public:
 
 		ImageAPI = new MonoImageAPI(&FunctSet, &ThreadFunctionList);
 		ClassAPI = new MonoClassAPI(ImageAPI, &FunctSet, &ThreadFunctionList);
-		
 	}
 
 	DWORD_PTR CurrentPlagerInstance = 0x0;
@@ -112,8 +114,11 @@ public:
 	MonoMethod* TakeDamageMethod;
 	MonoMethod* ToggleCollisionForSecondsMethod;
 	MonoMethod* ClampGravityMethod;
-	void Test()
+
+	void GetObjectData()
 	{
+		if (!Enable) return;
+
 		std::map<std::string, std::vector<MonoClass*>> MonoClassMap = ClassAPI->FindClassesInImageByNames({
 			{"Assembly-CSharp", {"BotHandler", "PlayerHandler", "Player"}},
 			{"UnityEngine.CoreModule", {"UnityEngine.Component", "UnityEngine.Transform", "UnityEngine.Camera"}}
@@ -142,7 +147,6 @@ public:
 		ToggleCollisionForSecondsMethod = PlayerClass->FindMethod("ToggleCollisionForSeconds");
 		ClampGravityMethod = PlayerClass->FindMethod("ClampGravity");
 		
-
 		// Transform Method
 		UnityEngineComponentClass = MonoClassMap["UnityEngine.CoreModule"][0];
 		GetTransformMethod = UnityEngineComponentClass->FindMethod("get_transform");
@@ -152,12 +156,9 @@ public:
 		UnityEngineCameraClass->Instance = UnityEngineCameraClass->FindMethod("get_main")->Call< DWORD_PTR >();
 		WorldToScreenPointMethod = UnityEngineCameraClass->FindMethod("WorldToScreenPoint_Injected");
 
-		
 
-		printf("BotListInstance 0x%llx\n", BotListInstance);
 		Initialized = true;
 		printf("Complete 0x%llx\n", BotListInstance);
-
 	}
 
 	void TestLoop(HWND window)
@@ -172,8 +173,6 @@ public:
 		std::vector<float> PlayerWorldPos = MemMgr.MemReader.ReadArray<float>(AllocMemoryAddress, 3);
 		MemMgr.RegionEnumerator.MemoryFree(ProcessInfo::hProcess, AllocMemoryAddress);
 		if (PlayerWorldPos[0] == 0) return;
-
-
 
 		// Bot List
 		DWORD_PTR BotListBaseAddress = 0x0;
@@ -218,6 +217,8 @@ public:
 		}
 		Sleep(10);
 	}
+
+
 
 	void HealFeature()
 	{

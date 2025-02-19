@@ -53,6 +53,8 @@ public:
 
 	std::map< std::string, std::map< std::string, std::map< std::string, std::pair<std::string, DWORD_PTR>>>>& GetPackage();
 	void SetPackage(DWORD_PTR Address, std::string PackageName, std::string Type, std::string ObjectName, std::string OuterObjectName);
+
+	void Reset();
 private:
 	//PackageViewer
 	std::map< std::string, std::map< std::string, std::map< std::string, std::pair<std::string, DWORD_PTR>> > > Package;
