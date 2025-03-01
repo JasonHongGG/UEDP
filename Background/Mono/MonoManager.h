@@ -12,6 +12,9 @@
 #include "../../GUI/MyGuiUtils.h"
 class MonoManager
 {
+public:
+	bool Enable = false;
+private:
 	bool Initialized = false;
 	MonoNativeFuncSet FunctSet;
 	HANDLE hMonoModule = NULL;
@@ -23,8 +26,6 @@ class MonoManager
 
 	MonoImageAPI* ImageAPI;
 	MonoClassAPI* ClassAPI;
-public:
-	bool Enable = false;
 public:
 
 	DWORD_PTR FindMonoApiAddress(DWORD_PTR AllocMemoryAddress, std::string FunctionName)
