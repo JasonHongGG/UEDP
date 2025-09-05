@@ -4,23 +4,9 @@
 
 class BackgroundEntry {
 public:
-	void InitialProcess();
-
-	void CloseProcess();
-
 	void Entry();
-
-	void SetUp()
-	{
-		 //Busy Box (use sleep to realse cpu)
-		while (Process::ProcState == Process::State::Running) {
-			Entry();
-			Sleep(10);
-		}
-	}
+	void Trigger();
 private:
 };
-
-
 
 inline BackgroundEntry Background = BackgroundEntry();

@@ -164,7 +164,6 @@
     <ClCompile Include="Background\Entry.cpp" />
     <ClCompile Include="Background\Entry\ParseEntry.h" />
     <ClCompile Include="Background\Storage\StorageManager.cpp" />
-    <ClCompile Include="Background\Mono\MonoClass.cpp" />
     <ClCompile Include="GUI\Include\Gradient\ImGradientHDR.cpp" />
     <ClCompile Include="GUI\Include\Notify\imgui_notify.cpp" />
     <ClCompile Include="GUI\Include\Toggle\imgui_toggle.cpp" />
@@ -215,16 +214,11 @@
     <ClInclude Include="Background\Entry\LoadAndSaveSettingEntry.h" />
     <ClInclude Include="Background\Entry\ObjectGraphEntry.h" />
     <ClInclude Include="Background\Entry\PackageViewEntry.h" />
+    <ClInclude Include="Background\Entry\ProcessEntry.h" />
     <ClInclude Include="Background\Entry\UtilsEntry.h" />
     <ClInclude Include="Background\Interface\ObjectInterface.h" />
     <ClInclude Include="Background\Interface\StorageInterface.h" />
     <ClInclude Include="Background\Storage\StorageManager.h" />
-    <ClInclude Include="Background\Mono\MonoClass.h" />
-    <ClInclude Include="Background\Mono\MonoConst.h" />
-    <ClInclude Include="Background\Mono\MonoFunction.h" />
-    <ClInclude Include="Background\Mono\MonoImage.h" />
-    <ClInclude Include="Background\Mono\MonoManager.h" />
-    <ClInclude Include="Background\Mono\MonoUtils.h" />
     <ClInclude Include="Font\IconRegular.h" />
     <ClInclude Include="Font\IconsFontAwesome6.h" />
     <ClInclude Include="GUI\Config\ColorConfig.h" />
@@ -281,7 +275,6 @@
     <ClInclude Include="GUI\Menu\MainMenu\ImagePage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\MainPage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ToolPage.h" />
-    <ClInclude Include="GUI\Menu\MonoPanel.h" />
     <ClInclude Include="GUI\Menu\SelectProcessWindow.h" />
     <ClInclude Include="GUI\Menu\MainMenu\SideBar.h" />
     <ClInclude Include="GUI\MyGuiComponent.h" />
