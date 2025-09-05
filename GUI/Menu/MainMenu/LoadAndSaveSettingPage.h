@@ -4,7 +4,7 @@
 #include "../../Config/FontConfig.h"
 #include "../../Config/LoadAndSaveSettingConfig.h"
 
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 #include "../../../State/GUIState.h"
 #include "../../../State/EventHandler.h"
 

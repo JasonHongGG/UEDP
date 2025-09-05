@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "../../../../imgui/imgui.h"
-#include "../../../MyGuiComponent/Operator.h"
+#include "../../../GUIComponent/Operator.h"
 
 struct EffectParams {
     ImVec2 a;

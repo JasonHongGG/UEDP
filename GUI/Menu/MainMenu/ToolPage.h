@@ -8,7 +8,7 @@
 #include "../../../State/GUIState.h"
 #include "../../../State/WindowState.h"
 #include "../../../State/EventHandler.h"
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 
 namespace ToolPage
 {

@@ -13,7 +13,7 @@
 #include "../../../font/IconsFontAwesome6.h"
 #include "../../../imgui/imgui.h"
 #include "../../../imgui/imgui_internal.h"
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 
 
 #define NOTIFY_MAX_MSG_LENGTH			4096		// Max message content length

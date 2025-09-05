@@ -4,7 +4,7 @@
 #include "../../../Config/ColorConfig.h"
 #include "../../../Config/FontConfig.h"
 #include "../../../Config/TestComponentConfig.h"
-#include "../../../MyGuiComponent.h"
+#include "../../../GUIComponent/GUIComponent.h"
 
 namespace ParamterPanelTab
 {

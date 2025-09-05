@@ -1,5 +1,5 @@
 #pragma once
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 #include "../../MyGuiUtils.h"
 #include "../../Interface/DumperConsoleInterface.h"
 #include "../../Config/MainConsoleConfig.h"

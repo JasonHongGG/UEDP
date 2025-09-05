@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../../../imgui/imgui.h"
-#include "../../../../MyGuiComponent.h"
+#include "../../../../GUIComponent/GUIComponent.h"
 
 #include "../../../../Config/ShadowConfig.h"
 #include "../../../../../State/GUIState.h"

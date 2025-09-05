@@ -4,7 +4,7 @@
 #include "../../State/GUIState.h"
 #include "../../System/Process.h"
 #include "../DockingManager.h"
-#include "../MyGuiComponent.h"
+#include "../GUIComponent/GUIComponent.h"
 
 namespace SelectProcessWindow
 {

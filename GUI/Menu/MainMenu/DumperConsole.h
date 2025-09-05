@@ -10,7 +10,7 @@
 #include "../../../State/GUIState.h"
 #include "../../../State/EventHandler.h"
 
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 #include "../../../System/Process.h"
 #include "../../../Background/Storage/StorageManager.h"
 

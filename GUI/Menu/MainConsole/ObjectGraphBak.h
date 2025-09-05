@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
-#include "../../MyGuiComponent/Operator.h"
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/Operator.h"
+#include "../../GUIComponent/GUIComponent.h"
 #include "../../../imgui/imgui.h"
 #include "../../Config/MainConsoleConfig.h"
 #include "../../../State/EventHandler.h"

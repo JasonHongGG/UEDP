@@ -314,19 +314,19 @@
     <ClInclude Include="GUI\Menu\MainMenu\MainPage.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\MyGuiComponent.h">
+    <ClInclude Include="GUI\GUIComponent\GUIComponent.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\MyGuiComponent\ComboList.h">
+    <ClInclude Include="GUI\GUIComponent\ComboList.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\MyGuiComponent\InputBarBtn.h">
+    <ClInclude Include="GUI\GUIComponent\InputBarBtn.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\MyGuiComponent\ListBox.h">
+    <ClInclude Include="GUI\GUIComponent\ListBox.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\MyGuiComponent\Operator.h">
+    <ClInclude Include="GUI\GUIComponent\Operator.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Config\TimerConfig.h">
@@ -561,6 +561,30 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Background\Entry\ProcessEntry.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIComponent\ProgressBar.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIComponent\ResizableComponent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIComponent\CustomButton.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIComponent\Tween.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIComponent\GroupPanel.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIComponent\GradientComponent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIComponent\ShadowComponent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUIComponent\HighlightComponent.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

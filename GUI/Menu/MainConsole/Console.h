@@ -2,7 +2,7 @@
 #include <string>
 #include <shared_mutex>
 #include "../../../imgui/imgui.h"
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 #include "../../MyGuiUtils.h"
 #include "../../Interface/DumperConsoleInterface.h"
 #include "../../Config/FontConfig.h"

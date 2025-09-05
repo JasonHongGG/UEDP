@@ -16,7 +16,7 @@ int main() {
 
 	// ==========  Overlay  ==========
 	std::thread GUI([&]() { OverlayMgr.Setup(); });
-	std::thread background([&]() { Background.SetUp(); });	
+	std::thread background([&]() { Background.Trigger(); });	
 	GUI.join();
 	background.join();
 

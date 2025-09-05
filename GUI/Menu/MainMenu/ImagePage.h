@@ -3,7 +3,7 @@
 #include "../../Config/MainMenuConfig.h"
 #include "../../Config/FontConfig.h"
 #include "../../TextureLoader.h"
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 #include "../../Overlay/D3DRender.h"
 
 namespace ImagePage

@@ -11,7 +11,7 @@
 #include "FXShader/IconFollowerEffect.h"
 
 #include "../../TextureLoader.h"
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 
 namespace FXShaderPage
 {

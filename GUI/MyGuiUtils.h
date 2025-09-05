@@ -6,7 +6,7 @@
 #include "Config/ToggleConfig.h"
 #include "Config/ColorConfig.h"
 #include "../State/EventHandler.h"
-#include "MyGuiComponent.h"
+#include "GUIComponent/GUIComponent.h"
 
 class GUIUtilsClass
 {

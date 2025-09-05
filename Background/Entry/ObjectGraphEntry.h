@@ -6,7 +6,7 @@
 #include "../../State/GUIState.h"
 #include "../Storage/StorageManager.h"
 #include "../../GUI/Interface/ObjectGraphInterface.h"
-#include "../../GUI/MyGuiComponent/Operator.h"
+#include "../../GUI/GUIComponent/Operator.h"
 
 namespace ObjectGraphEntry
 {

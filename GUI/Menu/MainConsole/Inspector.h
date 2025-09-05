@@ -9,7 +9,7 @@
 #include "../../Config/ToggleConfig.h"
 #include "../../Config/MainConsoleConfig.h"
 #include "../../Config/TimerConfig.h"
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 #include "../../MyGuiUtils.h"
 #include "../../../State/EventHandler.h"
 #include "../../Interface/DumperConsoleInterface.h"

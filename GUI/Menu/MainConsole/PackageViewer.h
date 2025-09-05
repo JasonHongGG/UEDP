@@ -7,7 +7,7 @@
 #include "../../Config/ColorConfig.h"
 #include "../../Config/StyleConfig.h"
 #include "../../Config/MainConsoleConfig.h"
-#include "../../MyGuiComponent.h"
+#include "../../GUIComponent/GUIComponent.h"
 #include "../../MyGuiUtils.h"
 #include "../../../State/EventHandler.h"
 #include "../../Interface/DumperConsoleInterface.h"

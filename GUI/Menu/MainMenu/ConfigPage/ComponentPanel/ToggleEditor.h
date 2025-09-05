@@ -3,7 +3,7 @@
 #include "../../../../Config/ToggleConfig.h"
 #include "../../../../Include/Toggle/imgui_toggle.h"
 #include "../../../../Include/Toggle/imgui_toggle_presets.h"
-//#include "../../../../MyGuiComponent.h"
+//#include "../../../../GUIComponent/GUIComponent.h"
 
 namespace ToggleEditor
 {

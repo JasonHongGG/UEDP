@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../../MyGuiComponent/Operator.h"
+#include "../../GUIComponent/Operator.h"
 #include "../../../imgui/imgui.h"
 #include "../../Interface/ObjectGraphInterface.h"
 #include "../../Config/MainConsoleConfig.h"
