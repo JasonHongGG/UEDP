@@ -16,7 +16,9 @@ public:
 	template <class T>
     std::vector<T> ReadArray(DWORD_PTR baseAddress, size_t n);
 
-    bool ReadString(DWORD_PTR baseAddress, BYTE* buffer, int strMaxLen = 50);
+    bool ReadString(DWORD_PTR baseAddress, std::string& retStr, int strMaxLen = 50);
+
+    bool ReadWString(DWORD_PTR baseAddress, std::wstring& retStr, int strMaxLen = 50);
 
     bool IsPointer(DWORD_PTR address);
 

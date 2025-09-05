@@ -364,11 +364,9 @@ inline bool GUIUtilsClass::ValueRender(std::string UniqueLabel, DWORD_PTR BaseAd
     }
     else if (Type.find("StrProperty") != std::string::npos) {
         static DWORD_PTR StrAddress;
-        static BYTE buffer[60];
         static std::wstring output;
         if (!MemMgr.MemReader.ReadMem(StrAddress, Address)) return false;
-        MemMgr.MemReader.ReadString(StrAddress, buffer);
-        output = std::wstring((wchar_t*)buffer);
+        MemMgr.MemReader.ReadWString(StrAddress, output);
         ImGui::TextColored(Color::White, (!output.empty()) ? Utils.UnicodeToUTF8(output.c_str()).c_str() : "None");
     }
     else {

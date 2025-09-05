@@ -238,9 +238,8 @@ std::string MonoClassAPI::GetMethodSignature(MonoMethod* Method)
 		FunctSet->FunctPtrSet["mono_method_get_param_names"]->Call<DWORD_PTR>(CALL_TYPE_CDECL, *ThreadFunctionList, Method->Handle, NamesPtrArray.Address);
 		NamesPtrArray.ReadResult();
 		for (int i = 0; i < ParamCnt; i++) {
-			BYTE ParamNameBytes[60];
-			MemMgr.MemReader.ReadString(NamesPtrArray.Elements[i], ParamNameBytes);
-			std::string ParamName(reinterpret_cast<char*>(ParamNameBytes));
+			std::string ParamName;
+			MemMgr.MemReader.ReadString(NamesPtrArray.Elements[i], ParamName);
 			ParamNames.push_back(ParamName);
 		}
 			

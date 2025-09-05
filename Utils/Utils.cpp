@@ -133,7 +133,7 @@ size_t UtilsSet::StringToHex(std::string HexStr) {
     if (HexStr.find("0x") != std::string::npos) HexStr.erase(HexStr.find("0x"), 2);
     if (HexStr.find("0X") != std::string::npos) HexStr.erase(HexStr.find("0X"), 2);
 
-    return std::stoi(HexStr, nullptr, 16);
+    return std::stoull(HexStr, nullptr, 16);
 }
 
 void UtilsSet::StringToLower(std::string& Str) {

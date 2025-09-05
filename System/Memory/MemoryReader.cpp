@@ -30,9 +30,22 @@ bool MemoryReader::IsPointer(DWORD_PTR address)
     return ReadMem<DWORD_PTR>(TempDWORD, address);
 }
 
-bool MemoryReader::ReadString(DWORD_PTR baseAddress, BYTE* buffer, int strMaxLen)
+bool MemoryReader::ReadString(DWORD_PTR baseAddress, std::string &retStr, int strMaxLen)
 {
-    ReadBytes(baseAddress, buffer, strMaxLen);     // 字串最長限制為 50
+    std::unique_ptr<BYTE[]> buffer(new BYTE[strMaxLen + 1]);
+    if (ReadBytes(baseAddress, buffer.get(), strMaxLen) == 0)     // 字串最長限制為 50
+        return false;
     buffer[strMaxLen] = '\0';
+    retStr = std::string(reinterpret_cast<char*>(buffer.get()));
+    return true;
+}
+
+bool MemoryReader::ReadWString(DWORD_PTR baseAddress, std::wstring& retStr, int strMaxLen)
+{
+    std::unique_ptr<BYTE[]> buffer(new BYTE[strMaxLen + 1]);
+    if (ReadBytes(baseAddress, buffer.get(), strMaxLen) == 0)     // 字串最長限制為 50
+        return false;
+    buffer[strMaxLen] = '\0';
+    retStr = std::wstring(reinterpret_cast<wchar_t*>(buffer.get()));
     return true;
 }

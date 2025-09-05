@@ -51,23 +51,23 @@ public:
     size_t FNameIndex = 0x18 - (ProcessInfo::ProcOffestSub * 2);
     size_t Outer = 0x20 - (ProcessInfo::ProcOffestSub * 2);
 
-    size_t Super = 0x40;     //Object        =>Super    //class => 0x88 
-    size_t Member = 0x50;     //Object        =>Member
-    size_t MemberSize = 0x58;     //Object        =>MemberSize            //未使用
-    size_t MemberTypeOffest = 0x8;      //Object        =>MemberTypeOffest
-    size_t MemberType = 0x0;      //ObjectType    =>MemberType
-    size_t MemberSubType = 0x8;      //ObjectType    =>MemberSubType ?       //未使用
-    size_t MemberFNameIndex = 0x20;     //Object        =>MemberFNameIndex      //0x28      0x20(UE5)
-    size_t MemberList = 0xA8;     //Object        =>MemberList            //未使用   //參數和繼承的Class有關時，Member 會變成 function 的 List，而變數要在這邊才找的到
-    size_t MemberListSize = 0x0;      //MemberList    =>MemberListSize        //未使用
-    size_t NextMember = 0x18;     //Member        =>NextMember            //0x20      0x18(UE5)      
+    size_t Super = 0x40;            //Object        =>Super    //class => 0x88 
+    size_t Member = 0x50;           //Object        =>Member
+    size_t MemberSize = 0x58;       //Object        =>MemberSize            //未使用
+    size_t MemberTypeOffest = 0x8;  //Object        =>MemberTypeOffest
+    size_t MemberType = 0x0;        //ObjectType    =>MemberType
+    size_t MemberSubType = 0x8;     //ObjectType    =>MemberSubType ?       //未使用
+    size_t MemberFNameIndex = 0x28; //Object        =>MemberFNameIndex      //0x28      0x20(UE5)
+    size_t MemberList = 0xA8;       //Object        =>MemberList            //未使用   //參數和繼承的Class有關時，Member 會變成 function 的 List，而變數要在這邊才找的到
+    size_t MemberListSize = 0x0;    //MemberList    =>MemberListSize        //未使用
+    size_t NextMember = 0x20;       //Member        =>NextMember            //0x20      0x18(UE5)      
     size_t NextMember_SameClass = 0x50;     //NextMember's Option                   //未使用
     size_t NextMember_AllUsed = 0x18;     //NextMember's Option                   //未使用   //基本上如果要遞迴找，就要走這條參數才會齊全，不然就直接從 MemberList
-    size_t Offset = 0x44;     //Object        =>Offset                //0x4C      0x44(UE5)
-    size_t PropSize = 0x34;     //Object        =>PropSize              //0x3C      0x34(UE5)
-    size_t Property = 0x78;     //Object        =>Property
-    size_t TypeObject = 0x70;     //Object        =>TypeObject            //Type 如果是 Object 則表示該 Object，Ex: Map<KeyObject, ValueObject> 會表示 KeyObject，而 ValueObject 再第一個 Property 內
-    size_t BitMask = 0x72;     //Object        =>BitMask               //0x7A      0x72(UE5)        //EX : 0404  => 010000000100 (看最右邊的 bit，從 0 開始數在第二個，所以是該 bool 變數要儲存在第二個 bit)
+    size_t Offset = 0x4C;           //Object        =>Offset                //0x4C      0x44(UE5)
+    size_t PropSize = 0x3C;         //Object        =>PropSize              //0x3C      0x34(UE5)
+    size_t Property = 0x78;         //Object        =>Property
+    size_t TypeObject = 0x70;       //Object        =>TypeObject            //Type 如果是 Object 則表示該 Object，Ex: Map<KeyObject, ValueObject> 會表示 KeyObject，而 ValueObject 再第一個 Property 內
+    size_t BitMask = 0x7A;          //Object        =>BitMask               //0x7A      0x72(UE5)        //EX : 0404  => 010000000100 (看最右邊的 bit，從 0 開始數在第二個，所以是該 bool 變數要儲存在第二個 bit)
 
 
     // EnumProperty 偏移 UEOffset.Property 到 Propty 

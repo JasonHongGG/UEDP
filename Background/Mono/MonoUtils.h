@@ -60,11 +60,9 @@ public:
 			break;
 		case TYPE_CHAR_P: {
 			if constexpr (std::is_same<T, std::string>::value) {
-				BYTE Buffer[512];
 				DWORD_PTR StrAddress;
 				MemMgr.MemReader.ReadMem(StrAddress, Address);
-				MemMgr.MemReader.ReadString(StrAddress, Buffer, 500);
-				result = std::string(reinterpret_cast<char*>(Buffer));
+				MemMgr.MemReader.ReadString(StrAddress, result, 500);
 			}
 			break;
 		}

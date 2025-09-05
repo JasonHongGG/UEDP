@@ -31,15 +31,13 @@ std::vector<DWORD_PTR> BaseAddressDumperClass::FindAddress(DWORD_PTR Address)
 		//一行組合語言指令只會有一個 [ ]
 		for (std::string Token : Tokens) {
 			if (Token.substr(0, 3) == "[0x") {
-				DWORD_PTR ptr;
 
 				// 刪除中括號 (取出 0x.....)
 				Token.erase(0, 1);	//刪除第一個字元
 				Token.pop_back();	//刪除最後一個字元
 
 				// String To Hex
-				std::stringstream ss(Token);
-				ss >> std::hex >> ptr;
+				DWORD_PTR ptr = (DWORD_PTR)Utils.StringToHex(Token);
 				if (std::find(ResultAddress.begin(), ResultAddress.end(), ptr) == ResultAddress.end()) {
 					ResultAddress.push_back(ptr);
 					printf("[ 指標的 16 進位值為 ] %p\n", (void*)ptr);
@@ -76,11 +74,11 @@ bool BaseAddressDumperClass::ValidateFNamePool(DWORD_PTR Address, DWORD_PTR& FNa
 			if (!MemMgr.MemReader.IsPointer(Address_Level_1)) break;
 		
 			for (int k = 0; k < 0x30; k += 2) {		//0x30 = 48		//24迴圈
-				char Buffer[5];
-				MemMgr.MemReader.ReadBytes(Address_Level_1 + k, (BYTE*)Buffer, 4);
-				Buffer[4] = '\0';
+				std::string word;
+				MemMgr.MemReader.ReadString(Address_Level_1 + k, word, 4);
+
 				//printf("[ Level 3 Str ] %s\n", Buffer);
-				if (strcmp(Buffer, "None") == 0) {
+				if (word.find("None") != std::string::npos) {
 					//printf("[ Find NamePool !!!! ] %p\n", Address);
 					printf("[ FNamePool Entry ][ i ] %X \t [ Pointer Depth ][ j ] %X \t [ First Word Offset ][ k ] %X \n", i, j, k);
 					FNamePoolFind_Flag = true;
@@ -108,7 +106,6 @@ void BaseAddressDumperClass::GetFNamePool()
 		return;
 	}
 
-	bool FindFlag = false;
 	DWORD_PTR FNamePoolBaseAddress = NULL;
 	size_t FNamePoolFirstPoolOffest = 0x0;
 	DWORD_PTR tempPtr = NULL;
@@ -145,28 +142,23 @@ void BaseAddressDumperClass::GetFNamePool()
 				//是否是一個 Pointer
 				if (MemMgr.MemReader.IsPointer(FindAddressResult[k])) {
 					//驗證該 Pointer 是 NamePool BaseAddress
-					FindFlag = ValidateFNamePool(FindAddressResult[k], FNamePoolBaseAddress, FNamePoolFirstPoolOffest);
-					if (FindFlag) {
+					if (ValidateFNamePool(FindAddressResult[k], FNamePoolBaseAddress, FNamePoolFirstPoolOffest)) {
 						StorageMgr.FNamePoolBaseAddress.Set(FNamePoolBaseAddress);
 						StorageMgr.FNamePoolFirstPoolOffest.Set(FNamePoolFirstPoolOffest);
+						printf("[ Find NamePool !!!! ] %p\n\n", (void*)FNamePoolBaseAddress);
+						return;
 					}
 				}
-				if (FindFlag) break;
 			}
-			if (FindFlag) break;
 		}
-		if (FindFlag) break;
 	}
-
-	// 顯示結果
-	if (FindFlag) printf("[ Find NamePool !!!! ] %p\n\n", (void*)FNamePoolBaseAddress);
-	else		  printf("[ NamePool No Exist !!!! ]\n\n");
+	printf("[ NamePool No Exist !!!! ]\n\n");
+	return;
 }
 
 
 bool BaseAddressDumperClass::ValidateGUObjectArray(DWORD_PTR Address, DWORD_PTR& GUObjectArrayBaseAddress, size_t& GUObjectArrayElementSize)
 {
-	bool FindFlag = false;
 	DWORD_PTR Address_Level_0 = NULL;
 	DWORD_PTR Address_Level_1 = NULL;
 
@@ -193,25 +185,18 @@ bool BaseAddressDumperClass::ValidateGUObjectArray(DWORD_PTR Address, DWORD_PTR&
 						break;
 
 					if (n == (10 * k)) {		//表示迴圈完整的跑完一次
-						FindFlag = true;
 						printf("[ GUObjArr Entry ][ i ] %X \t [ Pointer Depth ][ j ] %X \t [ Array Group Offset ][ k ] %X \t [ Validation Cnt ][ n ] %X \n", i, j, k, n);
 						GUObjectArrayBaseAddress = Address + i;
 						GUObjectArrayElementSize = k;
-						break;
+						return true;
 					}
 				}
-				if (FindFlag) break;
 			}
-			if (FindFlag) break;
-
 			//沒找到就再進去一層找(如果可以的話) => [ Address_Leve0 ]
 			if (!MemMgr.MemReader.ReadMem(Address_Level_0, Address_Level_0)) break;
 		}
-		if (FindFlag) break;
 	}
-
-
-	return FindFlag;
+	return false;
 }
 
 
@@ -260,23 +245,17 @@ void BaseAddressDumperClass::GetGUObjectArray()
 				//是否是一個 Pointer
 				if (MemMgr.MemReader.IsPointer(FindAddressResult[k])) {
 					// 驗證該 Pointer 是 GUObjectArray BaseAddress
-					FindFlag = ValidateGUObjectArray(FindAddressResult[k], GUObjectArrayBaseAddress, GUObjectArrayElementSize);
-					if (FindFlag) {
+					if (ValidateGUObjectArray(FindAddressResult[k], GUObjectArrayBaseAddress, GUObjectArrayElementSize)) {
 						StorageMgr.GUObjectArrayBaseAddress.Set(GUObjectArrayBaseAddress);
 						StorageMgr.GUObjectArrayElementSize.Set(GUObjectArrayElementSize);
+						printf("[ Find GUObjectArray !!!! ] %p\n\n", (void*)GUObjectArrayBaseAddress);
+						return;
 					}
-					FindFlag = true;
 				}
-				if (FindFlag) break;
 			}
-			if (FindFlag) break;
 		}
-		if (FindFlag) break;
 	}
-
-	// 顯示結果
-	if (FindFlag) printf("[ Find GUObjectArray !!!! ] %p\n\n", (void*)GUObjectArrayBaseAddress);
-	else		  printf("[ GUObjectArray No Exist !!!! ]\n\n");
+	printf("[ GUObjectArray No Exist !!!! ]\n\n");
 }
 
 
@@ -288,7 +267,6 @@ void BaseAddressDumperClass::GetGWorld()
 		return;
 	}
 
-	bool FindFlag = false;
 	DWORD_PTR GetGWorldBaseAddress = NULL;
 	size_t GetGWorld_ArrEleSize = 0;
 	DWORD_PTR tempPtr = NULL;
@@ -316,10 +294,10 @@ void BaseAddressDumperClass::GetGWorld()
 			FindAddressResult = FindAddress(ScanResult[j]);
 			for (int k = 0; k < FindAddressResult.size(); k++) {
 				printf("[ BaseAddressList ][k = % d] % p\n", k, (void*)FindAddressResult[k]);
-				FindFlag = true;
 				GetGWorldBaseAddress = FindAddressResult[k];
 				StorageMgr.GWorldBaseAddress.Set(GetGWorldBaseAddress);
-				break;
+				printf("[ Find GetGWorld !!!! ] %p\n\n", (void*)GetGWorldBaseAddress);
+				return;
 
 				// 暫時不作驗證，直接取 FindAddressResult[0]
 				////是否是一個 Pointer
@@ -335,14 +313,9 @@ void BaseAddressDumperClass::GetGWorld()
 				//}
 				//if (GetGWorldFind_Flag) break;
 			}
-			if (FindFlag) break;
 		}
-		if (FindFlag) break;
 	}
-
-	// 顯示結果
-	if (FindFlag) printf("[ Find GetGWorld !!!! ] %p\n\n", (void*)GetGWorldBaseAddress);
-	else		  printf("[ GetGWorld No Exist !!!! ]\n\n");
+	printf("[ GetGWorld No Exist !!!! ]\n\n");
 }
 
 ProcessState BaseAddressDumperClass::ShowBaseAddress()
