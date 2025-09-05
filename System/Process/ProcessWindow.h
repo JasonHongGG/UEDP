@@ -30,9 +30,9 @@ public:
 
     std::vector<EnumWindowsData> GetWindowList();
 
-    void GetWindowsFromProcessID(DWORD dwProcessID, std::vector<HWND>& windows, const char* WindowTitle);
+    HWND GetWindowsFromProcessID(DWORD dwProcessID, std::vector<HWND>& windows, const char* WindowTitle);
 
-    void GetWindowsNameFromHWND(HWND hwnd);
+    std::string GetWindowsNameFromHWND(HWND hwnd);
 
 private:
     static BOOL CALLBACK EnumWindowsCallback(HWND hwnd, LPARAM lParam);

@@ -27,6 +27,7 @@ BOOL CALLBACK ProcessWindow::EnumWindowsCallback(HWND hwnd, LPARAM lParam)
         GetWindowText(hwnd, windowTitle, sizeof(windowTitle) / sizeof(windowTitle[0]));
         if (windowTitle[0] != L'\0' and windowTitle[0] != L'?' and windowTitle[0] != L' ' and windowTitle[0] != L'.' and wcscmp(windowTitle, L"MSCTFIME UI") != 0 and wcscmp(windowTitle, L"Default IME") != 0) {
             bool FindFlag = false;
+            // 同一個 process 的 window
             for (int i = 0; i < windowList->size(); i++) {
                 if ((*windowList)[i].ProcessID == windowProcessID and _stricmp((*windowList)[i].WindowTitle.c_str(), Utils.UnicodeToUTF8(windowTitle).c_str()) == 0) {
                     (*windowList)[i].Windows.push_back(hwnd);
@@ -34,10 +35,13 @@ BOOL CALLBACK ProcessWindow::EnumWindowsCallback(HWND hwnd, LPARAM lParam)
                     break;
                 }
             }
+            // 新的 process
             if (!FindFlag) {
+                std::string windowTitleStr = Utils.UnicodeToUTF8(_wcsdup(windowTitle));
+                if (!windowTitleStr.empty() && windowTitleStr.back() == '\0') windowTitleStr.pop_back();
                 EnumWindowsData Temp;
                 Temp.ProcessID = windowProcessID;
-                Temp.WindowTitle = Utils.UnicodeToUTF8(_wcsdup(windowTitle));
+                Temp.WindowTitle = windowTitleStr;
                 Temp.Windows.push_back(hwnd);
                 windowList->push_back(Temp);
             }
@@ -58,7 +62,7 @@ std::vector<ProcessWindow::EnumWindowsData> ProcessWindow::GetWindowList()
     return windowList;
 }
 
-void ProcessWindow::GetWindowsFromProcessID(DWORD dwProcessID, std::vector<HWND>& windows, const char* WindowTitle)
+HWND ProcessWindow::GetWindowsFromProcessID(DWORD dwProcessID, std::vector<HWND>& windows, const char* WindowTitle)
 {
     std::vector<EnumWindowsData> windowList;
     EnumWindows(EnumWindowsCallback, reinterpret_cast<LPARAM>(&windowList));
@@ -73,11 +77,13 @@ void ProcessWindow::GetWindowsFromProcessID(DWORD dwProcessID, std::vector<HWND>
             }
 
     }
+    return ProcessWindow::MainWindow;
 }
 
-void ProcessWindow::GetWindowsNameFromHWND(HWND hwnd)
+std::string ProcessWindow::GetWindowsNameFromHWND(HWND hwnd)
 {
     wchar_t windowTitle[256];
     GetWindowText(hwnd, windowTitle, sizeof(windowTitle) / sizeof(windowTitle[0]));
     ProcessWindow::WindowName = Utils.UnicodeToUTF8(windowTitle);
+    return ProcessWindow::WindowName;
 }

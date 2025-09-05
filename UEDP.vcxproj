@@ -283,6 +283,7 @@
     <ClInclude Include="GUI\Menu\MainMenu\ImagePage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\MainPage.h" />
     <ClInclude Include="GUI\Menu\MainMenu\ToolPage.h" />
+    <ClInclude Include="GUI\Menu\NotificationPopout.h" />
     <ClInclude Include="GUI\Menu\SelectProcessWindow.h" />
     <ClInclude Include="GUI\Menu\MainMenu\SideBar.h" />
     <ClInclude Include="GUI\GUIComponent\GUIComponent.h" />

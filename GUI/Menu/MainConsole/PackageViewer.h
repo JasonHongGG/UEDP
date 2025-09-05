@@ -78,9 +78,7 @@ void PackageViewer::PackageListRender()
                     .Show();
 
                 // ========================= Search Bar =========================
-                ImGui::PushItemWidth(-FLT_MIN);
-                ImGui::InputTextWithHintWithWidth("##PackageDataInput_Result", "Search Package", PackageViwerConf.PackageDataListFilterStr);
-                ImGui::PopItemWidth();
+                ImGui::InputTextWithHintWithWidth("##PackageDataInput_Result", "Search Package", PackageViwerConf.PackageDataListFilterStr, -FLT_MIN);
     }
     ImGui::EndChild();
 }
@@ -156,9 +154,7 @@ void PackageViewer::ObjectInfoListRender()
         }
 
         // ========================= Search Bar =========================
-        ImGui::PushItemWidth(-FLT_MIN);
-        ImGui::InputTextWithHintWithWidth("##PackageObjectInput_Result", "Search Object", PackageViwerConf.PackageObjectDataListFilterStr);
-        ImGui::PopItemWidth();
+        ImGui::InputTextWithHintWithWidth("##PackageObjectInput_Result", "Search Object", PackageViwerConf.PackageObjectDataListFilterStr, -FLT_MIN);
     }
     ImGui::EndChild();
 }
@@ -198,8 +194,7 @@ void PackageViewer::GlobalSearchListRender()
                         .Show();
 
                     // ========================= Search Bar =========================
-                    ImGui::PushItemWidth(-FLT_MIN - ButtonSize.x);
-                    ImGui::InputTextWithHintWithWidth("##GlobalSearchObjectInput_Result", "Global Search Object", PackageViwerConf.GlobalSearchStr);
+                    ImGui::InputTextWithHintWithWidth("##GlobalSearchObjectInput_Result", "Global Search Object", PackageViwerConf.GlobalSearchStr, -FLT_MIN - ButtonSize.x);
                     if (ImGui::IsItemEdited()) {
                         if (strlen(PackageViwerConf.GlobalSearchStr.c_str()) > 1)
                             // Update 會事先清空 GlobalPackageObject.List 才執行動作 (可查看 UpdataGlobalSearchObject 的行為)
@@ -207,7 +202,6 @@ void PackageViewer::GlobalSearchListRender()
                         else if (PackageViwerConf.GlobalSearchList.size() > 0)
                             PackageViwerConf.GlobalSearchList.clear();
                     }
-                    ImGui::PopItemWidth();
 
         }
 

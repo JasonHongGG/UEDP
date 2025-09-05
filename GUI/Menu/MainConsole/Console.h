@@ -158,9 +158,7 @@ void Console::ObjectInfoRender()
                 EventHandler::GetFName();
             }
             ImGui::SameLine();
-            ImGui::PushItemWidth(MainConsoleConf.InputTextWidth - 90.0f);
-            ImGui::InputTextWithHintWithWidth("##GetFNameByIDInput_Result", "Enter Object ID", MainConsoleConf.FNameInfo.InputStr);
-            ImGui::PopItemWidth();
+            ImGui::InputTextWithHintWithWidth("##GetFNameByIDInput_Result", "Enter Object ID", MainConsoleConf.FNameInfo.InputStr, MainConsoleConf.InputTextWidth - 90.0f);
             ImGui::DummySpace();
             ImGui::InputTextWithWidth("##GetFNameByIDOutput_Result", MainConsoleConf.FNameInfo.FName, MainConsoleConf.InputTextWidth);
         }
@@ -202,9 +200,7 @@ void Console::ObjectInfoRender()
             }
             // Input
             ImGui::SameLine();
-            ImGui::PushItemWidth(MainConsoleConf.InputTextWidth - 190.0f);
-            ImGui::InputTextWithHintWithWidth("##GetGUObjectByAddress_Result", ("Enter Object " + MainConsoleConf.GUObjectInfo.ModeList[MainConsoleConf.GUObjectInfo.ModeListSelectIndex]).c_str(), MainConsoleConf.GUObjectInfo.InputStr);
-            ImGui::PopItemWidth();
+            ImGui::InputTextWithHintWithWidth("##GetGUObjectByAddress_Result", ("Enter Object " + MainConsoleConf.GUObjectInfo.ModeList[MainConsoleConf.GUObjectInfo.ModeListSelectIndex]).c_str(), MainConsoleConf.GUObjectInfo.InputStr, MainConsoleConf.InputTextWidth - 190.0f);
             ImGui::SameLine();
             if (MainConsoleState.GUObjectInfoParseEvent == ProcessState::Processing) {
                 const ImU32 col = ImGui::ColorConvertFloat4ToU32(Color::SpinnerColor);

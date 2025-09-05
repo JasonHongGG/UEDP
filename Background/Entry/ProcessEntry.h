@@ -94,9 +94,11 @@ namespace ProcessEntry
 			EventHandler::NotifyEvent(NotificationConfig::NotiyType::Info, "[Execute] SelectProcess");
 
 			ProcMgr.WindowMgr.GetWindowList();
+			SelectProcessWindowConf.WindowTitleSelectIndex = 0;
 			SelectProcessWindowConf.WindowTitleList.clear();
 			for (int i = 0; i < ProcessWindow::WindowList.size(); i++) {
-				SelectProcessWindowConf.WindowTitleList.push_back(ProcessWindow::WindowList[i].WindowTitle);
+				std::string procName = ProcMgr.InfoMgr.GetProcessNameByPID(ProcessWindow::WindowList[i].ProcessID);
+				SelectProcessWindowConf.WindowTitleList.push_back(ProcessWindow::WindowList[i].WindowTitle + "  " + procName );
 			}
 
 			SelectProcessWindowState.OpenSelectProcessWindow = true;

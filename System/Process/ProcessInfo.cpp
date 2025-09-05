@@ -54,7 +54,7 @@ size_t ProcessInfo::GetPID(const wchar_t* name)
     return ProcessInfo::PID;
 }
 
-void ProcessInfo::GetProcessNameByPID(size_t PID)
+std::string ProcessInfo::GetProcessNameByPID(size_t PID)
 {
     std::wstring ProcessName = L"";
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); // Process
@@ -69,6 +69,7 @@ void ProcessInfo::GetProcessNameByPID(size_t PID)
         }
     }
     ProcessInfo::ProcessName = Utils.UnicodeToUTF8(ProcessName.c_str());
+    return ProcessInfo::ProcessName;
 }
 
 bool ProcessInfo::ProcessIs64Bit()

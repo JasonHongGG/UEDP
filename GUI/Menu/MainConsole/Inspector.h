@@ -365,9 +365,7 @@ void Inspector::InspectorList()
 
 
                 // ========================= Search Bar =========================
-                ImGui::PushItemWidth(-FLT_MIN);
-                ImGui::InputTextWithHintWithWidth("##PackageDataInput_Result", "Search Object", InspectorConf.InspectorListFilterStr);
-                ImGui::PopItemWidth();
+                ImGui::InputTextWithHintWithWidth("##PackageDataInput_Result", "Search Object", InspectorConf.InspectorListFilterStr, -FLT_MIN);
     }
     ImGui::EndChild();
 }
@@ -401,9 +399,7 @@ void Inspector::DerivedList()
             .Show();
 
                 // ========================= Search Bar =========================
-                ImGui::PushItemWidth(-FLT_MIN);
-                ImGui::InputTextWithHintWithWidth("##DerivedListInput_Result", "Search Object", InspectorConf.DerivedList.FilterStr);
-                ImGui::PopItemWidth();
+                ImGui::InputTextWithHintWithWidth("##DerivedListInput_Result", "Search Object", InspectorConf.DerivedList.FilterStr, -FLT_MIN);
     }
     ImGui::EndChild();
 }

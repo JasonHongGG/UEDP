@@ -48,9 +48,9 @@ namespace ImGui {
     {
         char TextBuf[128];
         strcpy_s(TextBuf, sizeof(TextBuf), text.c_str());
-        if (Width > 0 or forceSet) ImGui::PushItemWidth(Width);
+        if (Width != 0 or forceSet) ImGui::PushItemWidth(Width);
         ImGui::InputTextWithHint(label, hint, TextBuf, IM_ARRAYSIZE(TextBuf));
-        if (Width > 0 or forceSet) ImGui::PopItemWidth();
+        if (Width != 0 or forceSet) ImGui::PopItemWidth();
         text = std::string(TextBuf);    // return back
     }
 

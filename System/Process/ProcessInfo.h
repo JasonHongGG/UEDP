@@ -24,7 +24,7 @@ public:
 
     size_t GetPID(const wchar_t* name = NULL);
 
-    void GetProcessNameByPID(size_t PID);
+    std::string GetProcessNameByPID(size_t PID);
 
     bool ProcessIs64Bit();
 
